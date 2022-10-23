@@ -52,6 +52,7 @@ class _HomePageState extends State<HomePage>
     _messageController1.dispose();
   }
 
+  String showCategoryWiseData = 'All';
   @override
   void initState() {
     super.initState();
@@ -84,75 +85,125 @@ class _HomePageState extends State<HomePage>
         image: DecorationImage(
             image: AssetImage(ConstVar.backgroundImg), fit: BoxFit.cover),
       ),
-      child: NestedScrollView(
-        headerSliverBuilder: (context, value) {
-          return [
-            SliverToBoxAdapter(
-                child: Column(
-              children: [
-                SizedBox(
-                  height: safearea,
-                ),
-                Container(
-                  width: width,
-                  padding:
-                      const EdgeInsets.only(left: 15.0, top: 15.0, right: 15.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          constWidgets.textWidget("Find your best property",
-                              FontWeight.w700, 18, Colors.black),
-                        ],
-                      ),
-                      const CircleAvatar(
-                          minRadius: 20,
-                          backgroundImage: AssetImage('assets/profilepic.jpg')),
-                    ],
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const SearchScreen()));
-                  },
-                  child: const SearchWidget(
-                      title: "Search",
-                      highlight: "Any Day | Any Where | Add Guest"),
-                ),
-              ],
-            )),
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  TabBar(
-                    tabs: myTabs,
-                    isScrollable: true,
-                    indicatorColor: Colors.white,
-                    indicator: const UnderlineTabIndicator(
-                        borderSide: BorderSide(
-                            width: 0.0, color: ConstColors.widgetDividerColor)),
-                    indicatorSize: TabBarIndicatorSize.label,
-                    physics: const BouncingScrollPhysics(),
-                    controller: _homePageTabController,
-                  )
-                ],
-              ),
-            ),
-          ];
-        },
-        body: TabBarView(
-            controller: _homePageTabController,
-            physics: const NeverScrollableScrollPhysics(),
+      child: SingleChildScrollView(
+        child: Column(children: [
+          Column(
             children: [
-              allCategories(homeProvider.allServices!, progress),
-              allCategories(homeProvider.allServices!, progress),
-              allCategories(homeProvider.allServices!, progress)
-            ]),
+              SizedBox(
+                height: safearea,
+              ),
+              Container(
+                width: width,
+                padding:
+                    const EdgeInsets.only(left: 15.0, top: 15.0, right: 15.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        constWidgets.textWidget("Find your best property",
+                            FontWeight.w700, 18, Colors.black),
+                      ],
+                    ),
+                    const CircleAvatar(
+                        minRadius: 20,
+                        backgroundImage: AssetImage('assets/profilepic.jpg')),
+                  ],
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SearchScreen()));
+                },
+                child: const SearchWidget(
+                    title: "Search",
+                    highlight: "Any Day | Any Where | Add Guest"),
+              ),
+            ],
+          ),
+          FutureBuilder(
+            future: FirebaseFirestore.instance
+                .collection('Admin')
+                .doc('categories')
+                .collection('categories_list')
+                .get(),
+            builder: (context, AsyncSnapshot snapshot) {
+              try {
+                if (snapshot.hasData) {
+                  return snapshot.data.docs.length == 0
+                      ? SizedBox()
+                      : SizedBox(
+                          width: Get.width,
+                          height: 60,
+                          child: ListView.builder(
+                            itemCount: snapshot.data.docs.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              var fetchCategory = snapshot.data.docs[index];
+
+                              return GestureDetector(
+                                onTap: () {
+                                  showCategoryWiseData =
+                                      fetchCategory['category_name'];
+                                  setState(() {});
+                                },
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 8),
+                                  child: Tab(
+                                      child: Container(
+                                    padding: const EdgeInsets.only(
+                                        left: 15.0,
+                                        right: 15.0,
+                                        top: 5.0,
+                                        bottom: 5.0),
+                                    decoration: BoxDecoration(
+                                        color: ConstColors.searchBoxColor,
+                                        border: Border.all(
+                                            color:
+                                                ConstColors.widgetDividerColor,
+                                            width: 1.0),
+                                        borderRadius:
+                                            BorderRadius.circular(50)),
+                                    child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          SizedBox(
+                                            height: 22,
+                                            width: 22,
+                                            child: Image.network(
+                                                '${fetchCategory['category_image'][0]}',
+                                                fit: BoxFit.cover),
+                                          ),
+                                          // const Icon(Icons.home,
+                                          //     size: 25, color: ConstColors.darkColor),
+                                          Text(
+                                              '${fetchCategory['category_name']}',
+                                              style: GoogleFonts.urbanist(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 13,
+                                                  color: ConstColors.darkColor))
+                                        ]),
+                                  )),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                } else {
+                  return CircularProgressIndicator();
+                }
+              } catch (e) {
+                return SizedBox();
+              }
+            },
+          ),
+          allCategories(homeProvider.allServices!, progress),
+        ]),
       ),
     );
   }
@@ -250,13 +301,22 @@ class _HomePageState extends State<HomePage>
     return Padding(
         padding: const EdgeInsets.only(left: 15),
         child: FutureBuilder(
-          future: FirebaseFirestore.instance
-              .collection('Admin')
-              .doc('all_properties')
-              .collection('property_data')
-              .orderBy('create_time', descending: true)
-              .limit(10)
-              .get(),
+          future: showCategoryWiseData == 'All'
+              ? FirebaseFirestore.instance
+                  .collection('Admin')
+                  .doc('all_properties')
+                  .collection('property_data')
+                  .orderBy('create_time', descending: true)
+                  .limit(10)
+                  .get()
+              : FirebaseFirestore.instance
+                  .collection('Admin')
+                  .doc('all_properties')
+                  .collection('property_data')
+                  .where('category', isEqualTo: showCategoryWiseData)
+                  .orderBy('create_time', descending: true)
+                  .limit(10)
+                  .get(),
           builder: (context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
               try {

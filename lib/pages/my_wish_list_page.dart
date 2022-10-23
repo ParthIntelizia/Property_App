@@ -85,6 +85,7 @@ class _MyWishListPageState extends State<MyWishListPage>
   Widget _descriptionWidget() {
     MyWishListProvider myWishListProvider =
         Provider.of<MyWishListProvider>(context, listen: false);
+
     return Container(
       padding: const EdgeInsets.all(15.0),
       width: MediaQuery.of(context).size.width - 30,
@@ -96,53 +97,64 @@ class _MyWishListPageState extends State<MyWishListPage>
             .get(),
         builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
-            return snapshot.data['list_of_like'].length == 0
-                ? Center(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: Get.height / 2.5),
-                      child: Text('Empty'),
-                    ),
-                  )
-                : ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: snapshot.data['list_of_like'].length,
-                    itemBuilder: (context, index) {
-                      var wishListItem = myWishListProvider.allServices![index];
-                      return FutureBuilder(
-                        future: FirebaseFirestore.instance
-                            .collection('Admin')
-                            .doc('all_properties')
-                            .collection('property_data')
-                            .where('productId',
-                                isEqualTo: snapshot.data['list_of_like'][index])
-                            .get(),
-                        builder: (context, AsyncSnapshot snapshotSingle) {
-                          if (snapshotSingle.hasData) {
-                            var getSingleProductData =
-                                snapshotSingle.data.docs[0];
-                            print(
-                                'getSingleProductData  ${getSingleProductData['address']}');
-                            return WishListItemWidget(
-                                onTap: () {
-                                  if (GetStorageServices
-                                          .getUserLoggedInStatus() ==
-                                      true) {
-                                    Get.to(() => EventDetailsPage(
-                                          fetchData: getSingleProductData,
-                                        ));
-                                  } else {
-                                    Get.to(() => const SignInScreen());
-                                  }
-                                },
-                                wishListItemModel: getSingleProductData);
-                          } else {
-                            return CircularProgressIndicator();
-                          }
-                        },
-                      );
-                    },
-                  );
+            try {
+              return snapshot.data['list_of_like'].length == 0
+                  ? Center(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: Get.height / 2.5),
+                        child: Text('Empty'),
+                      ),
+                    )
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: snapshot.data['list_of_like'].length,
+                      itemBuilder: (context, index) {
+                        var wishListItem =
+                            myWishListProvider.allServices![index];
+                        return FutureBuilder(
+                          future: FirebaseFirestore.instance
+                              .collection('Admin')
+                              .doc('all_properties')
+                              .collection('property_data')
+                              .where('productId',
+                                  isEqualTo: snapshot.data['list_of_like']
+                                      [index])
+                              .get(),
+                          builder: (context, AsyncSnapshot snapshotSingle) {
+                            if (snapshotSingle.hasData) {
+                              var getSingleProductData =
+                                  snapshotSingle.data.docs[0];
+                              print(
+                                  'getSingleProductData  ${getSingleProductData['address']}');
+                              return WishListItemWidget(
+                                  onTap: () {
+                                    if (GetStorageServices
+                                            .getUserLoggedInStatus() ==
+                                        true) {
+                                      Get.to(() => EventDetailsPage(
+                                            fetchData: getSingleProductData,
+                                          ));
+                                    } else {
+                                      Get.to(() => const SignInScreen());
+                                    }
+                                  },
+                                  wishListItemModel: getSingleProductData);
+                            } else {
+                              return CircularProgressIndicator();
+                            }
+                          },
+                        );
+                      },
+                    );
+            } catch (e) {
+              return Center(
+                child: Padding(
+                  padding: EdgeInsets.only(top: Get.height / 2.8),
+                  child: Text('No Data Found'),
+                ),
+              );
+            }
           } else {
             return CircularProgressIndicator();
           }
