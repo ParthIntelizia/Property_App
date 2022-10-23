@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "210888755019",
+    "project_id": "property-53eb7",
+    "storage_bucket": "property-53eb7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:210888755019:android:2b94d43cd07239d97b0ace",
+        "android_client_info": {
+          "package_name": "com.luxepass.luxepass"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "210888755019-ohcapd27ejtnlktn4gf85mf1si7ajpo5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.luxepass.luxepass",
+            "certificate_hash": "4f71f22aecd6fcef4471114760f5bdf07e9eb041"
+          }
+        },
+        {
+          "client_id": "210888755019-65fkd9pcf58ksq6s0emt2etvqj5jambk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMpdPfvWIKN4OHZqj0zV0kIGs4dGNYUeo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "210888755019-65fkd9pcf58ksq6s0emt2etvqj5jambk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

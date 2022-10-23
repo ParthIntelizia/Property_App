@@ -1,0 +1,768 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_progress_hud/flutter_progress_hud.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:luxepass/constants/common_widget.dart';
+import 'package:luxepass/constants/const_variables.dart';
+import 'package:luxepass/get_storage_services/get_storage_service.dart';
+import 'package:luxepass/home/search/search_screen.dart';
+import 'package:luxepass/home/widgets/wishl_list_item_widget.dart';
+import 'package:luxepass/providers/homepage_provider.dart';
+import 'package:provider/provider.dart';
+import '../constants/constant_colors.dart';
+import '../constants/constant_widgets.dart';
+import '../models/service_model.dart';
+import '../models/wish_list_model.dart';
+import '../pages/authentication/signin.dart';
+import '../pages/event_details_screen.dart';
+import 'widgets/search_widget.dart';
+import 'widgets/service_widget.dart';
+
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
+  TabController? _homePageTabController;
+  ConstWidgets constWidgets = ConstWidgets();
+  final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _pastCodeController = TextEditingController();
+  final TextEditingController _fullNameController1 = TextEditingController();
+  final TextEditingController _emailController1 = TextEditingController();
+  final TextEditingController _phoneController1 = TextEditingController();
+  final TextEditingController _messageController1 = TextEditingController();
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _fullNameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _pastCodeController.dispose();
+    _fullNameController1.dispose();
+    _emailController1.dispose();
+    _phoneController1.dispose();
+    _messageController1.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _homePageTabController = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    HomeProvider homeProvider = Provider.of<HomeProvider>(context);
+    return SafeArea(
+        child: Scaffold(
+      backgroundColor: ConstColors.backgroundColor,
+      body: ProgressHUD(child: Builder(
+        builder: (context) {
+          final progress = ProgressHUD.of(context);
+
+          return _body(homeProvider, progress);
+        },
+      )),
+    ));
+  }
+
+  Widget _body(HomeProvider homeProvider, final progress) {
+    var width = MediaQuery.of(context).size.width;
+    var safearea = MediaQuery.of(context).padding.top;
+    return Container(
+      constraints: const BoxConstraints.expand(),
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+            image: AssetImage(ConstVar.backgroundImg), fit: BoxFit.cover),
+      ),
+      child: NestedScrollView(
+        headerSliverBuilder: (context, value) {
+          return [
+            SliverToBoxAdapter(
+                child: Column(
+              children: [
+                SizedBox(
+                  height: safearea,
+                ),
+                Container(
+                  width: width,
+                  padding:
+                      const EdgeInsets.only(left: 15.0, top: 15.0, right: 15.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          constWidgets.textWidget("Find your best property",
+                              FontWeight.w700, 18, Colors.black),
+                        ],
+                      ),
+                      const CircleAvatar(
+                          minRadius: 20,
+                          backgroundImage: AssetImage('assets/profilepic.jpg')),
+                    ],
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SearchScreen()));
+                  },
+                  child: const SearchWidget(
+                      title: "Search",
+                      highlight: "Any Day | Any Where | Add Guest"),
+                ),
+              ],
+            )),
+            SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  TabBar(
+                    tabs: myTabs,
+                    isScrollable: true,
+                    indicatorColor: Colors.white,
+                    indicator: const UnderlineTabIndicator(
+                        borderSide: BorderSide(
+                            width: 0.0, color: ConstColors.widgetDividerColor)),
+                    indicatorSize: TabBarIndicatorSize.label,
+                    physics: const BouncingScrollPhysics(),
+                    controller: _homePageTabController,
+                  )
+                ],
+              ),
+            ),
+          ];
+        },
+        body: TabBarView(
+            controller: _homePageTabController,
+            physics: const NeverScrollableScrollPhysics(),
+            children: [
+              allCategories(homeProvider.allServices!, progress),
+              allCategories(homeProvider.allServices!, progress),
+              allCategories(homeProvider.allServices!, progress)
+            ]),
+      ),
+    );
+  }
+
+  Widget allCategories(List<List<ServiceModel>> allServices, final progress) {
+    HomeProvider homeProvider =
+        Provider.of<HomeProvider>(context, listen: false);
+
+    return SingleChildScrollView(
+      physics: const NeverScrollableScrollPhysics(),
+      child: Column(
+        children: [
+          serviceFunction(allServices[0]),
+          recomendedFunction(homeProvider.recomendedService!),
+          FutureBuilder(
+            future: FirebaseFirestore.instance
+                .collection('All_User_Details')
+                .doc('${GetStorageServices.getToken()}')
+                .collection('get_a_free_valuation')
+                .doc('${GetStorageServices.getToken()}')
+                .get(),
+            builder: (context, AsyncSnapshot snapshot) {
+              try {
+                if (snapshot.hasData) {
+                  var dataOfValuation = snapshot.data;
+                  print(
+                      'dataOfValuation full_name  ${dataOfValuation['full_name']}');
+                  return const SizedBox();
+                } else {
+                  return inputForm("heading", progress);
+                }
+              } catch (e) {
+                return inputForm("heading", progress);
+              }
+            },
+          ),
+          FutureBuilder(
+            future: FirebaseFirestore.instance
+                .collection('All_User_Details')
+                .doc('${GetStorageServices.getToken()}')
+                .collection('free_martgage_check')
+                .doc('${GetStorageServices.getToken()}')
+                .get(),
+            builder: (context, AsyncSnapshot snapshot) {
+              try {
+                if (snapshot.hasData) {
+                  var dataOfValuation = snapshot.data;
+                  print(
+                      'dataOfValuation full_name mo  ${dataOfValuation['full_name']}');
+                  return SizedBox();
+                } else {
+                  return inputForm1("heading", progress);
+                }
+              } catch (e) {
+                return inputForm1("heading", progress);
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget serviceFunction(List<ServiceModel> services) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          SizedBox(
+            height: 60,
+            width: MediaQuery.of(context).size.width,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: constWidgets.textWidget("Popular", FontWeight.w500, 20,
+                      ConstColors.serviceHeadLineColor),
+                ),
+                const Padding(
+                    padding: EdgeInsets.only(right: 15),
+                    child: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.black,
+                      size: 16,
+                    )),
+              ],
+            ),
+          ),
+          Padding(
+              padding: const EdgeInsets.only(left: 15),
+              child: SizedBox(
+                height: 350,
+                width: double.infinity,
+                child: FutureBuilder(
+                  future: FirebaseFirestore.instance
+                      .collection('Admin')
+                      .doc('all_properties')
+                      .collection('property_data')
+                      .orderBy('create_time', descending: true)
+                      .limit(10)
+                      .get(),
+                  builder: (context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData) {
+                      return ListView.builder(
+                          physics: const BouncingScrollPhysics(),
+                          scrollDirection: Axis.horizontal,
+                          shrinkWrap: true,
+                          itemCount: snapshot.data.docs.length,
+                          itemBuilder: (context, index) {
+                            var fetchData = snapshot.data.docs[index];
+
+                            return InkWell(
+                              child: Services(
+                                  title: fetchData['propertyName'],
+                                  image: fetchData['listOfImage'][0],
+                                  location: fetchData['address'],
+                                  highlight1: services[index].service!,
+                                  highlight2: services[index].highlight2!,
+                                  price: '\$${fetchData['price']}'),
+                              onTap: () {
+                                if (GetStorageServices
+                                        .getUserLoggedInStatus() ==
+                                    true) {
+                                  Get.to(() => EventDetailsPage(
+                                        fetchData: fetchData,
+                                      ));
+                                } else {
+                                  Get.to(() => const SignInScreen());
+                                }
+                                // MyNavigator.goToEventDetailsScreen(context);
+                              },
+                            );
+                          });
+                    } else {
+                      return CircularProgressIndicator();
+                    }
+                  },
+                ),
+              )),
+        ],
+      ),
+    );
+  }
+
+  Widget recomendedFunction(List<WishListItemModel> services) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          SizedBox(
+            height: 60,
+            width: MediaQuery.of(context).size.width,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: constWidgets.textWidget("Recommended for you",
+                      FontWeight.w500, 20, ConstColors.serviceHeadLineColor),
+                ),
+                const Padding(
+                    padding: EdgeInsets.only(right: 15),
+                    child: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.black,
+                      size: 16,
+                    )),
+              ],
+            ),
+          ),
+          Padding(
+              padding: const EdgeInsets.only(left: 15),
+              child: FutureBuilder(
+                future: FirebaseFirestore.instance
+                    .collection('Admin')
+                    .doc('all_propeties')
+                    .collection('property_data')
+                    .orderBy('create_time', descending: false)
+                    .limit(3)
+                    .get(),
+                builder: (context, AsyncSnapshot snapshot) {
+                  try {
+                    if (snapshot.hasData) {
+                      return ListView.builder(
+                          physics: const BouncingScrollPhysics(),
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: snapshot.data.docs.length,
+                          itemBuilder: (context, index) {
+                            var fetchMenData = snapshot.data.docs[index];
+
+                            return WishListItemWidget(
+                                onTap: () {
+                                  if (GetStorageServices
+                                          .getUserLoggedInStatus() ==
+                                      true) {
+                                    Get.to(() => EventDetailsPage(
+                                          fetchData: fetchMenData,
+                                        ));
+                                  } else {
+                                    Get.to(() => const SignInScreen());
+                                  }
+                                },
+                                wishListItemModel: fetchMenData);
+                          });
+                    } else {
+                      return const CircularProgressIndicator();
+                    }
+                  } catch (e) {
+                    return SizedBox();
+                  }
+                },
+              )),
+        ],
+      ),
+    );
+  }
+
+  String? gender = "male";
+  Widget inputForm(String heading, final progress) {
+    return Column(
+      children: [
+        Container(
+          width: MediaQuery.of(context).size.width,
+          margin: const EdgeInsets.only(top: 20.0),
+          padding: const EdgeInsets.only(left: 15.0, right: 15.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              constWidgets.textWidget("Get a Free Valuation", FontWeight.w500,
+                  20, ConstColors.serviceHeadLineColor),
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 150,
+                      child: RadioListTile(
+                        title: constWidgets.textWidget("To Sell",
+                            FontWeight.w700, 12, ConstColors.darkColor),
+                        value: "male",
+                        groupValue: gender,
+                        onChanged: (value) {
+                          setState(() {
+                            gender = value.toString();
+                          });
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      width: 150,
+                      child: RadioListTile(
+                        title: constWidgets.textWidget("To Let",
+                            FontWeight.w700, 12, ConstColors.darkColor),
+                        value: "female",
+                        groupValue: gender,
+                        onChanged: (value) {
+                          setState(() {
+                            gender = value.toString();
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.only(top: 20.0, bottom: 20.0),
+          padding: const EdgeInsets.only(left: 15.0, right: 15.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  constWidgets.textWidget(
+                      "Full Name", FontWeight.w500, 16, Colors.black),
+                  const SizedBox(height: 10.0),
+                  TextField(
+                    controller: _fullNameController,
+                    decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(8.0),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            borderSide: const BorderSide(
+                                color: ConstColors.widgetDividerColor,
+                                width: 1.0))),
+                  )
+                ],
+              ),
+              const SizedBox(height: 15.0),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  constWidgets.textWidget(
+                      "Email", FontWeight.w500, 16, Colors.black),
+                  const SizedBox(height: 10.0),
+                  TextField(
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(8.0),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            borderSide: const BorderSide(
+                                color: ConstColors.widgetDividerColor,
+                                width: 1.0))),
+                  )
+                ],
+              ),
+              const SizedBox(height: 15.0),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  constWidgets.textWidget(
+                      "Telephone no", FontWeight.w500, 16, Colors.black),
+                  const SizedBox(height: 10.0),
+                  TextField(
+                    controller: _phoneController,
+                    decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(8.0),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            borderSide: const BorderSide(
+                                color: ConstColors.widgetDividerColor,
+                                width: 1.0))),
+                  )
+                ],
+              ),
+              const SizedBox(height: 15.0),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  constWidgets.textWidget(
+                      "Postcode", FontWeight.w500, 16, Colors.black),
+                  const SizedBox(height: 10.0),
+                  TextField(
+                    controller: _pastCodeController,
+                    decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(8.0),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            borderSide: const BorderSide(
+                                color: ConstColors.widgetDividerColor,
+                                width: 1.0))),
+                  )
+                ],
+              ),
+              const SizedBox(height: 15.0),
+              Center(
+                child: GestureDetector(
+                  onTap: () async {
+                    if (GetStorageServices.getUserLoggedInStatus() == true) {
+                      if (_fullNameController.text.isNotEmpty &&
+                          _emailController.text.isNotEmpty &&
+                          _phoneController.text.isNotEmpty &&
+                          _pastCodeController.text.isNotEmpty) {
+                        progress.show();
+                        await FirebaseFirestore.instance
+                            .collection('All_User_Details')
+                            .doc('${GetStorageServices.getToken()}')
+                            .collection('get_a_free_valuation')
+                            .doc('${GetStorageServices.getToken()}')
+                            .set({
+                          'to_sell & to_let': gender,
+                          'full_name': _fullNameController.text.toString(),
+                          "email": _emailController.text.toString(),
+                          "phone_number": _phoneController.text.toString(),
+                          "postcode": _pastCodeController.text
+                        });
+                        progress.dismiss();
+
+                        setState(() {});
+                      } else {
+                        CommonWidget.getSnackBar(
+                            color: Colors.red,
+                            duration: 2,
+                            title: 'required',
+                            message: 'Please Enter all filed required');
+                      }
+                    } else {
+                      Get.to(() => const SignInScreen());
+                    }
+                  },
+                  child: Container(
+                      height: 50,
+                      width: 100,
+                      margin: const EdgeInsets.only(top: 15.0),
+                      decoration: const BoxDecoration(
+                          color: ConstColors.darkColor,
+                          borderRadius: BorderRadius.all(Radius.circular(25))),
+                      child: Center(
+                        child: constWidgets.textWidget(
+                            "Submit", FontWeight.w700, 12, Colors.white),
+                      )),
+                ),
+              ),
+            ],
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget inputForm1(String heading, final progress) {
+    return Column(
+      children: [
+        Container(
+          width: MediaQuery.of(context).size.width,
+          margin: const EdgeInsets.only(top: 20.0),
+          padding: const EdgeInsets.only(left: 15.0, right: 15.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              constWidgets.textWidget("Free Mortgage check", FontWeight.w500,
+                  20, ConstColors.serviceHeadLineColor),
+            ],
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.only(top: 20.0, bottom: 20.0),
+          padding: const EdgeInsets.only(left: 15.0, right: 15.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  constWidgets.textWidget(
+                      "Full Name", FontWeight.w500, 16, Colors.black),
+                  const SizedBox(height: 10.0),
+                  TextField(
+                    controller: _fullNameController1,
+                    decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(8.0),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            borderSide: const BorderSide(
+                                color: ConstColors.widgetDividerColor,
+                                width: 1.0))),
+                  )
+                ],
+              ),
+              const SizedBox(height: 15.0),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  constWidgets.textWidget(
+                      "Email", FontWeight.w500, 16, Colors.black),
+                  const SizedBox(height: 10.0),
+                  TextField(
+                    controller: _emailController1,
+                    decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(8.0),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            borderSide: const BorderSide(
+                                color: ConstColors.widgetDividerColor,
+                                width: 1.0))),
+                  )
+                ],
+              ),
+              const SizedBox(height: 15.0),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  constWidgets.textWidget(
+                      "Telephone no", FontWeight.w500, 16, Colors.black),
+                  const SizedBox(height: 10.0),
+                  TextField(
+                    controller: _phoneController1,
+                    decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(8.0),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            borderSide: const BorderSide(
+                                color: ConstColors.widgetDividerColor,
+                                width: 1.0))),
+                  )
+                ],
+              ),
+              const SizedBox(height: 15.0),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  constWidgets.textWidget(
+                      "Message", FontWeight.w500, 16, Colors.black),
+                  const SizedBox(height: 10.0),
+                  TextField(
+                    controller: _messageController1,
+                    decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(8.0),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            borderSide: const BorderSide(
+                                color: ConstColors.widgetDividerColor,
+                                width: 1.0))),
+                  )
+                ],
+              ),
+              const SizedBox(height: 15.0),
+              Center(
+                child: GestureDetector(
+                  onTap: () async {
+                    if (GetStorageServices.getUserLoggedInStatus() == true) {
+                      if (_fullNameController1.text.isNotEmpty &&
+                          _emailController1.text.isNotEmpty &&
+                          _phoneController1.text.isNotEmpty &&
+                          _messageController1.text.isNotEmpty) {
+                        progress.show();
+                        await FirebaseFirestore.instance
+                            .collection('All_User_Details')
+                            .doc('${GetStorageServices.getToken()}')
+                            .collection('free_martgage_check')
+                            .doc('${GetStorageServices.getToken()}')
+                            .set({
+                          'full_name': _fullNameController1.text.toString(),
+                          "email": _emailController1.text.toString(),
+                          "phone_number": _phoneController1.text.toString(),
+                          "postcode": _messageController1.text
+                        });
+                        progress.dismiss();
+
+                        setState(() {});
+                      } else {
+                        CommonWidget.getSnackBar(
+                            color: Colors.red,
+                            duration: 2,
+                            title: 'required',
+                            message: 'Please Enter all filed required');
+                      }
+                    } else {
+                      Get.to(() => const SignInScreen());
+                    }
+                  },
+                  child: Container(
+                      height: 50,
+                      width: 100,
+                      margin: const EdgeInsets.only(top: 15.0),
+                      decoration: const BoxDecoration(
+                          color: ConstColors.darkColor,
+                          borderRadius: BorderRadius.all(Radius.circular(25))),
+                      child: Center(
+                        child: constWidgets.textWidget(
+                            "Submit", FontWeight.w700, 12, Colors.white),
+                      )),
+                ),
+              ),
+            ],
+          ),
+        )
+      ],
+    );
+  }
+
+  final List<Tab> myTabs = <Tab>[
+    Tab(
+        child: Container(
+      padding:
+          const EdgeInsets.only(left: 15.0, right: 15.0, top: 5.0, bottom: 5.0),
+      decoration: BoxDecoration(
+          color: ConstColors.searchBoxColor,
+          border: Border.all(color: ConstColors.widgetDividerColor, width: 1.0),
+          borderRadius: BorderRadius.circular(50)),
+      child: Row(mainAxisSize: MainAxisSize.min, children: [
+        const Icon(Icons.home, size: 25, color: ConstColors.darkColor),
+        Text('Home',
+            style: GoogleFonts.urbanist(
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+                color: ConstColors.darkColor))
+      ]),
+    )),
+    Tab(
+        child: Container(
+      padding:
+          const EdgeInsets.only(left: 15.0, right: 15.0, top: 5.0, bottom: 5.0),
+      decoration: BoxDecoration(
+          color: ConstColors.searchBoxColor,
+          border: Border.all(color: ConstColors.widgetDividerColor, width: 1.0),
+          borderRadius: BorderRadius.circular(50)),
+      child: Row(mainAxisSize: MainAxisSize.min, children: [
+        const Icon(Icons.villa, size: 25, color: ConstColors.darkColor),
+        Text('Villa',
+            style: GoogleFonts.urbanist(
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+                color: ConstColors.darkColor))
+      ]),
+    )),
+    Tab(
+        child: Container(
+      padding:
+          const EdgeInsets.only(left: 15.0, right: 15.0, top: 5.0, bottom: 5.0),
+      decoration: BoxDecoration(
+          color: ConstColors.searchBoxColor,
+          border: Border.all(color: ConstColors.widgetDividerColor, width: 1.0),
+          borderRadius: BorderRadius.circular(50)),
+      child: Row(mainAxisSize: MainAxisSize.min, children: [
+        const Icon(Icons.apartment, size: 25, color: ConstColors.darkColor),
+        Text('Apartment',
+            style: GoogleFonts.urbanist(
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+                color: ConstColors.darkColor))
+      ]),
+    )),
+  ];
+}
