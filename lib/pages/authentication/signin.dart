@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:luxepass/constants/const_variables.dart';
+import '../../constants/common_method.dart';
 import '../../constants/constant_colors.dart';
+import '../../get_storage_services/get_storage_service.dart';
 import '../../models/CountryModel.dart';
 import '../../services/locator_service.dart';
 import '../../services/navigation_service.dart';
 import 'my_location_page.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -520,6 +521,12 @@ class _SignInScreenState extends State<SignInScreen> {
 
     var currentUser = _auth.currentUser;
 
+    if (authResult.user != null) {
+      GetStorageServices.setToken(FirebaseAuth.instance.currentUser!.uid);
+      GetStorageServices.setUserLoggedIn();
+      CommonMethode.likeFiledAdd();
+    }
+
     assert(user?.uid == currentUser?.uid);
 
     print("User Name: ${user?.displayName}");
@@ -534,6 +541,9 @@ class _SignInScreenState extends State<SignInScreen> {
       FacebookAuth.instance.getUserData().then((user) {
         goToMyLocationPage();
       });
+      GetStorageServices.setToken(FirebaseAuth.instance.currentUser!.uid);
+      GetStorageServices.setUserLoggedIn();
+      CommonMethode.likeFiledAdd();
     });
   }
 }
