@@ -171,15 +171,15 @@ class _HomePageState extends State<HomePage>
             future: FirebaseFirestore.instance
                 .collection('All_User_Details')
                 .doc('${GetStorageServices.getToken()}')
-                .collection('get_a_free_valuation')
-                .doc('${GetStorageServices.getToken()}')
                 .get(),
             builder: (context, AsyncSnapshot snapshot) {
               try {
                 if (snapshot.hasData) {
                   var dataOfValuation = snapshot.data;
+                  bool isCheck = dataOfValuation['is_check_valuation'];
+
                   print(
-                      'dataOfValuation full_name  ${dataOfValuation['full_name']}');
+                      'dataOfValuation full_name  ${dataOfValuation['is_check_valuation']}');
                   return const SizedBox();
                 } else {
                   return inputForm("heading", progress);
@@ -193,15 +193,14 @@ class _HomePageState extends State<HomePage>
             future: FirebaseFirestore.instance
                 .collection('All_User_Details')
                 .doc('${GetStorageServices.getToken()}')
-                .collection('free_martgage_check')
-                .doc('${GetStorageServices.getToken()}')
                 .get(),
             builder: (context, AsyncSnapshot snapshot) {
               try {
                 if (snapshot.hasData) {
                   var dataOfValuation = snapshot.data;
+                  bool isCheck = dataOfValuation['is_check_mortgage'];
                   print(
-                      'dataOfValuation full_name mo  ${dataOfValuation['full_name']}');
+                      'dataOfValuation full_name mo  ${dataOfValuation['is_check_mortgage']}');
                   return SizedBox();
                 } else {
                   return inputForm1("heading", progress);
@@ -241,60 +240,67 @@ class _HomePageState extends State<HomePage>
               ],
             ),
           ),
-          Padding(
-              padding: const EdgeInsets.only(left: 15),
-              child: SizedBox(
-                height: 350,
-                width: double.infinity,
-                child: FutureBuilder(
-                  future: FirebaseFirestore.instance
-                      .collection('Admin')
-                      .doc('all_properties')
-                      .collection('property_data')
-                      .orderBy('create_time', descending: true)
-                      .limit(10)
-                      .get(),
-                  builder: (context, AsyncSnapshot snapshot) {
-                    if (snapshot.hasData) {
-                      return ListView.builder(
-                          physics: const BouncingScrollPhysics(),
-                          scrollDirection: Axis.horizontal,
-                          shrinkWrap: true,
-                          itemCount: snapshot.data.docs.length,
-                          itemBuilder: (context, index) {
-                            var fetchData = snapshot.data.docs[index];
-
-                            return InkWell(
-                              child: Services(
-                                  title: fetchData['propertyName'],
-                                  image: fetchData['listOfImage'][0],
-                                  location: fetchData['address'],
-                                  highlight1: services[index].service!,
-                                  highlight2: services[index].highlight2!,
-                                  price: '\$${fetchData['price']}'),
-                              onTap: () {
-                                if (GetStorageServices
-                                        .getUserLoggedInStatus() ==
-                                    true) {
-                                  Get.to(() => EventDetailsPage(
-                                        fetchData: fetchData,
-                                      ));
-                                } else {
-                                  Get.to(() => const SignInScreen());
-                                }
-                                // MyNavigator.goToEventDetailsScreen(context);
-                              },
-                            );
-                          });
-                    } else {
-                      return CircularProgressIndicator();
-                    }
-                  },
-                ),
-              )),
+          popularWidget(services),
         ],
       ),
     );
+  }
+
+  Widget popularWidget(List<ServiceModel> services) {
+    return Padding(
+        padding: const EdgeInsets.only(left: 15),
+        child: FutureBuilder(
+          future: FirebaseFirestore.instance
+              .collection('Admin')
+              .doc('all_properties')
+              .collection('property_data')
+              .orderBy('create_time', descending: true)
+              .limit(10)
+              .get(),
+          builder: (context, AsyncSnapshot snapshot) {
+            if (snapshot.hasData) {
+              try {
+                return SizedBox(
+                  height: snapshot.data.docs.length == 0 ? 0 : 350,
+                  width: double.infinity,
+                  child: ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      itemCount: snapshot.data.docs.length,
+                      itemBuilder: (context, index) {
+                        var fetchData = snapshot.data.docs[index];
+
+                        return InkWell(
+                          child: Services(
+                              title: fetchData['propertyName'],
+                              image: fetchData['listOfImage'][0],
+                              location: fetchData['address'],
+                              highlight1: services[index].service!,
+                              highlight2: services[index].highlight2!,
+                              price: '\$${fetchData['price']}'),
+                          onTap: () {
+                            if (GetStorageServices.getUserLoggedInStatus() ==
+                                true) {
+                              Get.to(() => EventDetailsPage(
+                                    fetchData: fetchData,
+                                  ));
+                            } else {
+                              Get.to(() => const SignInScreen());
+                            }
+                            // MyNavigator.goToEventDetailsScreen(context);
+                          },
+                        );
+                      }),
+                );
+              } catch (e) {
+                return SizedBox();
+              }
+            } else {
+              return CircularProgressIndicator();
+            }
+          },
+        ));
   }
 
   Widget recomendedFunction(List<WishListItemModel> services) {
@@ -327,7 +333,7 @@ class _HomePageState extends State<HomePage>
               child: FutureBuilder(
                 future: FirebaseFirestore.instance
                     .collection('Admin')
-                    .doc('all_propeties')
+                    .doc('all_properties')
                     .collection('property_data')
                     .orderBy('create_time', descending: false)
                     .limit(3)
@@ -370,7 +376,7 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  String? gender = "male";
+  String? gender = "To Sell";
   Widget inputForm(String heading, final progress) {
     return Column(
       children: [
@@ -394,7 +400,7 @@ class _HomePageState extends State<HomePage>
                       child: RadioListTile(
                         title: constWidgets.textWidget("To Sell",
                             FontWeight.w700, 12, ConstColors.darkColor),
-                        value: "male",
+                        value: "To Sell",
                         groupValue: gender,
                         onChanged: (value) {
                           setState(() {
@@ -408,7 +414,7 @@ class _HomePageState extends State<HomePage>
                       child: RadioListTile(
                         title: constWidgets.textWidget("To Let",
                             FontWeight.w700, 12, ConstColors.darkColor),
-                        value: "female",
+                        value: "To Let",
                         groupValue: gender,
                         onChanged: (value) {
                           setState(() {
@@ -517,18 +523,19 @@ class _HomePageState extends State<HomePage>
                         await FirebaseFirestore.instance
                             .collection('All_User_Details')
                             .doc('${GetStorageServices.getToken()}')
-                            .collection('get_a_free_valuation')
-                            .doc('${GetStorageServices.getToken()}')
-                            .set({
-                          'to_sell & to_let': gender,
-                          'full_name': _fullNameController.text.toString(),
-                          "email": _emailController.text.toString(),
-                          "phone_number": _phoneController.text.toString(),
-                          "postcode": _pastCodeController.text
+                            .update({
+                          "is_check_valuation": true,
+                          "get_a_free_valuation": {
+                            'to_sell & to_let': gender,
+                            'full_name': _fullNameController.text.toString(),
+                            "email": _emailController.text.toString(),
+                            "phone_number": _phoneController.text.toString(),
+                            "postcode": _pastCodeController.text
+                          }
                         });
-                        progress.dismiss();
-
                         setState(() {});
+
+                        progress.dismiss();
                       } else {
                         CommonWidget.getSnackBar(
                             color: Colors.red,
@@ -670,13 +677,14 @@ class _HomePageState extends State<HomePage>
                         await FirebaseFirestore.instance
                             .collection('All_User_Details')
                             .doc('${GetStorageServices.getToken()}')
-                            .collection('free_martgage_check')
-                            .doc('${GetStorageServices.getToken()}')
-                            .set({
-                          'full_name': _fullNameController1.text.toString(),
-                          "email": _emailController1.text.toString(),
-                          "phone_number": _phoneController1.text.toString(),
-                          "postcode": _messageController1.text
+                            .update({
+                          "is_check_mortgage": true,
+                          "free_martgage_check": {
+                            'full_name': _fullNameController1.text.toString(),
+                            "email": _emailController1.text.toString(),
+                            "phone_number": _phoneController1.text.toString(),
+                            "postcode": _messageController1.text
+                          }
                         });
                         progress.dismiss();
 
