@@ -24,7 +24,7 @@ class CommonMethode {
       await FirebaseFirestore.instance
           .collection("All_User_Details")
           .doc(GetStorageServices.getToken())
-          .set({"list_of_like": []});
+          .update({"list_of_like": []});
     }
   }
 }
