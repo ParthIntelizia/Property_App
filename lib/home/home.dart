@@ -15,7 +15,7 @@ import '../constants/constant_widgets.dart';
 import '../models/service_model.dart';
 import '../models/wish_list_model.dart';
 import '../pages/authentication/signin.dart';
-import '../pages/event_details_screen.dart';
+import '../pages/property_details_screen.dart';
 import 'widgets/search_widget.dart';
 import 'widgets/service_widget.dart';
 
@@ -342,7 +342,7 @@ class _HomePageState extends State<HomePage>
                           onTap: () {
                             if (GetStorageServices.getUserLoggedInStatus() ==
                                 true) {
-                              Get.to(() => EventDetailsPage(
+                              Get.to(() => PropertyDetailsPage(
                                     fetchData: fetchData,
                                   ));
                             } else {
@@ -414,7 +414,7 @@ class _HomePageState extends State<HomePage>
                                   if (GetStorageServices
                                           .getUserLoggedInStatus() ==
                                       true) {
-                                    Get.to(() => EventDetailsPage(
+                                    Get.to(() => PropertyDetailsPage(
                                           fetchData: fetchMenData,
                                         ));
                                   } else {

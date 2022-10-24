@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:luxepass/constants/const_variables.dart';
-import 'package:luxepass/pages/event_details_screen.dart';
+import 'package:luxepass/pages/property_details_screen.dart';
 import 'package:luxepass/providers/my_wish_list_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -12,6 +12,7 @@ import '../../constants/constant_widgets.dart';
 import '../get_storage_services/get_storage_service.dart';
 import '../home/widgets/wishl_list_item_widget.dart';
 import '../utils/navigator.dart';
+import '../utils/wishlist_shimmer.dart';
 import 'authentication/signin.dart';
 
 class MyWishListPage extends StatefulWidget {
@@ -132,7 +133,7 @@ class _MyWishListPageState extends State<MyWishListPage>
                                     if (GetStorageServices
                                             .getUserLoggedInStatus() ==
                                         true) {
-                                      Get.to(() => EventDetailsPage(
+                                      Get.to(() => PropertyDetailsPage(
                                             fetchData: getSingleProductData,
                                           ));
                                     } else {
@@ -141,7 +142,7 @@ class _MyWishListPageState extends State<MyWishListPage>
                                   },
                                   wishListItemModel: getSingleProductData);
                             } else {
-                              return CircularProgressIndicator();
+                              return WishListShimmer();
                             }
                           },
                         );
@@ -156,7 +157,7 @@ class _MyWishListPageState extends State<MyWishListPage>
               );
             }
           } else {
-            return CircularProgressIndicator();
+            return WishListShimmer();
           }
         },
       )),

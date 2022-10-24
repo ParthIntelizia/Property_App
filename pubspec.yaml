@@ -53,7 +53,7 @@ dependencies:
   get: 4.6.1
   get_storage: ^2.0.3
   cloud_firestore: ^3.5.1
-
+  shimmer: ^2.0.0
 
 dev_dependencies:
   flutter_test:

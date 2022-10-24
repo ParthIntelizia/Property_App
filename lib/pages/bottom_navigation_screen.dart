@@ -6,7 +6,7 @@ import 'package:luxepass/pages/user_profile_page.dart';
 import '../home/home.dart';
 import '../providers/navbar_provider.dart';
 import '../services/locator_service.dart';
-import 'my_booking_page.dart';
+import 'discover_page.dart';
 import 'my_wish_list_page.dart';
 
 class BottomNavigationBarScreen extends StatefulWidget {
@@ -72,7 +72,7 @@ class _BottomNavigationBarState extends State<BottomNavigationBarScreen>
       ..add(const HomePage())
       ..add(const MyWishListPage())
       ..add(const ServicesPage())
-      ..add(const MyBookingPage())
+      ..add(const DiscoverPage())
       ..add(const UserProfilePage());
     super.initState();
     WidgetsBinding.instance.addObserver(this);

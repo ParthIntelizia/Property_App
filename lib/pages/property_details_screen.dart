@@ -10,15 +10,16 @@ import '../../constants/constant_widgets.dart';
 import '../../providers/search_screen_provider.dart';
 import '../home/widgets/unordered_list.dart';
 
-class EventDetailsPage extends StatefulWidget {
+class PropertyDetailsPage extends StatefulWidget {
   final fetchData;
-  const EventDetailsPage({Key? key, required this.fetchData}) : super(key: key);
+  const PropertyDetailsPage({Key? key, required this.fetchData})
+      : super(key: key);
 
   @override
-  State<EventDetailsPage> createState() => _EventDetailsPageState();
+  State<PropertyDetailsPage> createState() => _PropertyDetailsPageState();
 }
 
-class _EventDetailsPageState extends State<EventDetailsPage>
+class _PropertyDetailsPageState extends State<PropertyDetailsPage>
     with SingleTickerProviderStateMixin {
   TabController? _homePageTabController;
   ConstWidgets constWidgets = ConstWidgets();
@@ -133,21 +134,22 @@ class _EventDetailsPageState extends State<EventDetailsPage>
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        color: Colors.white),
-                                    height: 30,
-                                    width: 30,
-                                    margin: const EdgeInsets.only(left: 10.0),
-                                    child: Center(
-                                      child: IconButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          icon: const Icon(Icons.arrow_back_ios,
-                                              size: 16, color: Colors.grey)),
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.only(left: 5),
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.white),
+                                      height: 30,
+                                      width: 30,
+                                      margin: const EdgeInsets.only(left: 10.0),
+                                      child: Center(
+                                        child: const Icon(Icons.arrow_back_ios,
+                                            size: 16, color: Colors.grey),
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -186,18 +188,7 @@ class _EventDetailsPageState extends State<EventDetailsPage>
                                               height: 30,
                                               width: 30,
                                               child: Center(
-                                                child: Image.asset(
-                                                  color: snapshot
-                                                          .data['list_of_like']
-                                                          .contains(
-                                                              widget.fetchData[
-                                                                  'productId'])
-                                                      ? Colors.red
-                                                      : Colors.grey,
-                                                  'assets/icons/favorite.png',
-                                                  height: 20,
-                                                  width: 20,
-                                                ),
+                                                child: likeWidget(snapshot),
                                               ),
                                             ),
                                           );
@@ -222,13 +213,11 @@ class _EventDetailsPageState extends State<EventDetailsPage>
                                     ),
                                     Container(
                                       decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(100),
+                                          shape: BoxShape.circle,
                                           color: Colors.white),
                                       height: 30,
                                       width: 30,
-                                      padding:
-                                          const EdgeInsets.only(right: 10.0),
+                                      padding: const EdgeInsets.only(right: 3),
                                       child: const Center(
                                         child: Icon(
                                           Icons.share,
@@ -254,6 +243,27 @@ class _EventDetailsPageState extends State<EventDetailsPage>
         body: _descriptionWidget(widget.fetchData),
       ),
     );
+  }
+
+  Image likeWidget(AsyncSnapshot<dynamic> snapshot) {
+    try {
+      return Image.asset(
+        color: snapshot.data['list_of_like']
+                .contains(widget.fetchData['productId'])
+            ? Colors.red
+            : Colors.grey,
+        'assets/icons/favorite.png',
+        height: 20,
+        width: 20,
+      );
+    } catch (e) {
+      return Image.asset(
+        color: Colors.grey,
+        'assets/icons/favorite.png',
+        height: 20,
+        width: 20,
+      );
+    }
   }
 
   likeUnLike({required int productId}) async {

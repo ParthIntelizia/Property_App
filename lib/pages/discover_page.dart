@@ -6,19 +6,24 @@ import '../../constants/constant_colors.dart';
 import '../../constants/constant_widgets.dart';
 import '../get_storage_services/get_storage_service.dart';
 import '../home/widgets/wishl_list_item_widget.dart';
+import '../utils/wishlist_shimmer.dart';
 import 'authentication/signin.dart';
-import 'event_details_screen.dart';
+import 'property_details_screen.dart';
 
-class MyBookingPage extends StatefulWidget {
-  const MyBookingPage({Key? key}) : super(key: key);
+class DiscoverPage extends StatefulWidget {
+  const DiscoverPage({Key? key}) : super(key: key);
 
   @override
-  State<MyBookingPage> createState() => _MyBookingPageState();
+  State<DiscoverPage> createState() => _DiscoverPageState();
 }
 
-class _MyBookingPageState extends State<MyBookingPage>
+class _DiscoverPageState extends State<DiscoverPage>
     with SingleTickerProviderStateMixin {
   ConstWidgets constWidgets = ConstWidgets();
+
+  String searchText = '';
+
+  TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
@@ -47,69 +52,58 @@ class _MyBookingPageState extends State<MyBookingPage>
         headerSliverBuilder: (context, value) {
           return [
             SliverToBoxAdapter(
-                child: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-                  width: width,
-                  height: 60,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      constWidgets.textWidget(
-                          "Discover", FontWeight.w700, 24, Colors.black),
-                      IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.add_road,
-                            size: 24.0,
-                            color: ConstColors.darkColor,
-                          ))
-                    ],
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+                    width: width,
+                    height: 60,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        constWidgets.textWidget(
+                            "Discover", FontWeight.w700, 24, Colors.black),
+                        IconButton(
+                            onPressed: () {},
+                            icon: const Icon(
+                              Icons.add_road,
+                              size: 24.0,
+                              color: ConstColors.darkColor,
+                            ))
+                      ],
+                    ),
                   ),
-                ),
-                Container(
+                  Container(
                     padding: const EdgeInsets.all(15),
                     width: width,
                     child: Container(
                       height: 50,
                       padding: const EdgeInsets.all(5),
                       decoration: BoxDecoration(
-                          color: ConstColors.searchBoxColor,
-                          border: Border.all(
-                              color: ConstColors.widgetDividerColor,
-                              width: 1.0),
-                          borderRadius: BorderRadius.circular(50)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                const Icon(Icons.search,
-                                    size: 22, color: ConstColors.lightColor),
-                                const SizedBox(
-                                  width: 15,
-                                ),
-                                SizedBox(
-                                  child: constWidgets.textWidget(
-                                      "Search",
-                                      FontWeight.w500,
-                                      12,
-                                      ConstColors.searchBoxHighlightColor),
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
+                        color: ConstColors.searchBoxColor,
+                        border: Border.all(
+                            color: ConstColors.widgetDividerColor, width: 1.0),
+                        borderRadius: BorderRadius.circular(50),
                       ),
-                    ))
-              ],
-            )),
+                      child: TextFormField(
+                        controller: searchController,
+                        onChanged: (value) {
+                          setState(() {
+                            searchText = value;
+                          });
+                        },
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.search),
+                          hintText: "Search",
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
           ];
         },
         body: _descriptionWidget(),
@@ -137,10 +131,19 @@ class _MyBookingPageState extends State<MyBookingPage>
               itemCount: snapshot.data.docs.length,
               itemBuilder: (context, index) {
                 var fetchData = snapshot.data.docs[index];
+                // if (searchText.isNotEmpty) {
+                //   fetchData = fetchData.where((element) {
+                //     return element
+                //         .get('propertyName')
+                //         .toString()
+                //         .toLowerCase()
+                //         .contains(searchText.toLowerCase());
+                //   }).toList();
+                // }
                 return WishListItemWidget(
                     onTap: () {
                       if (GetStorageServices.getUserLoggedInStatus() == true) {
-                        Get.to(() => EventDetailsPage(
+                        Get.to(() => PropertyDetailsPage(
                               fetchData: fetchData,
                             ));
                       } else {
@@ -151,7 +154,7 @@ class _MyBookingPageState extends State<MyBookingPage>
               },
             );
           } else {
-            return CircularProgressIndicator();
+            return WishListShimmer();
           }
         },
       )),
