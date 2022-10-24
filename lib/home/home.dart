@@ -548,6 +548,7 @@ class _HomePageState extends State<HomePage>
                       "Telephone no", FontWeight.w500, 16, Colors.black),
                   const SizedBox(height: 10.0),
                   TextField(
+                    keyboardType: TextInputType.number,
                     controller: _phoneController,
                     decoration: InputDecoration(
                         contentPadding: const EdgeInsets.all(8.0),
@@ -567,6 +568,7 @@ class _HomePageState extends State<HomePage>
                       "Postcode", FontWeight.w500, 16, Colors.black),
                   const SizedBox(height: 10.0),
                   TextField(
+                    keyboardType: TextInputType.number,
                     controller: _pastCodeController,
                     decoration: InputDecoration(
                         contentPadding: const EdgeInsets.all(8.0),
@@ -587,20 +589,32 @@ class _HomePageState extends State<HomePage>
                           _emailController.text.isNotEmpty &&
                           _phoneController.text.isNotEmpty &&
                           _pastCodeController.text.isNotEmpty) {
-                        progress.show();
-                        await FirebaseFirestore.instance
-                            .collection('All_User_Details')
-                            .doc('${GetStorageServices.getToken()}')
-                            .update({
-                          "is_check_valuation": true,
-                          "get_a_free_valuation": {
-                            'to_sell & to_let': gender,
-                            'full_name': _fullNameController.text.toString(),
-                            "email": _emailController.text.toString(),
-                            "phone_number": _phoneController.text.toString(),
-                            "postcode": _pastCodeController.text
-                          }
-                        });
+                        bool emailValid = RegExp(
+                                r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
+                            .hasMatch(_emailController.text);
+                        if (emailValid == true) {
+                          progress.show();
+                          await FirebaseFirestore.instance
+                              .collection('All_User_Details')
+                              .doc('${GetStorageServices.getToken()}')
+                              .update({
+                            "is_check_valuation": true,
+                            "get_a_free_valuation": {
+                              'to_sell & to_let': gender,
+                              'full_name': _fullNameController.text.toString(),
+                              "email": _emailController.text.toString(),
+                              "phone_number": _phoneController.text.toString(),
+                              "postcode": _pastCodeController.text
+                            }
+                          });
+                        } else {
+                          CommonWidget.getSnackBar(
+                              color: Colors.red,
+                              duration: 2,
+                              title: 'Invalid Email',
+                              message: 'Please Enter Valid Email');
+                        }
+
                         setState(() {});
 
                         progress.dismiss();
@@ -702,6 +716,7 @@ class _HomePageState extends State<HomePage>
                       "Telephone no", FontWeight.w500, 16, Colors.black),
                   const SizedBox(height: 10.0),
                   TextField(
+                    keyboardType: TextInputType.number,
                     controller: _phoneController1,
                     decoration: InputDecoration(
                         contentPadding: const EdgeInsets.all(8.0),
@@ -741,19 +756,30 @@ class _HomePageState extends State<HomePage>
                           _emailController1.text.isNotEmpty &&
                           _phoneController1.text.isNotEmpty &&
                           _messageController1.text.isNotEmpty) {
-                        progress.show();
-                        await FirebaseFirestore.instance
-                            .collection('All_User_Details')
-                            .doc('${GetStorageServices.getToken()}')
-                            .update({
-                          "is_check_mortgage": true,
-                          "free_martgage_check": {
-                            'full_name': _fullNameController1.text.toString(),
-                            "email": _emailController1.text.toString(),
-                            "phone_number": _phoneController1.text.toString(),
-                            "postcode": _messageController1.text
-                          }
-                        });
+                        bool emailValid = RegExp(
+                                r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
+                            .hasMatch(_emailController1.text);
+                        if (emailValid == true) {
+                          progress.show();
+                          await FirebaseFirestore.instance
+                              .collection('All_User_Details')
+                              .doc('${GetStorageServices.getToken()}')
+                              .update({
+                            "is_check_mortgage": true,
+                            "free_martgage_check": {
+                              'full_name': _fullNameController1.text.toString(),
+                              "email": _emailController1.text.toString(),
+                              "phone_number": _phoneController1.text.toString(),
+                              "postcode": _messageController1.text
+                            }
+                          });
+                        } else {
+                          CommonWidget.getSnackBar(
+                              color: Colors.red,
+                              duration: 2,
+                              title: 'Invalid Email',
+                              message: 'Please Enter Valid Email');
+                        }
                         progress.dismiss();
 
                         setState(() {});
