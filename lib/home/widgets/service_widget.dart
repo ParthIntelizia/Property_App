@@ -49,7 +49,7 @@ class _ServicesState extends State<Services> {
                     topLeft: Radius.circular(10)),
                 child: SizedBox(
                   height: 200,
-                  width: 200,
+                  //   width: 200,
                   child: Image.network(
                     widget.image,
                     fit: BoxFit.fill,
