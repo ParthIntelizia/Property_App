@@ -8,6 +8,7 @@ import '../providers/navbar_provider.dart';
 import '../services/locator_service.dart';
 import 'discover_page.dart';
 import 'my_wish_list_page.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class BottomNavigationBarScreen extends StatefulWidget {
   const BottomNavigationBarScreen({Key? key}) : super(key: key);
@@ -105,17 +106,21 @@ class _BottomNavigationBarState extends State<BottomNavigationBarScreen>
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
                       IconButton(
-                          icon: Image.asset('assets/icons/home_tab.png',
+                          icon: SvgPicture.asset('assets/icons/home.svg',
+                              height: 23,
+                              width: 23,
                               color: indexCounter == 0
                                   ? ConstColors.darkColor
                                   : Colors.grey),
-                          iconSize: 16,
+                          iconSize: 22,
                           onPressed: () {
                             setNavBarIndex(context, 0);
                           }),
                       IconButton(
-                          iconSize: 20,
-                          icon: Image.asset('assets/icons/wish_list.png',
+                          iconSize: 22,
+                          icon: SvgPicture.asset('assets/icons/favourite.svg',
+                              height: 26,
+                              width: 26,
                               color: indexCounter == 1
                                   ? ConstColors.darkColor
                                   : Colors.grey),
@@ -123,8 +128,10 @@ class _BottomNavigationBarState extends State<BottomNavigationBarScreen>
                             setNavBarIndex(context, 1);
                           }),
                       IconButton(
-                          iconSize: 20,
-                          icon: Image.asset('assets/icons/service_nav.png',
+                          iconSize: 22,
+                          icon: SvgPicture.asset('assets/icons/services.svg',
+                              height: 23,
+                              width: 23,
                               color: indexCounter == 2
                                   ? ConstColors.darkColor
                                   : Colors.grey),
@@ -132,8 +139,10 @@ class _BottomNavigationBarState extends State<BottomNavigationBarScreen>
                             setNavBarIndex(context, 2);
                           }),
                       IconButton(
-                          iconSize: 20,
-                          icon: Image.asset('assets/icons/search.png',
+                          iconSize: 22,
+                          icon: SvgPicture.asset('assets/icons/search.svg',
+                              height: 24,
+                              width: 24,
                               color: indexCounter == 3
                                   ? ConstColors.darkColor
                                   : Colors.grey),
@@ -141,8 +150,10 @@ class _BottomNavigationBarState extends State<BottomNavigationBarScreen>
                             setNavBarIndex(context, 3);
                           }),
                       IconButton(
-                          iconSize: 20,
-                          icon: Image.asset('assets/icons/profile_tab.png',
+                          iconSize: 22,
+                          icon: SvgPicture.asset('assets/icons/profile.svg',
+                              height: 23,
+                              width: 23,
                               color: indexCounter == 4
                                   ? ConstColors.darkColor
                                   : Colors.grey),
