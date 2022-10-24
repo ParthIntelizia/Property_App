@@ -16,6 +16,8 @@ import '../models/service_model.dart';
 import '../models/wish_list_model.dart';
 import '../pages/authentication/signin.dart';
 import '../pages/property_details_screen.dart';
+import '../utils/category_shimmer.dart';
+import '../utils/properties_shimmer.dart';
 import 'widgets/search_widget.dart';
 import 'widgets/service_widget.dart';
 
@@ -115,9 +117,11 @@ class _HomePageState extends State<HomePage>
               InkWell(
                 onTap: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const SearchScreen()));
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SearchScreen(),
+                    ),
+                  );
                 },
                 child: const SearchWidget(
                     title: "Search",
@@ -199,7 +203,7 @@ class _HomePageState extends State<HomePage>
                           ),
                         );
                 } else {
-                  return CircularProgressIndicator();
+                  return CategoryShimmer();
                 }
               } catch (e) {
                 return SizedBox();
@@ -361,7 +365,7 @@ class _HomePageState extends State<HomePage>
                 return SizedBox();
               }
             } else {
-              return CircularProgressIndicator();
+              return PropertiesShimmer();
             }
           },
         ));
@@ -428,7 +432,7 @@ class _HomePageState extends State<HomePage>
                                 wishListItemModel: fetchMenData);
                           });
                     } else {
-                      return const CircularProgressIndicator();
+                      return CategoryShimmer();
                     }
                   } catch (e) {
                     return SizedBox();
