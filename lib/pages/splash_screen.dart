@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:luxepass/constants/constant_colors.dart';
 import 'package:get/get.dart';
+import 'package:luxepass/get_storage_services/get_storage_service.dart';
 import '../utils/navigator.dart';
 import 'authentication/signin.dart';
 
@@ -17,7 +18,11 @@ class _SplashState extends State<Splash> {
   void initState() {
     super.initState();
     Timer(const Duration(seconds: 3), () {
-      MyNavigator.goToHome(context);
+      if (GetStorageServices.getUserLoggedInStatus() == true) {
+        MyNavigator.goToHome(context);
+      } else {
+        Get.to(() => SignInScreen());
+      }
     });
   }
 

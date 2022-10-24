@@ -164,8 +164,12 @@ class _HomePageState extends State<HomePage>
                                     decoration: BoxDecoration(
                                         color: ConstColors.searchBoxColor,
                                         border: Border.all(
-                                            color:
-                                                ConstColors.widgetDividerColor,
+                                            color: showCategoryWiseData ==
+                                                    fetchCategory[
+                                                        'category_name']
+                                                ? ConstColors.lightColor
+                                                : ConstColors
+                                                    .widgetDividerColor,
                                             width: 1.0),
                                         borderRadius:
                                             BorderRadius.circular(50)),
