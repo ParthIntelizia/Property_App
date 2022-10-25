@@ -173,7 +173,6 @@ class _EmailEntryScreenState extends State<EmailEntryScreen> {
     );
   }
 
-
   validateEmail(
     String emailID,
   ) {

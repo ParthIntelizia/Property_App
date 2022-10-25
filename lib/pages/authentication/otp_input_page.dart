@@ -12,6 +12,11 @@ import '../../home/home.dart';
 import '../../utils/navigator.dart';
 import 'package:get/get.dart';
 
+enum MobileVerificationState {
+  SHOW_MOBILE_FORM_STATE,
+  SHOW_OTP_FORM_STATE,
+}
+
 class OTPInputScreen extends StatefulWidget {
   final String emailOrPhoneText;
   final String verificationId;
@@ -34,7 +39,8 @@ class OTPInputScreen extends StatefulWidget {
 class _OTPInputScreenState extends State<OTPInputScreen> {
   bool isTrue = false;
   String? verificationCode;
-
+  MobileVerificationState currentState =
+      MobileVerificationState.SHOW_MOBILE_FORM_STATE;
   FirebaseAuth _auth = FirebaseAuth.instance;
 
   String countryCode = "+1";
@@ -143,13 +149,17 @@ class _OTPInputScreenState extends State<OTPInputScreen> {
                               print(
                                   'code length verificationCode ${verificationCode.length}');
                               if (verificationCode.length == 6) {
-                                PhoneAuthCredential phoneAuthCredential =
-                                    PhoneAuthProvider.credential(
-                                        verificationId: widget.verificationId,
-                                        smsCode: verificationCode);
-                                signInWithPhoneAuthCredential(
-                                    progress: progress,
-                                    phoneAuthCredential: phoneAuthCredential);
+                                if (widget.isEmail) {
+                                  print('is Email');
+                                } else {
+                                  PhoneAuthCredential phoneAuthCredential =
+                                      PhoneAuthProvider.credential(
+                                          verificationId: widget.verificationId,
+                                          smsCode: verificationCode);
+                                  signInWithPhoneAuthCredential(
+                                      progress: progress,
+                                      phoneAuthCredential: phoneAuthCredential);
+                                }
                               }
                             }, // end onSubmit
                           ),
@@ -159,7 +169,7 @@ class _OTPInputScreenState extends State<OTPInputScreen> {
                               const EdgeInsets.fromLTRB(30.0, 10.0, 30.0, 10.0),
                           child: widget.isEmail
                               ? const Text(
-                                  "Text you a 4 digit code on your email-id",
+                                  "Text you a 6 digit code on your email-id",
                                   style: TextStyle(
                                       color: Colors.grey,
                                       letterSpacing: 1,
@@ -167,7 +177,7 @@ class _OTPInputScreenState extends State<OTPInputScreen> {
                                       fontWeight: FontWeight.w400),
                                 )
                               : const Text(
-                                  "Text you a 4 digit code on your phone number",
+                                  "Text you a 6 digit code on your phone number",
                                   style: TextStyle(
                                       color: Colors.grey,
                                       letterSpacing: 1,
@@ -193,7 +203,9 @@ class _OTPInputScreenState extends State<OTPInputScreen> {
                           ),
                         ),
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            Get.back();
+                          },
                           child: Container(
                             margin: const EdgeInsets.fromLTRB(
                                 30.0, 20.0, 30.0, 10.0),
@@ -231,7 +243,11 @@ class _OTPInputScreenState extends State<OTPInputScreen> {
 
       if (authCredential.user != null) {
         String uid = _auth.currentUser!.uid.toString();
+
         print('---------uid in current user $uid');
+        print(
+            '---------uid in- displayName  user ${_auth.currentUser!.displayName}');
+        GetStorageServices.setLoginValue('${widget.emailOrPhoneText}');
         GetStorageServices.setToken(uid);
         GetStorageServices.setUserLoggedIn();
         CommonMethode.likeFiledAdd();
@@ -259,19 +275,54 @@ class _OTPInputScreenState extends State<OTPInputScreen> {
   }
 
   resendOTP() async {
-    try {
-      if (widget.isEmail) {
-        // var response = await authRepository.validateEmailID(widget.emailID);
-        // showToast("Text you a 4 digit code on your email-id", Colors.black);
-        // widget.otpResponseModel=response;
-      } else {
-        // var response = await authRepository.validatePhoneNumber(widget.emailID);
-        // showToast("Text you a 4 digit code on your phone number", Colors.black);
-        // widget.otpResponseModel=response;
-      }
-    } catch (e) {
-      showToast(e.toString(), Colors.black);
-    }
+    // try {
+    //   if (widget.isEmail) {
+    //     // var response = await authRepository.validateEmailID(widget.emailID);
+    //     // showToast("Text you a 4 digit code on your email-id", Colors.black);
+    //     // widget.otpResponseModel=response;
+    //   } else {
+    //     // var response = await authRepository.validatePhoneNumber(widget.emailID);
+    //     // showToast("Text you a 4 digit code on your phone number", Colors.black);
+    //     // widget.otpResponseModel=response;
+    //     progress.show();
+    //
+    //     await _auth.verifyPhoneNumber(
+    //       phoneNumber: widget.emailOrPhoneText,
+    //       verificationCompleted: (phoneAuthCredential) async {
+    //         progress.dismiss();
+    //       },
+    //       verificationFailed: (verificationFailed) async {
+    //         progress.dismiss();
+    //
+    //         print('----verificationFailed---${verificationFailed.message}');
+    //         CommonWidget.getSnackBar(
+    //           message: verificationFailed.message!,
+    //           title: 'Failed',
+    //           duration: 2,
+    //           color: Colors.red,
+    //         );
+    //       },
+    //       codeSent: (verificationId, resendingToken) async {
+    //         setState(() {
+    //           //  showLoading = false;
+    //           currentState = MobileVerificationState.SHOW_OTP_FORM_STATE;
+    //           this.verificationId = verificationId;
+    //
+    //           Get.to(OTPInputScreen(
+    //             isEmail: false,
+    //             emailOrPhoneText:
+    //             seletedCountry.dial_code + numberController.text,
+    //             verificationId: verificationId,
+    //           ));
+    //           progress.dismiss();
+    //         });
+    //       },
+    //       codeAutoRetrievalTimeout: (verificationId) async {},
+    //     );
+    //   }
+    // } catch (e) {
+    //   showToast(e.toString(), Colors.black);
+    // }
   }
 
   fetchUserDetails() async {
