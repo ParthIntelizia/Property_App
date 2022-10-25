@@ -20,14 +20,77 @@ class DiscoverPage extends StatefulWidget {
 class _DiscoverPageState extends State<DiscoverPage>
     with SingleTickerProviderStateMixin {
   ConstWidgets constWidgets = ConstWidgets();
+  ScrollController _scrollController = ScrollController();
+  bool hasMore = true; // flag for more products available or not
+  bool isLoading = false;
+  List<DocumentSnapshot> products = []; // stores fetched products
 
-  String searchText = '';
-
-  TextEditingController searchController = TextEditingController();
-
+  int documentLimit = 10; // documents to be fetched per request
+  TextEditingController _searchController = TextEditingController();
+  DocumentSnapshot? lastDocument;
   @override
   void initState() {
+    _scrollController.addListener(() {
+      double maxScroll = _scrollController.position.maxScrollExtent;
+      double currentScroll = _scrollController.position.pixels;
+      double delta = MediaQuery.of(context).size.height * 0.20;
+      if (maxScroll - currentScroll <= delta) {
+        getProducts();
+      }
+    });
+
+    getProducts();
     super.initState();
+  }
+
+  getProducts() async {
+    try {
+      if (!hasMore) {
+        return;
+      }
+      if (isLoading) {
+        return;
+      }
+      setState(() {
+        isLoading = true;
+      });
+      // FirebaseFirestore.instance
+      //     .collection('Admin')
+      //     .doc('all_properties')
+      //     .collection('property_data')
+      //     .orderBy('create_time', descending: true)
+      QuerySnapshot querySnapshot;
+      if (lastDocument == null) {
+        querySnapshot = await FirebaseFirestore.instance
+            .collection('Admin')
+            .doc('all_properties')
+            .collection('property_data')
+            .orderBy('create_time', descending: true)
+            .limit(documentLimit)
+            .get();
+      } else {
+        querySnapshot = await FirebaseFirestore.instance
+            .collection('Admin')
+            .doc('all_properties')
+            .collection('property_data')
+            .orderBy('create_time', descending: true)
+            .startAfterDocument(lastDocument!)
+            .limit(documentLimit)
+            .get();
+      }
+      if (querySnapshot.docs.length < documentLimit) {
+        hasMore = false;
+      }
+      lastDocument = querySnapshot.docs[querySnapshot.docs.length - 1];
+      products.addAll(querySnapshot.docs);
+      setState(() {
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -115,49 +178,70 @@ class _DiscoverPageState extends State<DiscoverPage>
     return Container(
       padding: const EdgeInsets.all(15.0),
       width: MediaQuery.of(context).size.width - 30,
-      child: SingleChildScrollView(
-          child: FutureBuilder(
-        future: FirebaseFirestore.instance
-            .collection('Admin')
-            .doc('all_properties')
-            .collection('property_data')
-            .orderBy('create_time', descending: true)
-            .get(),
-        builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: snapshot.data.docs.length,
-              itemBuilder: (context, index) {
-                var fetchData = snapshot.data.docs[index];
-                // if (searchText.isNotEmpty) {
-                //   fetchData = fetchData.where((element) {
-                //     return element
-                //         .get('propertyName')
-                //         .toString()
-                //         .toLowerCase()
-                //         .contains(searchText.toLowerCase());
-                //   }).toList();
-                // }
-                return WishListItemWidget(
-                    onTap: () {
-                      if (GetStorageServices.getUserLoggedInStatus() == true) {
-                        Get.to(() => PropertyDetailsPage(
-                              fetchData: fetchData,
-                            ));
-                      } else {
-                        Get.to(() => const SignInScreen());
-                      }
+      child: _searchController.text.isNotEmpty
+          ? FutureBuilder(
+              future: FirebaseFirestore.instance
+                  .collection('Admin')
+                  .doc('all_properties')
+                  .collection('property_data')
+                  .where('propertyName',
+                      isGreaterThanOrEqualTo:
+                          _searchController.text.toLowerCase().toString())
+                  .get(),
+              builder: (context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: snapshot.data.docs.length,
+                    itemBuilder: (context, index) {
+                      var fetchData = snapshot.data.docs[index];
+                      return WishListItemWidget(
+                          onTap: () {
+                            if (GetStorageServices.getUserLoggedInStatus() ==
+                                true) {
+                              Get.to(() => EventDetailsPage(
+                                    fetchData: fetchData,
+                                  ));
+                            } else {
+                              Get.to(() => const SignInScreen());
+                            }
+                          },
+                          wishListItemModel: fetchData);
                     },
-                    wishListItemModel: fetchData);
+                  );
+                } else {
+                  return CircularProgressIndicator();
+                }
               },
-            );
-          } else {
-            return WishListShimmer();
-          }
-        },
-      )),
+            )
+          : products.length == 0
+              ? Expanded(
+                  child: Center(
+                    child: Text('okokokoko'),
+                  ),
+                )
+              : ListView.builder(
+                  controller: _scrollController,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: products.length,
+                  itemBuilder: (context, index) {
+                    var fetchData = products[index];
+                    return WishListItemWidget(
+                        onTap: () {
+                          if (GetStorageServices.getUserLoggedInStatus() ==
+                              true) {
+                            Get.to(() => EventDetailsPage(
+                                  fetchData: fetchData,
+                                ));
+                          } else {
+                            Get.to(() => const SignInScreen());
+                          }
+                        },
+                        wishListItemModel: fetchData);
+                  },
+                ),
     );
   }
 }

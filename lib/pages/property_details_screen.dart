@@ -465,11 +465,8 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(top: 10.0),
-                                child: constWidgets.textWidget(
-                                    "${fetchData['isParkingAvailable']}",
-                                    FontWeight.w500,
-                                    10,
-                                    Colors.grey),
+                                child: constWidgets.textWidget("Parking",
+                                    FontWeight.w500, 10, Colors.grey),
                               )
                             ],
                           ))

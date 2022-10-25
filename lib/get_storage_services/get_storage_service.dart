@@ -2,6 +2,9 @@ import 'package:get_storage/get_storage.dart';
 
 class GetStorageServices {
   static GetStorage getStorage = GetStorage();
+  static clearStorage() {
+    getStorage.erase();
+  }
 
   static setUserName({required String username}) {
     getStorage.write('username', username);
@@ -26,5 +29,14 @@ class GetStorageServices {
 
   static getToken() {
     return getStorage.read('token');
+  }
+
+  /// login value
+  static setLoginValue(String LoginValue) {
+    getStorage.write('setLoginValue', LoginValue);
+  }
+
+  static getLoginValue() {
+    return getStorage.read('setLoginValue');
   }
 }

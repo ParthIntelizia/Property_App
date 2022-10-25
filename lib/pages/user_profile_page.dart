@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:luxepass/constants/const_variables.dart';
+import 'package:luxepass/get_storage_services/get_storage_service.dart';
 import 'package:luxepass/providers/my_booking_provider.dart';
 import 'package:provider/provider.dart';
 import '../../constants/constant_colors.dart';
@@ -58,7 +60,7 @@ class _UserProfilePageState extends State<UserProfilePage>
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   constWidgets.textWidget(
-                      "Profile", FontWeight.w600, 20, Colors.black),
+                      "Profile ", FontWeight.w600, 20, Colors.black),
                   IconButton(
                       onPressed: () {},
                       icon: const Icon(
@@ -85,8 +87,11 @@ class _UserProfilePageState extends State<UserProfilePage>
                           minRadius: 30,
                           backgroundImage: AssetImage('assets/profilepic.jpg')),
                       Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: constWidgets.textWidget("", FontWeight.w600, 20,
+                        padding: const EdgeInsets.only(left: 8.0, top: 2),
+                        child: constWidgets.textWidget(
+                            "${GetStorageServices.getLoginValue()}",
+                            FontWeight.w600,
+                            20,
                             ConstColors.userTitleColor),
                       ),
                     ],
@@ -251,6 +256,10 @@ class _UserProfilePageState extends State<UserProfilePage>
 
   logOut() async {
     FacebookAuth.instance.logOut();
+
+    GetStorageServices.clearStorage();
+    await FirebaseAuth.instance.signOut();
+
     locator<NavBarIndex>().setTabCount(0);
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => const SignInScreen()));
