@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -536,14 +537,24 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   _performLogin() async {
-    FacebookAuth.instance
-        .login(permissions: ["public_profile", "email"]).then((value) {
-      FacebookAuth.instance.getUserData().then((user) {
+    final LoginResult loginResult = await FacebookAuth.instance
+        .login(permissions: ["public_profile", "email"]);
+
+    // Create a credential from the access token
+    final OAuthCredential facebookAuthCredential =
+        FacebookAuthProvider.credential(loginResult.accessToken!.token);
+
+    // Once signed in, return the UserCredential
+    FirebaseAuth.instance
+        .signInWithCredential(facebookAuthCredential)
+        .then((value) {
+      if (value.user != null) {
+        GetStorageServices.setToken(FirebaseAuth.instance.currentUser!.uid);
+        GetStorageServices.setUserLoggedIn();
+        log('Token===>>${GetStorageServices.getToken()}');
+        CommonMethode.likeFiledAdd();
         goToMyLocationPage();
-      });
-      GetStorageServices.setToken(FirebaseAuth.instance.currentUser!.uid);
-      GetStorageServices.setUserLoggedIn();
-      CommonMethode.likeFiledAdd();
+      }
     });
   }
 }

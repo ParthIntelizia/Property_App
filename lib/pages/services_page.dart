@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:luxepass/constants/const_variables.dart';
 import 'package:luxepass/pages/service_inquery_page.dart';
@@ -43,17 +42,13 @@ class _ServicesPageState extends State<ServicesPage>
   ];
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-      backgroundColor: ConstColors.backgroundColor,
-      body: _body(),
-    ));
+      child: Scaffold(
+        backgroundColor: ConstColors.backgroundColor,
+        body: _body(),
+      ),
+    );
   }
 
   Widget _body() {

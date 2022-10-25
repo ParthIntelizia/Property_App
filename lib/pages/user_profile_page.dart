@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:luxepass/constants/const_variables.dart';
 import 'package:luxepass/providers/my_booking_provider.dart';
 import 'package:provider/provider.dart';
@@ -248,7 +249,8 @@ class _UserProfilePageState extends State<UserProfilePage>
     );
   }
 
-  logOut() {
+  logOut() async {
+    FacebookAuth.instance.logOut();
     locator<NavBarIndex>().setTabCount(0);
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => const SignInScreen()));
