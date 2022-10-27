@@ -102,15 +102,18 @@ class _OTPInputScreenState extends State<OTPInputScreen> {
                           child: Align(
                             alignment: Alignment.topLeft,
                             child: ElevatedButton.icon(
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                      ConstColors.darkColor)),
                               icon: const Icon(
                                 Icons.arrow_back_ios,
-                                color: Color(0xff66B3B3),
+                                color: Colors.white,
                               ),
                               //`Icon` to display
                               label: const Text(
                                 'Back',
                                 style: TextStyle(
-                                    color: Colors.black, fontSize: 16),
+                                    color: Colors.white, fontSize: 16),
                               ),
                               //`Text` to display
                               onPressed: () {

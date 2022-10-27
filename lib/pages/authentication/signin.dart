@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:country_codes/country_codes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -32,6 +33,16 @@ class _SignInScreenState extends State<SignInScreen> {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+  String? countryCode;
+
+  getCountryCode() async {
+    await CountryCodes.init();
+
+    final CountryDetails details = CountryCodes.detailsForLocale();
+    countryCode = details.dialCode;
+    setState(() {});
+    print(details.dialCode); // Displays the dial code, for example +1.
+  }
 
   bool isSignIn = false;
   bool google = false;
@@ -40,12 +51,8 @@ class _SignInScreenState extends State<SignInScreen> {
   void initState() {
     // TODO: implement initState
 
-    seletedCountry = CountryModel("India", "🇮🇳", "IN", "+91");
     super.initState();
-    if (Platform.isIOS) {
-      //check for ios if developing for both android & ios
-
-    }
+    getCountryCode();
   }
 
   @override
@@ -298,76 +305,53 @@ class _SignInScreenState extends State<SignInScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Expanded(
-                      flex: 2,
-                      child: Container(
-                        margin: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-                        height: 50.0,
-                        child: seletedCountry != null
-                            ? Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Text(
-                                    seletedCountry.flag,
-                                    style: const TextStyle(
-                                      fontSize: 30,
-                                    ),
-                                  ),
-                                  Text(
-                                    seletedCountry.dial_code,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                    ),
-                                  )
-                                ],
-                              )
-                            : const SizedBox(),
-                      ),
+                    Text(
+                      countryCode ?? "",
+                      style: TextStyle(color: ConstColors.darkColor),
+                    ),
+                    SizedBox(
+                      width: 10,
                     ),
                     Expanded(
-                      flex: 6,
-                      child: SizedBox(
-                        height: 50.0,
-                        child: TextField(
-                            controller: numberController,
-                            enabled: false,
-                            maxLength: 12,
-                            style: const TextStyle(
-                                color: Color(0xff008080),
-                                fontSize: 14,
-                                fontStyle: FontStyle.normal,
-                                letterSpacing: 1),
-                            keyboardType: TextInputType.none,
-                            decoration: const InputDecoration(
-                              hintText: 'Continue with mobile number',
-                              contentPadding: EdgeInsets.all(10.0),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.grey, width: 1),
-                              ),
-                              // Focused Border
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: ConstColors.lightColor, width: 1),
-                              ),
-                              // Error Border
-                              errorBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: ConstColors.lightColor, width: 1),
-                              ),
-                              // Focused Error Border
-                              focusedErrorBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: ConstColors.lightColor, width: 1),
-                              ),
-                              hintStyle: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 14,
-                                  fontStyle: FontStyle.normal),
+                      child: TextField(
+                          controller: numberController,
+                          enabled: false,
+                          maxLength: 12,
+                          style: const TextStyle(
+                              color: Color(0xff008080),
+                              fontSize: 14,
+                              fontStyle: FontStyle.normal,
+                              letterSpacing: 1),
+                          keyboardType: TextInputType.none,
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Continue with mobile number',
+                            contentPadding: EdgeInsets.all(10.0),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.grey, width: 1),
                             ),
-                            onChanged: (String value) {}),
-                      ),
+                            // Focused Border
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: ConstColors.lightColor, width: 1),
+                            ),
+                            // Error Border
+                            errorBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: ConstColors.lightColor, width: 1),
+                            ),
+                            // Focused Error Border
+                            focusedErrorBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: ConstColors.lightColor, width: 1),
+                            ),
+                            hintStyle: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 14,
+                                fontStyle: FontStyle.normal),
+                          ),
+                          onChanged: (String value) {}),
                     )
                   ],
                 ),

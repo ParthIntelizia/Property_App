@@ -77,15 +77,18 @@ class _EmailEntryScreenState extends State<EmailEntryScreen> {
                         child: Align(
                           alignment: Alignment.topLeft,
                           child: ElevatedButton.icon(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    ConstColors.darkColor)),
                             icon: const Icon(
                               Icons.arrow_back_ios,
-                              color: ConstColors.lightColor,
+                              color: Colors.white,
                             ),
                             //`Icon` to display
                             label: const Text(
                               'Back',
                               style:
-                                  TextStyle(color: Colors.black, fontSize: 16),
+                                  TextStyle(color: Colors.white, fontSize: 16),
                             ),
                             //`Text` to display
                             onPressed: () {
@@ -109,7 +112,7 @@ class _EmailEntryScreenState extends State<EmailEntryScreen> {
                                 enabled: true,
                                 maxLength: 50,
                                 style: const TextStyle(
-                                    color: Colors.black,
+                                    color: ConstColors.darkColor,
                                     fontSize: 14,
                                     fontStyle: FontStyle.normal,
                                     letterSpacing: 1),

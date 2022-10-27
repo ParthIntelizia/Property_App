@@ -35,8 +35,10 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child:
-          Scaffold(backgroundColor: ConstColors.backgroundColor, body: _body()),
+      child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: ConstColors.backgroundColor,
+          body: _body()),
     );
   }
 
@@ -90,16 +92,20 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
                             borderRadius: BorderRadius.circular(500),
                             child: Image.file(image!, fit: BoxFit.cover)),
                   ),
-                  CircleAvatar(
-                      backgroundColor: ConstColors.darkColor,
-                      child: IconButton(
-                          onPressed: () {
-                            showDialogWidget();
-                          },
-                          icon: Icon(
-                            Icons.edit,
-                            color: Colors.white,
-                          )))
+                  Positioned(
+                    //bottom: 20,
+                    right: 10,
+                    child: CircleAvatar(
+                        backgroundColor: ConstColors.darkColor,
+                        child: IconButton(
+                            onPressed: () {
+                              showDialogWidget();
+                            },
+                            icon: Icon(
+                              Icons.edit,
+                              color: Colors.white,
+                            ))),
+                  )
                 ],
               ),
               SizedBox(
@@ -127,7 +133,7 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
                     borderRadius: BorderRadius.circular(10)),
                 margin: const EdgeInsets.all(10.0),
                 child: Center(
-                  child: GestureDetector(
+                  child: InkWell(
                     //`Icon` to display
                     child: Text(
                       'Next',
