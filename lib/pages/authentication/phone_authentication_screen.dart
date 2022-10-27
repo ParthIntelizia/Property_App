@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:country_codes/country_codes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,8 +9,6 @@ import 'package:get/get.dart';
 import '../../constants/common_widget.dart';
 import '../../constants/const_variables.dart';
 import '../../constants/constant_colors.dart';
-import '../../models/CountryModel.dart';
-import '../../models/send_otp_reponse_model.dart';
 import 'otp_input_page.dart';
 
 enum MobileVerificationState {
@@ -30,7 +29,6 @@ class PhoneAuthenticationScreen extends StatefulWidget {
 class _PhoneAuthenticationScreenState extends State<PhoneAuthenticationScreen> {
   bool isTrue = false;
   dynamic resendToken;
-  String countryCode = "+1";
   TextEditingController numberController = new TextEditingController();
   TextEditingController searchTextEditing = new TextEditingController();
 
@@ -43,36 +41,29 @@ class _PhoneAuthenticationScreenState extends State<PhoneAuthenticationScreen> {
   String lastStatus = "";
   String _currentLocaleId = "";
 
-  List<CountryModel> _searchResult = [];
-  List<CountryModel> _countryList = [];
   FirebaseAuth _auth = FirebaseAuth.instance;
 
-  late CountryModel seletedCountry;
   MobileVerificationState currentState =
       MobileVerificationState.SHOW_MOBILE_FORM_STATE;
   bool isObscured = true;
   String? verificationId;
   bool? emailValid;
+  String? countryCode;
   // AuthRepository authRepository=AuthRepository();
+  getCountryCode() async {
+    await CountryCodes.init();
+
+    final CountryDetails details = CountryCodes.detailsForLocale();
+    countryCode = details.dialCode;
+    setState(() {});
+    print(details.dialCode); // Displays the dial code, for example +1.
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    seletedCountry = CountryModel("India", "🇮🇳", "IN", "+91");
-    loadCountry().then((value) {
-      _countryList = value;
-      if (_countryList.isNotEmpty) {
-        setState(() {
-          if (_currentLocaleId == "en_IN") {
-            seletedCountry = _countryList[1];
-          } else {
-            seletedCountry = _countryList[0];
-          }
-        });
-      }
-    });
+    getCountryCode();
   }
 
   @override
@@ -107,15 +98,18 @@ class _PhoneAuthenticationScreenState extends State<PhoneAuthenticationScreen> {
                           child: Align(
                             alignment: Alignment.topLeft,
                             child: ElevatedButton.icon(
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                      ConstColors.darkColor)),
                               icon: const Icon(
                                 Icons.arrow_back_ios,
-                                color: Color(0xff66B3B3),
+                                color: Colors.white,
                               ),
                               //`Icon` to display
                               label: const Text(
                                 'Back',
                                 style: TextStyle(
-                                    color: Colors.black, fontSize: 16),
+                                    color: Colors.white, fontSize: 16),
                               ),
                               //`Text` to display
                               onPressed: () {
@@ -136,112 +130,68 @@ class _PhoneAuthenticationScreenState extends State<PhoneAuthenticationScreen> {
                                 fontWeight: FontWeight.w700),
                           ),
                         ),
-                        Container(
-                          height: 50.0,
-                          margin:
-                              const EdgeInsets.fromLTRB(30.0, 20.0, 30.0, 40.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Expanded(
-                                flex: 2,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    _displayDialog(context);
-                                  },
-                                  child: Container(
-                                    margin: const EdgeInsets.fromLTRB(
-                                        0.0, 0.0, 0.0, 0.0),
-                                    height: 50.0,
-                                    child: seletedCountry != null
-                                        ? Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              Text(
-                                                seletedCountry.flag,
-                                                style: const TextStyle(
-                                                  fontSize: 30,
-                                                ),
-                                              ),
-                                              Text(
-                                                seletedCountry.dial_code,
-                                                style: const TextStyle(
-                                                  fontSize: 16,
-                                                ),
-                                              )
-                                            ],
-                                          )
-                                        : const SizedBox(),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 26),
+                          child: TextField(
+                              controller: numberController,
+                              enabled: true,
+                              style: TextStyle(
+                                  color: ConstColors.darkColor,
+                                  fontSize: 14,
+                                  fontStyle: FontStyle.normal,
+                                  letterSpacing: 1),
+                              keyboardType: TextInputType.phone,
+                              decoration: InputDecoration(
+                                hintText: 'Continue with mobile number',
+                                //contentPadding: EdgeInsets.all(10.0),
+                                prefixIcon: Padding(
+                                  padding: const EdgeInsets.only(top: 11),
+                                  child: Text(
+                                    countryCode ?? "",
+                                    style:
+                                        TextStyle(color: ConstColors.darkColor),
                                   ),
                                 ),
-                              ),
-                              Expanded(
-                                flex: 6,
-                                child: SizedBox(
-                                  height: 50.0,
-                                  child: TextField(
-                                      controller: numberController,
-                                      enabled: true,
-                                      maxLength: 12,
-                                      style: const TextStyle(
-                                          color: Color(0xff008080),
-                                          fontSize: 14,
-                                          fontStyle: FontStyle.normal,
-                                          letterSpacing: 1),
-                                      keyboardType: TextInputType.phone,
-                                      decoration: const InputDecoration(
-                                        hintText: 'Continue with mobile number',
-                                        contentPadding: EdgeInsets.all(10.0),
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Colors.grey, width: 1),
-                                        ),
-                                        // Focused Border
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: ConstColors.lightColor,
-                                              width: 1),
-                                        ),
-                                        // Error Border
-                                        errorBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: ConstColors.lightColor,
-                                              width: 1),
-                                        ),
-                                        // Focused Error Border
-                                        focusedErrorBorder:
-                                            UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: ConstColors.lightColor,
-                                              width: 1),
-                                        ),
-                                        hintStyle: TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 14,
-                                            fontStyle: FontStyle.normal),
-                                      ),
-                                      inputFormatters: [
-                                        FilteringTextInputFormatter.allow(
-                                            RegExp(r'[0-9]')),
-                                        FilteringTextInputFormatter.digitsOnly
-                                      ],
-                                      onChanged: (String value) {
-                                        if (value.length >= 8) {
-                                          setState(() {
-                                            isTrue = true;
-                                          });
-                                        } else {
-                                          setState(() {
-                                            isTrue = false;
-                                          });
-                                        }
-                                      }),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.grey, width: 1),
                                 ),
-                              )
-                            ],
-                          ),
+                                // Focused Border
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: ConstColors.lightColor, width: 1),
+                                ),
+                                // Error Border
+                                errorBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: ConstColors.lightColor, width: 1),
+                                ),
+                                // Focused Error Border
+                                focusedErrorBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: ConstColors.lightColor, width: 1),
+                                ),
+                                hintStyle: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14,
+                                    fontStyle: FontStyle.normal),
+                              ),
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(r'[0-9]')),
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
+                              onChanged: (String value) {
+                                if (value.length >= 8) {
+                                  setState(() {
+                                    isTrue = true;
+                                  });
+                                } else {
+                                  setState(() {
+                                    isTrue = false;
+                                  });
+                                }
+                              }),
                         ),
                         Container(
                           height: 60.0,
@@ -279,158 +229,8 @@ class _PhoneAuthenticationScreenState extends State<PhoneAuthenticationScreen> {
     return await rootBundle.loadString('assets/country.JSON');
   }
 
-  Future<List<CountryModel>> loadCountry() async {
-    String jsonString = await _loadAStudentAsset();
-    final jsonResponse = json.decode(jsonString);
-
-    List<CountryModel> listData = jsonResponse
-        .map<CountryModel>((json) => CountryModel.fromJson(json))
-        .toList();
-    return listData;
-  }
-
   Future wait(int seconds) {
     return Future.delayed(Duration(seconds: seconds), () => {});
-  }
-
-  _displayDialog(BuildContext context) async {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return StatefulBuilder(
-              builder: (BuildContext context, StateSetter modalSetState) {
-            return AlertDialog(
-              content: SizedBox(
-                width: double.maxFinite,
-                height: 360.0,
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      color: Theme.of(context).primaryColor,
-                      child: Card(
-                        child: ListTile(
-                          leading: const Icon(Icons.search),
-                          title: TextField(
-                            controller: searchTextEditing,
-                            decoration: const InputDecoration(
-                                hintText: 'Search', border: InputBorder.none),
-                            onChanged: (value) {
-                              onSearchTextChanged(value, modalSetState);
-                            },
-                          ),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.cancel),
-                            onPressed: () {
-                              searchTextEditing.clear();
-                              onSearchTextChanged('', modalSetState);
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: _searchResult.isNotEmpty ||
-                              searchTextEditing.text.isNotEmpty
-                          ? ListView.builder(
-                              itemCount: _searchResult.length,
-                              itemBuilder: (context, i) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      seletedCountry = _searchResult[i];
-                                    });
-                                    Navigator.pop(context);
-                                  },
-                                  child: Card(
-                                    margin: const EdgeInsets.all(6.0),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Row(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 8.0, right: 10.0),
-                                            child: Text(
-                                              _searchResult[i].flag,
-                                              style: const TextStyle(
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                          ),
-                                          Text(
-                                            _searchResult[i].name,
-                                            maxLines: 2,
-                                            textAlign: TextAlign.justify,
-                                            style: const TextStyle(
-                                              fontSize: 12,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            )
-                          : ListView.builder(
-                              itemCount: _countryList.length,
-                              itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      seletedCountry = _countryList[index];
-                                    });
-                                    Navigator.pop(context);
-                                  },
-                                  child: Card(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 8.0, right: 10.0),
-                                            child: Text(
-                                              _countryList[index].flag,
-                                              style: const TextStyle(
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                          ),
-                                          Text(
-                                            _countryList[index].name,
-                                            maxLines: 2,
-                                            style: const TextStyle(
-                                              fontSize: 12,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                    ),
-                  ],
-                ),
-              ),
-              actions: <Widget>[
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(5.0),
-                    child: const Text('CANCEL'),
-                  ),
-                )
-              ],
-            );
-          });
-        });
   }
 
   _displayTermConditionsDialog(BuildContext context) async {
@@ -497,20 +297,6 @@ class _PhoneAuthenticationScreenState extends State<PhoneAuthenticationScreen> {
         });
   }
 
-  onSearchTextChanged(String text, StateSetter modalSetState) async {
-    _searchResult.clear();
-    if (text.isEmpty) {
-      modalSetState(() {});
-      return;
-    }
-    for (var value in _countryList) {
-      if (value.name.toLowerCase().contains(text.toLowerCase()))
-        _searchResult.add(value);
-    }
-
-    modalSetState(() {});
-  }
-
   signInMethod(
     final progress,
   ) async {
@@ -519,7 +305,7 @@ class _PhoneAuthenticationScreenState extends State<PhoneAuthenticationScreen> {
         progress.show();
 
         await _auth.verifyPhoneNumber(
-          phoneNumber: seletedCountry.dial_code + numberController.text,
+          phoneNumber: countryCode! + numberController.text,
           verificationCompleted: (phoneAuthCredential) async {
             progress.dismiss();
           },
@@ -544,8 +330,7 @@ class _PhoneAuthenticationScreenState extends State<PhoneAuthenticationScreen> {
               Get.to(OTPInputScreen(
                 resendToken: resendingToken,
                 isEmail: false,
-                emailOrPhoneText:
-                    seletedCountry.dial_code + numberController.text,
+                emailOrPhoneText: countryCode! + numberController.text,
                 verificationId: verificationId,
               ));
               progress.dismiss();
