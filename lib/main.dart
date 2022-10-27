@@ -11,6 +11,7 @@ import 'package:luxepass/pages/authentication/signin.dart';
 import 'package:luxepass/pages/bottom_navigation_screen.dart';
 import 'package:luxepass/pages/property_details_screen.dart';
 import 'package:luxepass/pages/review_booking_page.dart';
+import 'package:luxepass/pages/set_profile_screen.dart';
 import 'package:luxepass/pages/splash_screen.dart';
 import 'package:luxepass/providers/my_booking_provider.dart';
 import 'package:luxepass/providers/my_wish_list_provider.dart';
@@ -73,11 +74,6 @@ class MyApp extends StatelessWidget {
       navigatorKey: locator<NavigationService>().navigatorKey,
       routes: routes,
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSwatch().copyWith(
-          primary: Color(0xff26416B),
-        ),
-      ),
       home: const Splash(),
     );
   }

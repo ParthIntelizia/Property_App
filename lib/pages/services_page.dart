@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:luxepass/constants/const_variables.dart';
+import 'package:luxepass/get_storage_services/get_storage_service.dart';
 import 'package:luxepass/pages/service_inquery_page.dart';
 import '../../constants/constant_colors.dart';
 import '../../constants/constant_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+
+import 'authentication/signin.dart';
 
 class ServicesPage extends StatefulWidget {
   const ServicesPage({Key? key}) : super(key: key);
@@ -111,11 +114,15 @@ class _ServicesPageState extends State<ServicesPage>
   Widget serviceItem(int index) {
     return InkWell(
       onTap: () {
-        Get.to(
-          () => ServiceEnquiryPage(
-            enquiryName: keyPoints[index],
-          ),
-        );
+        if (GetStorageServices.getUserLoggedInStatus() == true) {
+          Get.to(
+            () => ServiceEnquiryPage(
+              enquiryName: keyPoints[index],
+            ),
+          );
+        } else {
+          Get.to(() => SignInScreen());
+        }
       },
       child: Container(
           height: 80,

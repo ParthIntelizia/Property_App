@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:luxepass/constants/common_widget.dart';
 import 'package:luxepass/constants/const_variables.dart';
 import 'package:luxepass/get_storage_services/get_storage_service.dart';
-import 'package:luxepass/home/search/search_screen.dart';
 import 'package:luxepass/home/widgets/wishl_list_item_widget.dart';
+import 'package:luxepass/pages/popular_screen.dart';
 import 'package:luxepass/providers/homepage_provider.dart';
 import 'package:provider/provider.dart';
 import '../constants/constant_colors.dart';
@@ -16,6 +17,8 @@ import '../models/service_model.dart';
 import '../models/wish_list_model.dart';
 import '../pages/authentication/signin.dart';
 import '../pages/property_details_screen.dart';
+import '../providers/navbar_provider.dart';
+import '../services/locator_service.dart';
 import '../utils/category_shimmer.dart';
 import '../utils/properties_shimmer.dart';
 import 'widgets/search_widget.dart';
@@ -32,6 +35,8 @@ class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   TabController? _homePageTabController;
   ConstWidgets constWidgets = ConstWidgets();
+  bool form = true;
+  bool form1 = true;
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -87,8 +92,8 @@ class _HomePageState extends State<HomePage>
         image: DecorationImage(
             image: AssetImage(ConstVar.backgroundImg), fit: BoxFit.cover),
       ),
-      child: SingleChildScrollView(
-        child: Column(children: [
+      child: Column(
+        children: [
           Column(
             children: [
               SizedBox(
@@ -108,110 +113,186 @@ class _HomePageState extends State<HomePage>
                             FontWeight.w700, 18, Colors.black),
                       ],
                     ),
-                    const CircleAvatar(
-                        minRadius: 20,
-                        backgroundImage: AssetImage('assets/profilepic.jpg')),
+                    Container(
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(shape: BoxShape.circle),
+                      child: GetStorageServices.getProfileImageValue() == null
+                          ? CircleAvatar(
+                              minRadius: 20,
+                              backgroundColor: Colors.grey.withOpacity(0.5),
+                              child: Icon(
+                                Icons.person,
+                                color: Colors.grey,
+                              ),
+                            )
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(300),
+                              child: Image.network(
+                                  '${GetStorageServices.getProfileImageValue()}',
+                                  fit: BoxFit.cover),
+                            ),
+                    ),
                   ],
                 ),
               ),
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SearchScreen(),
-                    ),
-                  );
-                },
-                child: const SearchWidget(
-                    title: "Search",
-                    highlight: "Any Day | Any Where | Add Guest"),
-              ),
             ],
           ),
-          FutureBuilder(
-            future: FirebaseFirestore.instance
-                .collection('Admin')
-                .doc('categories')
-                .collection('categories_list')
-                .get(),
-            builder: (context, AsyncSnapshot snapshot) {
-              try {
-                if (snapshot.hasData) {
-                  return snapshot.data.docs.length == 0
-                      ? SizedBox()
-                      : SizedBox(
-                          width: Get.width,
-                          height: 60,
-                          child: ListView.builder(
-                            itemCount: snapshot.data.docs.length,
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index) {
-                              var fetchCategory = snapshot.data.docs[index];
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(children: [
+                InkWell(
+                  onTap: () {
+                    locator<NavBarIndex>().setTabCount(3);
 
-                              return GestureDetector(
-                                onTap: () {
-                                  showCategoryWiseData =
-                                      fetchCategory['category_name'];
-                                  setState(() {});
-                                },
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 8),
-                                  child: Tab(
-                                      child: Container(
-                                    padding: const EdgeInsets.only(
-                                        left: 15.0,
-                                        right: 15.0,
-                                        top: 5.0,
-                                        bottom: 5.0),
-                                    decoration: BoxDecoration(
-                                        color: ConstColors.searchBoxColor,
-                                        border: Border.all(
-                                            color: showCategoryWiseData ==
-                                                    fetchCategory[
-                                                        'category_name']
-                                                ? ConstColors.lightColor
-                                                : ConstColors
-                                                    .widgetDividerColor,
-                                            width: 1.0),
-                                        borderRadius:
-                                            BorderRadius.circular(50)),
-                                    child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          SizedBox(
-                                            height: 22,
-                                            width: 22,
-                                            child: Image.network(
-                                                '${fetchCategory['category_image'][0]}',
-                                                fit: BoxFit.cover),
-                                          ),
-                                          // const Icon(Icons.home,
-                                          //     size: 25, color: ConstColors.darkColor),
-                                          Text(
-                                              '${fetchCategory['category_name']}',
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => const SearchScreen(),
+                    //   ),
+                    // );
+                  },
+                  child: const SearchWidget(
+                      title: "Search",
+                      highlight: "Any Day | Any Where | Add Guest"),
+                ),
+                FutureBuilder(
+                  future: FirebaseFirestore.instance
+                      .collection('Admin')
+                      .doc('categories')
+                      .collection('categories_list')
+                      .get(),
+                  builder: (context, AsyncSnapshot snapshot) {
+                    try {
+                      if (snapshot.hasData) {
+                        return snapshot.data.docs.length == 0
+                            ? SizedBox()
+                            : SizedBox(
+                                width: Get.width,
+                                height: 60,
+                                child: Row(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        showCategoryWiseData = 'All';
+                                        setState(() {});
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8),
+                                        child: Tab(
+                                            child: Container(
+                                          padding: const EdgeInsets.only(
+                                              left: 20.0,
+                                              right: 20.0,
+                                              top: 7.0,
+                                              bottom: 7.0),
+                                          decoration: BoxDecoration(
+                                              color: ConstColors.searchBoxColor,
+                                              border: Border.all(
+                                                  color: showCategoryWiseData ==
+                                                          'All'
+                                                      ? ConstColors.lightColor
+                                                      : ConstColors
+                                                          .widgetDividerColor,
+                                                  width: 1.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(50)),
+                                          child: Text('All',
                                               style: GoogleFonts.urbanist(
                                                   fontWeight: FontWeight.w600,
                                                   fontSize: 13,
-                                                  color: ConstColors.darkColor))
-                                        ]),
-                                  )),
+                                                  color:
+                                                      ConstColors.darkColor)),
+                                        )),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: ListView.builder(
+                                        itemCount: snapshot.data.docs.length,
+                                        scrollDirection: Axis.horizontal,
+                                        itemBuilder: (context, index) {
+                                          var fetchCategory =
+                                              snapshot.data.docs[index];
+
+                                          return GestureDetector(
+                                            onTap: () {
+                                              showCategoryWiseData =
+                                                  fetchCategory[
+                                                      'category_name'];
+                                              setState(() {});
+                                            },
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 8),
+                                              child: Tab(
+                                                  child: Container(
+                                                padding: const EdgeInsets.only(
+                                                    left: 15.0,
+                                                    right: 15.0,
+                                                    top: 5.0,
+                                                    bottom: 5.0),
+                                                decoration: BoxDecoration(
+                                                    color: ConstColors
+                                                        .searchBoxColor,
+                                                    border: Border.all(
+                                                        color: showCategoryWiseData ==
+                                                                fetchCategory[
+                                                                    'category_name']
+                                                            ? ConstColors
+                                                                .lightColor
+                                                            : ConstColors
+                                                                .widgetDividerColor,
+                                                        width: 1.0),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            50)),
+                                                child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      SizedBox(
+                                                        height: 22,
+                                                        width: 22,
+                                                        child: Image.network(
+                                                            '${fetchCategory['category_image'][0]}',
+                                                            fit: BoxFit.cover),
+                                                      ),
+                                                      // const Icon(Icons.home,
+                                                      //     size: 25, color: ConstColors.darkColor),
+                                                      Text(
+                                                          '${fetchCategory['category_name']}',
+                                                          style: GoogleFonts.urbanist(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              fontSize: 13,
+                                                              color: ConstColors
+                                                                  .darkColor))
+                                                    ]),
+                                              )),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               );
-                            },
-                          ),
-                        );
-                } else {
-                  return CategoryShimmer();
-                }
-              } catch (e) {
-                return SizedBox();
-              }
-            },
+                      } else {
+                        return CategoryShimmer();
+                      }
+                    } catch (e) {
+                      return SizedBox();
+                    }
+                  },
+                ),
+                allCategories(homeProvider.allServices!, progress),
+              ]),
+            ),
           ),
-          allCategories(homeProvider.allServices!, progress),
-        ]),
+        ],
       ),
     );
   }
@@ -226,49 +307,8 @@ class _HomePageState extends State<HomePage>
         children: [
           serviceFunction(allServices[0]),
           recomendedFunction(homeProvider.recomendedService!),
-          FutureBuilder(
-            future: FirebaseFirestore.instance
-                .collection('All_User_Details')
-                .doc('${GetStorageServices.getToken()}')
-                .get(),
-            builder: (context, AsyncSnapshot snapshot) {
-              try {
-                if (snapshot.hasData) {
-                  var dataOfValuation = snapshot.data;
-                  bool isCheck = dataOfValuation['is_check_valuation'];
-
-                  print(
-                      'dataOfValuation full_name  ${dataOfValuation['is_check_valuation']}');
-                  return const SizedBox();
-                } else {
-                  return inputForm("heading", progress);
-                }
-              } catch (e) {
-                return inputForm("heading", progress);
-              }
-            },
-          ),
-          FutureBuilder(
-            future: FirebaseFirestore.instance
-                .collection('All_User_Details')
-                .doc('${GetStorageServices.getToken()}')
-                .get(),
-            builder: (context, AsyncSnapshot snapshot) {
-              try {
-                if (snapshot.hasData) {
-                  var dataOfValuation = snapshot.data;
-                  bool isCheck = dataOfValuation['is_check_mortgage'];
-                  print(
-                      'dataOfValuation full_name mo  ${dataOfValuation['is_check_mortgage']}');
-                  return SizedBox();
-                } else {
-                  return inputForm1("heading", progress);
-                }
-              } catch (e) {
-                return inputForm1("heading", progress);
-              }
-            },
-          ),
+          form ? inputForm("heading", progress) : SizedBox(),
+          form1 ? inputForm1("heading", progress) : SizedBox(),
         ],
       ),
     );
@@ -289,12 +329,17 @@ class _HomePageState extends State<HomePage>
                   child: constWidgets.textWidget("Popular", FontWeight.w500, 20,
                       ConstColors.serviceHeadLineColor),
                 ),
-                const Padding(
+                Padding(
                     padding: EdgeInsets.only(right: 15),
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.black,
-                      size: 16,
+                    child: InkResponse(
+                      onTap: () {
+                        Get.to(() => PopularPage());
+                      },
+                      child: Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.black,
+                        size: 16,
+                      ),
                     )),
               ],
             ),
@@ -341,11 +386,10 @@ class _HomePageState extends State<HomePage>
 
                         return InkWell(
                           child: Services(
+                              highlight1: fetchData['category'],
                               title: fetchData['propertyName'],
                               image: fetchData['listOfImage'][0],
                               location: fetchData['address'],
-                              highlight1: services[index].service!,
-                              highlight2: services[index].highlight2!,
                               price: '\$${fetchData['price']}'),
                           onTap: () {
                             if (GetStorageServices.getUserLoggedInStatus() ==
@@ -379,20 +423,20 @@ class _HomePageState extends State<HomePage>
             height: 60,
             width: MediaQuery.of(context).size.width,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 15),
                   child: constWidgets.textWidget("Recommended for you",
                       FontWeight.w500, 20, ConstColors.serviceHeadLineColor),
                 ),
-                const Padding(
-                    padding: EdgeInsets.only(right: 15),
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.black,
-                      size: 16,
-                    )),
+                // const Padding(
+                //     padding: EdgeInsets.only(right: 15),
+                //     child: Icon(
+                //       Icons.arrow_forward_ios,
+                //       color: Colors.black,
+                //       size: 16,
+                //     )),
               ],
             ),
           ),
@@ -550,6 +594,10 @@ class _HomePageState extends State<HomePage>
                   TextField(
                     keyboardType: TextInputType.number,
                     controller: _phoneController,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
                     decoration: InputDecoration(
                         contentPadding: const EdgeInsets.all(8.0),
                         border: OutlineInputBorder(
@@ -593,19 +641,19 @@ class _HomePageState extends State<HomePage>
                                 r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
                             .hasMatch(_emailController.text);
                         if (emailValid == true) {
-                          progress.show();
-                          await FirebaseFirestore.instance
-                              .collection('All_User_Details')
-                              .doc('${GetStorageServices.getToken()}')
-                              .update({
-                            "is_check_valuation": true,
-                            "get_a_free_valuation": {
-                              'to_sell & to_let': gender,
-                              'full_name': _fullNameController.text.toString(),
-                              "email": _emailController.text.toString(),
-                              "phone_number": _phoneController.text.toString(),
-                              "postcode": _pastCodeController.text
-                            }
+                          form = false;
+                          FirebaseFirestore.instance
+                              .collection('Admin')
+                              .doc('inquires_list')
+                              .collection('get_a_free_valuation')
+                              .add({
+                            'to_sell & to_let': gender,
+                            'full_name': _fullNameController.text.toString(),
+                            "email": _emailController.text.toString(),
+                            "phone_number": _phoneController.text.toString(),
+                            "postcode": _pastCodeController.text,
+                            "user_token": GetStorageServices.getToken(),
+                            'crate_date': DateTime.now().toString()
                           });
                         } else {
                           CommonWidget.getSnackBar(
@@ -716,6 +764,10 @@ class _HomePageState extends State<HomePage>
                       "Telephone no", FontWeight.w500, 16, Colors.black),
                   const SizedBox(height: 10.0),
                   TextField(
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
                     keyboardType: TextInputType.number,
                     controller: _phoneController1,
                     decoration: InputDecoration(
@@ -760,18 +812,19 @@ class _HomePageState extends State<HomePage>
                                 r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
                             .hasMatch(_emailController1.text);
                         if (emailValid == true) {
-                          progress.show();
-                          await FirebaseFirestore.instance
-                              .collection('All_User_Details')
-                              .doc('${GetStorageServices.getToken()}')
-                              .update({
-                            "is_check_mortgage": true,
-                            "free_martgage_check": {
-                              'full_name': _fullNameController1.text.toString(),
-                              "email": _emailController1.text.toString(),
-                              "phone_number": _phoneController1.text.toString(),
-                              "postcode": _messageController1.text
-                            }
+                          form1 = false;
+
+                          FirebaseFirestore.instance
+                              .collection('Admin')
+                              .doc('inquires_list')
+                              .collection('free_martgage_check')
+                              .add({
+                            'full_name': _fullNameController1.text.toString(),
+                            "email": _emailController1.text.toString(),
+                            "phone_number": _phoneController1.text.toString(),
+                            "postcode": _messageController1.text,
+                            "user_token": GetStorageServices.getToken(),
+                            'crate_date': DateTime.now().toString()
                           });
                         } else {
                           CommonWidget.getSnackBar(

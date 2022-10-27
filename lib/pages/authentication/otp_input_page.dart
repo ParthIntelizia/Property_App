@@ -1,3 +1,4 @@
+import 'package:email_auth/email_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
@@ -8,7 +9,6 @@ import '../../constants/common_widget.dart';
 import '../../constants/const_variables.dart';
 import '../../constants/constant_colors.dart';
 import '../../get_storage_services/get_storage_service.dart';
-import '../../home/home.dart';
 import '../../utils/navigator.dart';
 import 'package:get/get.dart';
 
@@ -21,12 +21,14 @@ class OTPInputScreen extends StatefulWidget {
   final String emailOrPhoneText;
   final String verificationId;
   final bool isEmail;
+  final resendToken;
 
   OTPInputScreen({
     Key? key,
     required this.emailOrPhoneText,
     required this.verificationId,
     required this.isEmail,
+    required this.resendToken,
   }) : super(key: key);
 
   @override
@@ -39,6 +41,7 @@ class OTPInputScreen extends StatefulWidget {
 class _OTPInputScreenState extends State<OTPInputScreen> {
   bool isTrue = false;
   String? verificationCode;
+  dynamic resendToken;
   MobileVerificationState currentState =
       MobileVerificationState.SHOW_MOBILE_FORM_STATE;
   FirebaseAuth _auth = FirebaseAuth.instance;
@@ -46,11 +49,21 @@ class _OTPInputScreenState extends State<OTPInputScreen> {
   String countryCode = "+1";
   TextEditingController numberController = TextEditingController();
   TextEditingController searchTextEditing = TextEditingController();
+  EmailAuth? emailAuth;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    if (widget.isEmail) {
+      emailAuth = new EmailAuth(
+        sessionName: "Sample session",
+      );
+      emailAuth!.config({
+        "server": "server url",
+        "serverKey": "AIzaSyCoJPlgKxXEy3FprIJYE5nPqaLC_gL94jI"
+      });
+    }
   }
 
   Future wait(int seconds) {
@@ -143,14 +156,14 @@ class _OTPInputScreenState extends State<OTPInputScreen> {
                             //runs when a code is typed in
 
                             //runs when every textfield is filled
-                            onSubmit: (String verificationCode) {
+                            onSubmit: (String verificationCode) async {
                               print(
                                   'code length verificationCode ${verificationCode}');
                               print(
                                   'code length verificationCode ${verificationCode.length}');
                               if (verificationCode.length == 6) {
                                 if (widget.isEmail) {
-                                  print('is Email');
+                                  await emailMethod(verificationCode, progress);
                                 } else {
                                   PhoneAuthCredential phoneAuthCredential =
                                       PhoneAuthProvider.credential(
@@ -186,7 +199,15 @@ class _OTPInputScreenState extends State<OTPInputScreen> {
                                 ),
                         ),
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            if (widget.isEmail) {
+                              validateEmail(progress);
+                            } else {
+                              print('enter the mobile otp');
+
+                              resendOTP(progress);
+                            }
+                          },
                           child: Container(
                             margin: const EdgeInsets.fromLTRB(
                                 30.0, 20.0, 30.0, 10.0),
@@ -247,11 +268,9 @@ class _OTPInputScreenState extends State<OTPInputScreen> {
         print('---------uid in current user $uid');
         print(
             '---------uid in- displayName  user ${_auth.currentUser!.displayName}');
-        GetStorageServices.setLoginValue('${widget.emailOrPhoneText}');
         GetStorageServices.setToken(uid);
         GetStorageServices.setUserLoggedIn();
-        CommonMethode.likeFiledAdd();
-        MyNavigator.goToHome(context);
+        await CommonMethode.likeFiledAdd(context);
       }
     } on FirebaseAuthException catch (e) {
       progress.dismiss();
@@ -264,65 +283,127 @@ class _OTPInputScreenState extends State<OTPInputScreen> {
     }
   }
 
-  validateOtp(String otp) {
-    fetchUserDetails();
+  validateEmail(final progress) async {
+    progress.show();
 
-    // if(otp==widget.otpResponseModel.otp){
-    //   fetchUserDetails();
-    // }else{
-    //   showToast("Invalid  OTP", Colors.black);
-    // }
+    emailAuth = new EmailAuth(
+      sessionName: "Sample session",
+    );
+    emailAuth!.config({
+      "server": "server url",
+      "serverKey": "AIzaSyCoJPlgKxXEy3FprIJYE5nPqaLC_gL94jI"
+    });
+    bool result = await emailAuth!
+        .sendOtp(recipientMail: widget.emailOrPhoneText, otpLength: 6);
+    if (result) {
+      // showBottomEmailSheet();
+      Future.delayed(Duration(milliseconds: 500), () {
+        CommonWidget.getSnackBar(
+          message: "otp has been sent to your email ${widget.emailOrPhoneText}",
+          color: Colors.red,
+          title: 'Successfully',
+          duration: 2,
+        );
+      });
+      progress.dismiss();
+    } else {
+      progress.dismiss();
+      CommonWidget.getSnackBar(
+        message: "Something went-wrong",
+        color: Colors.red,
+        title: 'Failed',
+        duration: 2,
+      );
+    }
   }
 
-  resendOTP() async {
-    // try {
-    //   if (widget.isEmail) {
-    //     // var response = await authRepository.validateEmailID(widget.emailID);
-    //     // showToast("Text you a 4 digit code on your email-id", Colors.black);
-    //     // widget.otpResponseModel=response;
-    //   } else {
-    //     // var response = await authRepository.validatePhoneNumber(widget.emailID);
-    //     // showToast("Text you a 4 digit code on your phone number", Colors.black);
-    //     // widget.otpResponseModel=response;
-    //     progress.show();
-    //
-    //     await _auth.verifyPhoneNumber(
-    //       phoneNumber: widget.emailOrPhoneText,
-    //       verificationCompleted: (phoneAuthCredential) async {
-    //         progress.dismiss();
-    //       },
-    //       verificationFailed: (verificationFailed) async {
-    //         progress.dismiss();
-    //
-    //         print('----verificationFailed---${verificationFailed.message}');
-    //         CommonWidget.getSnackBar(
-    //           message: verificationFailed.message!,
-    //           title: 'Failed',
-    //           duration: 2,
-    //           color: Colors.red,
-    //         );
-    //       },
-    //       codeSent: (verificationId, resendingToken) async {
-    //         setState(() {
-    //           //  showLoading = false;
-    //           currentState = MobileVerificationState.SHOW_OTP_FORM_STATE;
-    //           this.verificationId = verificationId;
-    //
-    //           Get.to(OTPInputScreen(
-    //             isEmail: false,
-    //             emailOrPhoneText:
-    //             seletedCountry.dial_code + numberController.text,
-    //             verificationId: verificationId,
-    //           ));
-    //           progress.dismiss();
-    //         });
-    //       },
-    //       codeAutoRetrievalTimeout: (verificationId) async {},
-    //     );
-    //   }
-    // } catch (e) {
-    //   showToast(e.toString(), Colors.black);
-    // }
+  emailMethod(String verificationCode, final progress) async {
+    progress.show();
+
+    bool validOtp = emailAuth!.validateOtp(
+        recipientMail: widget.emailOrPhoneText, userOtp: verificationCode);
+    print('---test email  $validOtp');
+    // 716432
+    if (validOtp) {
+      try {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: widget.emailOrPhoneText, password: '123456');
+        GetStorageServices.setToken(FirebaseAuth.instance.currentUser!.uid);
+        GetStorageServices.setUserLoggedIn();
+        CommonMethode.likeFiledAdd(context);
+        progress.dismiss();
+      } catch (e) {
+        try {
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+              email: widget.emailOrPhoneText, password: '123456');
+          GetStorageServices.setToken(FirebaseAuth.instance.currentUser!.uid);
+          GetStorageServices.setUserLoggedIn();
+          CommonMethode.likeFiledAdd(context);
+          progress.dismiss();
+        } on FirebaseAuthException catch (e) {
+          progress.dismiss();
+          CommonWidget.getSnackBar(
+              title: 'Failed',
+              color: Colors.red,
+              duration: 2,
+              message: '${e.message}');
+        }
+      }
+    } else {
+      progress.dismiss();
+
+      CommonWidget.getSnackBar(
+          title: 'Failed',
+          color: Colors.red,
+          duration: 2,
+          message: 'Please Enter Valid otp');
+    }
+  }
+
+  resendOTP(final progress) async {
+    try {
+      await _auth.verifyPhoneNumber(
+        phoneNumber: widget.emailOrPhoneText,
+        timeout: Duration(microseconds: 100),
+        verificationCompleted: (phoneAuthCredential) async {
+          progress.dismiss();
+        },
+        verificationFailed: (verificationFailed) async {
+          progress.dismiss();
+
+          print('----verificationFailed---${verificationFailed.message}');
+          CommonWidget.getSnackBar(
+            message: verificationFailed.message!,
+            title: 'Failed',
+            duration: 2,
+            color: Colors.red,
+          );
+        },
+        codeSent: (verificationId1, resendingToken) async {
+          setState(() {
+            //  showLoading = false;
+            currentState = MobileVerificationState.SHOW_OTP_FORM_STATE;
+            verificationCode = verificationId1;
+            resendToken = resendingToken;
+
+            CommonWidget.getSnackBar(
+              message:
+                  "otp has been sent to your phone ${widget.emailOrPhoneText}",
+              color: Colors.red,
+              title: 'Successfully',
+              duration: 2,
+            );
+          });
+        },
+        forceResendingToken: resendToken,
+        codeAutoRetrievalTimeout: (verificationId) async {
+          progress.dismiss();
+        },
+      );
+    } on FirebaseAuthException catch (e) {
+      print('eeeeeeeeeeeeeeeeeeeeeeeeeeeee   ${e.message}');
+      showToast(e.toString(), Colors.black);
+    }
   }
 
   fetchUserDetails() async {

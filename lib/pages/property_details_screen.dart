@@ -67,7 +67,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
           return [
             SliverToBoxAdapter(
               child: SizedBox(
-                height: 400,
+                height: 350,
                 width: width,
                 child: Stack(
                   children: [
@@ -89,35 +89,40 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
                           setState(() {});
                         },
                         height: 400,
-                        autoPlay: true,
+                        autoPlay: crouselImage.length > 1 ? true : false,
                         enlargeCenterPage: true,
                         viewportFraction: 1.0,
                         initialPage: 1,
                       ),
                     ),
-                    Positioned(
-                        left: width / 2 - 50,
-                        bottom: 20.0,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: crouselImage.asMap().entries.map((entry) {
-                            print('enenen ${entry.key}  ${_current}');
-                            return GestureDetector(
-                              onTap: () => _controller.animateToPage(entry.key),
-                              child: Container(
-                                width: 12.0,
-                                height: 12.0,
-                                margin: const EdgeInsets.symmetric(
-                                    vertical: 8.0, horizontal: 4.0),
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: _current == entry.key
-                                        ? Colors.black
-                                        : Colors.black.withOpacity(0.4)),
-                              ),
-                            );
-                          }).toList(),
-                        )),
+                    crouselImage.length > 1
+                        ? Positioned(
+                            left: 0,
+                            right: 0,
+                            bottom: 20.0,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children:
+                                  crouselImage.asMap().entries.map((entry) {
+                                print('enenen ${entry.key}  ${_current}');
+                                return GestureDetector(
+                                  onTap: () =>
+                                      _controller.animateToPage(entry.key),
+                                  child: Container(
+                                    width: 12.0,
+                                    height: 12.0,
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 8.0, horizontal: 4.0),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: _current == entry.key
+                                            ? Colors.black
+                                            : Colors.black.withOpacity(0.4)),
+                                  ),
+                                );
+                              }).toList(),
+                            ))
+                        : SizedBox(),
                     Column(
                       children: [
                         SizedBox(
@@ -145,7 +150,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
                                           color: Colors.white),
                                       height: 30,
                                       width: 30,
-                                      margin: const EdgeInsets.only(left: 10.0),
+                                      margin: const EdgeInsets.only(left: 18.0),
                                       child: Center(
                                         child: const Icon(Icons.arrow_back_ios,
                                             size: 16, color: Colors.grey),
@@ -164,11 +169,14 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
                                           (context, AsyncSnapshot snapshot) {
                                         if (snapshot.hasData) {
                                           try {
+                                            print(
+                                                'like not goo  ${widget.fetchData['productId']}');
                                             isContainCheck = snapshot
                                                 .data['list_of_like']
-                                                .contains(1);
+                                                .contains(widget
+                                                    .fetchData['productId']);
                                             print(
-                                                'list_of_like  ${snapshot.data['list_of_like'].contains(1)}');
+                                                'list_of_like  ${snapshot.data['list_of_like'].contains(widget.fetchData['productId'])}');
                                           } catch (e) {
                                             isContainCheck = false;
                                           }

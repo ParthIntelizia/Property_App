@@ -11,14 +11,14 @@ import '../home/widgets/wishl_list_item_widget.dart';
 import '../utils/wishlist_shimmer.dart';
 import 'authentication/signin.dart';
 
-class DiscoverPage extends StatefulWidget {
-  const DiscoverPage({Key? key}) : super(key: key);
+class PopularPage extends StatefulWidget {
+  const PopularPage({Key? key}) : super(key: key);
 
   @override
-  State<DiscoverPage> createState() => _DiscoverPageState();
+  State<PopularPage> createState() => _PopularPageState();
 }
 
-class _DiscoverPageState extends State<DiscoverPage>
+class _PopularPageState extends State<PopularPage>
     with SingleTickerProviderStateMixin {
   ConstWidgets constWidgets = ConstWidgets();
   ScrollController _scrollController = ScrollController();
@@ -114,22 +114,21 @@ class _DiscoverPageState extends State<DiscoverPage>
         child: Column(
           children: [
             Container(
-              padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+              padding: const EdgeInsets.only(left: 10.0, right: 20.0),
               width: width,
               height: 60,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  constWidgets.textWidget(
-                      "Discover", FontWeight.w700, 24, Colors.black),
                   IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.add_road,
-                        size: 24.0,
-                        color: ConstColors.darkColor,
-                      ))
+                    onPressed: () {
+                      Get.back();
+                    },
+                    icon: Icon(Icons.arrow_back_ios),
+                  ),
+                  constWidgets.textWidget(
+                      "Pupular", FontWeight.w700, 24, Colors.black),
                 ],
               ),
             ),
