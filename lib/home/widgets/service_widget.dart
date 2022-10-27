@@ -9,7 +9,6 @@ class Services extends StatefulWidget {
   final String image;
   final String location;
   final String highlight1;
-  final String highlight2;
   final String price;
   const Services(
       {Key? key,
@@ -17,7 +16,6 @@ class Services extends StatefulWidget {
       required this.image,
       required this.location,
       required this.highlight1,
-      required this.highlight2,
       required this.price})
       : super(key: key);
 

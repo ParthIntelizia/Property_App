@@ -29,7 +29,7 @@ class PhoneAuthenticationScreen extends StatefulWidget {
 
 class _PhoneAuthenticationScreenState extends State<PhoneAuthenticationScreen> {
   bool isTrue = false;
-
+  dynamic resendToken;
   String countryCode = "+1";
   TextEditingController numberController = new TextEditingController();
   TextEditingController searchTextEditing = new TextEditingController();
@@ -222,6 +222,11 @@ class _PhoneAuthenticationScreenState extends State<PhoneAuthenticationScreen> {
                                             fontSize: 14,
                                             fontStyle: FontStyle.normal),
                                       ),
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(
+                                            RegExp(r'[0-9]')),
+                                        FilteringTextInputFormatter.digitsOnly
+                                      ],
                                       onChanged: (String value) {
                                         if (value.length >= 8) {
                                           setState(() {
@@ -534,8 +539,10 @@ class _PhoneAuthenticationScreenState extends State<PhoneAuthenticationScreen> {
               //  showLoading = false;
               currentState = MobileVerificationState.SHOW_OTP_FORM_STATE;
               this.verificationId = verificationId;
+              resendToken = resendingToken;
 
               Get.to(OTPInputScreen(
+                resendToken: resendingToken,
                 isEmail: false,
                 emailOrPhoneText:
                     seletedCountry.dial_code + numberController.text,
@@ -544,6 +551,7 @@ class _PhoneAuthenticationScreenState extends State<PhoneAuthenticationScreen> {
               progress.dismiss();
             });
           },
+          forceResendingToken: resendToken,
           codeAutoRetrievalTimeout: (verificationId) async {},
         );
       } else {

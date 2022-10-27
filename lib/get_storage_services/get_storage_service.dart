@@ -31,12 +31,21 @@ class GetStorageServices {
     return getStorage.read('token');
   }
 
-  /// login value
-  static setLoginValue(String LoginValue) {
-    getStorage.write('setLoginValue', LoginValue);
+  /// profile image
+  static setProfileImageValue(String LoginValue) {
+    getStorage.write('setProfileImage', LoginValue);
   }
 
-  static getLoginValue() {
-    return getStorage.read('setLoginValue');
+  static getProfileImageValue() {
+    return getStorage.read('setProfileImage');
+  }
+
+  /// name image
+  static setNameValue(String LoginValue) {
+    getStorage.write('setNameValue', LoginValue);
+  }
+
+  static getNameValue() {
+    return getStorage.read('setNameValue');
   }
 }

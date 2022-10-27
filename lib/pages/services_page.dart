@@ -1,9 +1,14 @@
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:luxepass/constants/const_variables.dart';
+import 'package:luxepass/get_storage_services/get_storage_service.dart';
+import 'package:luxepass/pages/service_inquery_page.dart';
 import '../../constants/constant_colors.dart';
 import '../../constants/constant_widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+
+import 'authentication/signin.dart';
+
 class ServicesPage extends StatefulWidget {
   const ServicesPage({Key? key}) : super(key: key);
 
@@ -13,19 +18,18 @@ class ServicesPage extends StatefulWidget {
 
 class _ServicesPageState extends State<ServicesPage>
     with SingleTickerProviderStateMixin {
-
   ConstWidgets constWidgets = ConstWidgets();
 
   List<String> servicesImage = [
-    "assets/services/service1.png",
-    "assets/services/service2.png",
-    "assets/services/service3.png",
-    "assets/services/service4.png",
-    "assets/services/service5.png",
-    "assets/services/service6.png",
-    "assets/services/service7.png",
-    "assets/services/service8.png",
-    "assets/services/service9.png",
+    "assets/services/service1.svg",
+    "assets/services/service2.svg",
+    "assets/services/service3.svg",
+    "assets/services/service4.svg",
+    "assets/services/service5.svg",
+    "assets/services/service6.svg",
+    "assets/services/service7.svg",
+    "assets/services/service8.svg",
+    "assets/services/service9.svg",
   ];
 
   List<String> keyPoints = [
@@ -41,20 +45,13 @@ class _ServicesPageState extends State<ServicesPage>
   ];
 
   @override
-  void initState() {
-
-    super.initState();
-  }
-
-
-
-  @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-          backgroundColor: ConstColors.backgroundColor,
-          body: _body(),
-        ));
+      child: Scaffold(
+        backgroundColor: ConstColors.backgroundColor,
+        body: _body(),
+      ),
+    );
   }
 
   Widget _body() {
@@ -70,25 +67,25 @@ class _ServicesPageState extends State<ServicesPage>
           return [
             SliverToBoxAdapter(
                 child: Container(
-                  padding: const EdgeInsets.only(left: 20.0,right: 20.0),
-                  width:width,
-                  height: 60,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      constWidgets.textWidget(
-                          "Services",
-                          FontWeight.w700,
-                          22, Colors.black),
-                      IconButton(
-                          onPressed: (){
-
-                          }, icon: const Icon(Icons.more_vert,size: 24.0,color: Colors.grey,))
-                    ],
-                  ),
-
-                )),
+              padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+              width: width,
+              height: 60,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  constWidgets.textWidget(
+                      "Services", FontWeight.w700, 22, Colors.black),
+                  IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.more_vert,
+                        size: 24.0,
+                        color: Colors.grey,
+                      ))
+                ],
+              ),
+            )),
           ];
         },
         body: _descriptionWidget(),
@@ -96,54 +93,63 @@ class _ServicesPageState extends State<ServicesPage>
     );
   }
 
-
   Widget _descriptionWidget() {
     return Container(
       padding: const EdgeInsets.all(15.0),
-      width:MediaQuery.of(context).size.width-30 ,
+      width: MediaQuery.of(context).size.width - 30,
       child: SingleChildScrollView(
-          child:GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: servicesImage.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: 4.0,
-                mainAxisSpacing: 4.0),
-            itemBuilder: (context, index) {
-              return  serviceItem(index);
-            },
-          )
-      ),
+          child: GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: servicesImage.length,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3, crossAxisSpacing: 4.0, mainAxisSpacing: 4.0),
+        itemBuilder: (context, index) {
+          return serviceItem(index);
+        },
+      )),
     );
   }
 
-  Widget serviceItem(int index){
-  return  Container(
-        height:80,
-    decoration: BoxDecoration(
-        color: ConstColors.searchBoxColor,
-        border: Border.all(color: ConstColors.widgetDividerColor,width: 0.5),
-        borderRadius: BorderRadius.circular(5)),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-             Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: Image.asset(servicesImage[index],height: 30,width: 30,),
+  Widget serviceItem(int index) {
+    return InkWell(
+      onTap: () {
+        if (GetStorageServices.getUserLoggedInStatus() == true) {
+          Get.to(
+            () => ServiceEnquiryPage(
+              enquiryName: keyPoints[index],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-              child:constWidgets.textWidget(
-                  keyPoints[index],
-                  FontWeight.w500,
-                  12,
-                  Colors.grey),
-            )
-          ],
-        ));
+          );
+        } else {
+          Get.to(() => SignInScreen());
+        }
+      },
+      child: Container(
+          height: 80,
+          decoration: BoxDecoration(
+              color: ConstColors.searchBoxColor,
+              border:
+                  Border.all(color: ConstColors.widgetDividerColor, width: 0.5),
+              borderRadius: BorderRadius.circular(5)),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: SvgPicture.asset(
+                  servicesImage[index],
+                  height: 30,
+                  width: 30,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: constWidgets.textWidget(
+                    keyPoints[index], FontWeight.w500, 12, Colors.grey),
+              )
+            ],
+          )),
+    );
   }
-
-
 }

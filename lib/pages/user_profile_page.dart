@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:luxepass/constants/const_variables.dart';
 import 'package:luxepass/get_storage_services/get_storage_service.dart';
 import 'package:luxepass/providers/my_booking_provider.dart';
@@ -9,6 +10,9 @@ import '../../constants/constant_widgets.dart';
 import '../providers/navbar_provider.dart';
 import '../services/locator_service.dart';
 import 'authentication/signin.dart';
+import 'package:get/get.dart';
+
+import 'edit_profile_screen.dart';
 
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({Key? key}) : super(key: key);
@@ -82,13 +86,31 @@ class _UserProfilePageState extends State<UserProfilePage>
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const CircleAvatar(
-                          minRadius: 30,
-                          backgroundImage: AssetImage('assets/profilepic.jpg')),
+                      GetStorageServices.getProfileImageValue() == null
+                          ? CircleAvatar(
+                              minRadius: 26,
+                              maxRadius: 26,
+                              backgroundColor: Colors.grey.withOpacity(0.5),
+                              child: Icon(
+                                Icons.person,
+                                color: Colors.grey,
+                              ),
+                            )
+                          : Container(
+                              height: 60,
+                              width: 60,
+                              decoration: BoxDecoration(shape: BoxShape.circle),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(300),
+                                child: Image.network(
+                                    '${GetStorageServices.getProfileImageValue()}',
+                                    fit: BoxFit.cover),
+                              ),
+                            ),
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0, top: 2),
                         child: constWidgets.textWidget(
-                            "${GetStorageServices.getLoginValue()}",
+                            "${GetStorageServices.getNameValue() ?? ''}",
                             FontWeight.w600,
                             20,
                             ConstColors.userTitleColor),
@@ -129,6 +151,13 @@ class _UserProfilePageState extends State<UserProfilePage>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ListTile(
+                    onTap: () {
+                      if (GetStorageServices.getUserLoggedInStatus() == true) {
+                        Get.to(() => EditProfileScreen());
+                      } else {
+                        Get.to(() => SignInScreen());
+                      }
+                    },
                     leading: const Icon(
                       Icons.person,
                       color: ConstColors.darkColor,
@@ -156,20 +185,20 @@ class _UserProfilePageState extends State<UserProfilePage>
                       size: 16,
                     ),
                   ),
-                  ListTile(
-                    leading: const Icon(
-                      Icons.notifications,
-                      color: ConstColors.darkColor,
-                      size: 20,
-                    ),
-                    title: constWidgets.textWidget(
-                        "Notification", FontWeight.w400, 14, Colors.black),
-                    trailing: const Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      color: Colors.grey,
-                      size: 16,
-                    ),
-                  ),
+                  // ListTile(
+                  //   leading: const Icon(
+                  //     Icons.notifications,
+                  //     color: ConstColors.darkColor,
+                  //     size: 20,
+                  //   ),
+                  //   title: constWidgets.textWidget(
+                  //       "Notification", FontWeight.w400, 14, Colors.black),
+                  //   trailing: const Icon(
+                  //     Icons.arrow_forward_ios_rounded,
+                  //     color: Colors.grey,
+                  //     size: 16,
+                  //   ),
+                  // ),
                   ListTile(
                     leading: const Icon(
                       Icons.privacy_tip_rounded,
@@ -254,6 +283,9 @@ class _UserProfilePageState extends State<UserProfilePage>
   }
 
   logOut() async {
+    try {
+      FacebookAuth.instance.logOut();
+    } catch (e) {}
     GetStorageServices.clearStorage();
     await FirebaseAuth.instance.signOut();
 

@@ -10,15 +10,16 @@ import '../../constants/constant_widgets.dart';
 import '../../providers/search_screen_provider.dart';
 import '../home/widgets/unordered_list.dart';
 
-class EventDetailsPage extends StatefulWidget {
+class PropertyDetailsPage extends StatefulWidget {
   final fetchData;
-  const EventDetailsPage({Key? key, required this.fetchData}) : super(key: key);
+  const PropertyDetailsPage({Key? key, required this.fetchData})
+      : super(key: key);
 
   @override
-  State<EventDetailsPage> createState() => _EventDetailsPageState();
+  State<PropertyDetailsPage> createState() => _PropertyDetailsPageState();
 }
 
-class _EventDetailsPageState extends State<EventDetailsPage>
+class _PropertyDetailsPageState extends State<PropertyDetailsPage>
     with SingleTickerProviderStateMixin {
   TabController? _homePageTabController;
   ConstWidgets constWidgets = ConstWidgets();
@@ -66,7 +67,7 @@ class _EventDetailsPageState extends State<EventDetailsPage>
           return [
             SliverToBoxAdapter(
               child: SizedBox(
-                height: 400,
+                height: 350,
                 width: width,
                 child: Stack(
                   children: [
@@ -88,35 +89,40 @@ class _EventDetailsPageState extends State<EventDetailsPage>
                           setState(() {});
                         },
                         height: 400,
-                        autoPlay: true,
+                        autoPlay: crouselImage.length > 1 ? true : false,
                         enlargeCenterPage: true,
                         viewportFraction: 1.0,
                         initialPage: 1,
                       ),
                     ),
-                    Positioned(
-                        left: width / 2 - 50,
-                        bottom: 20.0,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: crouselImage.asMap().entries.map((entry) {
-                            print('enenen ${entry.key}  ${_current}');
-                            return GestureDetector(
-                              onTap: () => _controller.animateToPage(entry.key),
-                              child: Container(
-                                width: 12.0,
-                                height: 12.0,
-                                margin: const EdgeInsets.symmetric(
-                                    vertical: 8.0, horizontal: 4.0),
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: _current == entry.key
-                                        ? Colors.black
-                                        : Colors.black.withOpacity(0.4)),
-                              ),
-                            );
-                          }).toList(),
-                        )),
+                    crouselImage.length > 1
+                        ? Positioned(
+                            left: 0,
+                            right: 0,
+                            bottom: 20.0,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children:
+                                  crouselImage.asMap().entries.map((entry) {
+                                print('enenen ${entry.key}  ${_current}');
+                                return GestureDetector(
+                                  onTap: () =>
+                                      _controller.animateToPage(entry.key),
+                                  child: Container(
+                                    width: 12.0,
+                                    height: 12.0,
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 8.0, horizontal: 4.0),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: _current == entry.key
+                                            ? Colors.black
+                                            : Colors.black.withOpacity(0.4)),
+                                  ),
+                                );
+                              }).toList(),
+                            ))
+                        : SizedBox(),
                     Column(
                       children: [
                         SizedBox(
@@ -133,21 +139,22 @@ class _EventDetailsPageState extends State<EventDetailsPage>
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        color: Colors.white),
-                                    height: 30,
-                                    width: 30,
-                                    margin: const EdgeInsets.only(left: 10.0),
-                                    child: Center(
-                                      child: IconButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          icon: const Icon(Icons.arrow_back_ios,
-                                              size: 16, color: Colors.grey)),
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.only(left: 5),
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.white),
+                                      height: 30,
+                                      width: 30,
+                                      margin: const EdgeInsets.only(left: 18.0),
+                                      child: Center(
+                                        child: const Icon(Icons.arrow_back_ios,
+                                            size: 16, color: Colors.grey),
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -162,11 +169,14 @@ class _EventDetailsPageState extends State<EventDetailsPage>
                                           (context, AsyncSnapshot snapshot) {
                                         if (snapshot.hasData) {
                                           try {
+                                            print(
+                                                'like not goo  ${widget.fetchData['productId']}');
                                             isContainCheck = snapshot
                                                 .data['list_of_like']
-                                                .contains(1);
+                                                .contains(widget
+                                                    .fetchData['productId']);
                                             print(
-                                                'list_of_like  ${snapshot.data['list_of_like'].contains(1)}');
+                                                'list_of_like  ${snapshot.data['list_of_like'].contains(widget.fetchData['productId'])}');
                                           } catch (e) {
                                             isContainCheck = false;
                                           }
@@ -186,18 +196,7 @@ class _EventDetailsPageState extends State<EventDetailsPage>
                                               height: 30,
                                               width: 30,
                                               child: Center(
-                                                child: Image.asset(
-                                                  color: snapshot
-                                                          .data['list_of_like']
-                                                          .contains(
-                                                              widget.fetchData[
-                                                                  'productId'])
-                                                      ? Colors.red
-                                                      : Colors.grey,
-                                                  'assets/icons/favorite.png',
-                                                  height: 20,
-                                                  width: 20,
-                                                ),
+                                                child: likeWidget(snapshot),
                                               ),
                                             ),
                                           );
@@ -222,13 +221,11 @@ class _EventDetailsPageState extends State<EventDetailsPage>
                                     ),
                                     Container(
                                       decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(100),
+                                          shape: BoxShape.circle,
                                           color: Colors.white),
                                       height: 30,
                                       width: 30,
-                                      padding:
-                                          const EdgeInsets.only(right: 10.0),
+                                      padding: const EdgeInsets.only(right: 3),
                                       child: const Center(
                                         child: Icon(
                                           Icons.share,
@@ -254,6 +251,27 @@ class _EventDetailsPageState extends State<EventDetailsPage>
         body: _descriptionWidget(widget.fetchData),
       ),
     );
+  }
+
+  Image likeWidget(AsyncSnapshot<dynamic> snapshot) {
+    try {
+      return Image.asset(
+        color: snapshot.data['list_of_like']
+                .contains(widget.fetchData['productId'])
+            ? Colors.red
+            : Colors.grey,
+        'assets/icons/favorite.png',
+        height: 20,
+        width: 20,
+      );
+    } catch (e) {
+      return Image.asset(
+        color: Colors.grey,
+        'assets/icons/favorite.png',
+        height: 20,
+        width: 20,
+      );
+    }
   }
 
   likeUnLike({required int productId}) async {

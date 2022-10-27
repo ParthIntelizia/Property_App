@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:luxepass/constants/const_variables.dart';
-import 'package:luxepass/pages/event_details_screen.dart';
+import 'package:luxepass/pages/property_details_screen.dart';
 import 'package:luxepass/providers/my_wish_list_provider.dart';
 import 'package:provider/provider.dart';
 import '../../constants/constant_colors.dart';
@@ -126,7 +126,7 @@ class _CategoryWiseScreenState extends State<CategoryWiseScreen>
                                   if (GetStorageServices
                                           .getUserLoggedInStatus() ==
                                       true) {
-                                    Get.to(() => EventDetailsPage(
+                                    Get.to(() => PropertyDetailsPage(
                                           fetchData: getSingleProductData,
                                         ));
                                   } else {

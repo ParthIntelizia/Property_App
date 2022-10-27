@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -9,9 +11,10 @@ import '../../get_storage_services/get_storage_service.dart';
 import '../../models/CountryModel.dart';
 import '../../services/locator_service.dart';
 import '../../services/navigation_service.dart';
-import 'my_location_page.dart';
+import '../../utils/navigator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:http/http.dart' as http;
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({Key? key}) : super(key: key);
@@ -401,7 +404,7 @@ class _SignInScreenState extends State<SignInScreen> {
             ),
             GestureDetector(
               onTap: () {
-                goToMyLocationPage();
+                MyNavigator.goToHome(context);
               },
               child: Container(
                 height: 40.0,
@@ -425,14 +428,6 @@ class _SignInScreenState extends State<SignInScreen> {
           ],
         ),
       ),
-    );
-  }
-
-  goToMyLocationPage() {
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => const MyLocation()),
-      (Route<dynamic> route) => false,
     );
   }
 
@@ -528,29 +523,51 @@ class _SignInScreenState extends State<SignInScreen> {
       } catch (e) {
         nameOfUser = FirebaseAuth.instance.currentUser!.email!;
       }
-      GetStorageServices.setLoginValue(nameOfUser);
+
       GetStorageServices.setToken(FirebaseAuth.instance.currentUser!.uid);
+
       GetStorageServices.setUserLoggedIn();
-      CommonMethode.likeFiledAdd();
+      CommonMethode.likeFiledAdd(context);
     }
 
     assert(user?.uid == currentUser?.uid);
 
     print("User Name: ${user?.displayName}");
     print("User Email ${user?.email}");
-
-    goToMyLocationPage();
   }
 
   _performLogin() async {
-    FacebookAuth.instance
-        .login(permissions: ["public_profile", "email"]).then((value) {
-      FacebookAuth.instance.getUserData().then((user) {
-        goToMyLocationPage();
-      });
-      GetStorageServices.setToken(FirebaseAuth.instance.currentUser!.uid);
-      GetStorageServices.setUserLoggedIn();
-      CommonMethode.likeFiledAdd();
+    final LoginResult loginResult = await FacebookAuth.instance
+        .login(permissions: ["public_profile", "email"]);
+
+    // Create a credential from the access token
+    final OAuthCredential facebookAuthCredential =
+        FacebookAuthProvider.credential(loginResult.accessToken!.token);
+
+    // Once signed in, return the UserCredential
+    FirebaseAuth.instance
+        .signInWithCredential(facebookAuthCredential)
+        .then((value) async {
+      if (value.user != null) {
+        String name;
+        try {
+          final accessToken = loginResult.accessToken;
+          final graphResponse = await http.get(Uri.parse(
+              'https://graph.facebook.com/v2.12/me?fields=first_name,picture&access_token=${accessToken!.token}'));
+          final profile = jsonDecode(graphResponse.body);
+          final profile1 = jsonDecode(graphResponse.body);
+
+          name = profile['first_name'];
+          // image = profile['picture']['data']['url'];
+          name = name;
+        } catch (e) {
+          name = '';
+        }
+        GetStorageServices.setToken(FirebaseAuth.instance.currentUser!.uid);
+        GetStorageServices.setUserLoggedIn();
+        log('Token===>>${GetStorageServices.getToken()}');
+        CommonMethode.likeFiledAdd(context);
+      }
     });
   }
 }
