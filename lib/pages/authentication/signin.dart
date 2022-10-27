@@ -522,6 +522,13 @@ class _SignInScreenState extends State<SignInScreen> {
     var currentUser = _auth.currentUser;
 
     if (authResult.user != null) {
+      String nameOfUser;
+      try {
+        nameOfUser = FirebaseAuth.instance.currentUser!.displayName!;
+      } catch (e) {
+        nameOfUser = FirebaseAuth.instance.currentUser!.email!;
+      }
+      GetStorageServices.setLoginValue(nameOfUser);
       GetStorageServices.setToken(FirebaseAuth.instance.currentUser!.uid);
       GetStorageServices.setUserLoggedIn();
       CommonMethode.likeFiledAdd();
