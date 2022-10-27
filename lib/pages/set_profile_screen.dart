@@ -126,68 +126,66 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
                 ),
               ),
               Spacer(),
-              Container(
-                height: 40,
-                decoration: BoxDecoration(
-                    color: ConstColors.darkColor,
-                    borderRadius: BorderRadius.circular(10)),
-                margin: const EdgeInsets.all(10.0),
-                child: Center(
-                  child: InkWell(
-                    //`Icon` to display
+              InkWell(
+                onTap: () async {
+                  print('enter thg escree ');
+
+                  if (image != null && nameController.text.isNotEmpty) {
+                    try {
+                      print('enter thg escree ');
+                      progress!.show();
+                      var snapshot = await FirebaseStorage.instance
+                          .ref()
+                          .child(
+                              'AllUserImage/${DateTime.now().microsecondsSinceEpoch}')
+                          .putFile(image!);
+                      liveImageURL = await snapshot.ref.getDownloadURL();
+                      await FirebaseFirestore.instance
+                          .collection('All_User_Details')
+                          .doc(GetStorageServices.getToken())
+                          .update({
+                        'profile_image': liveImageURL,
+                        'user_name': nameController.text.toString(),
+                        'is_Profile_check': true
+                      });
+                      CommonMethode.setProfileAllDetails(
+                          imageUrl: liveImageURL!,
+                          name: nameController.text.toString());
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const MyLocation()),
+                        (Route<dynamic> route) => false,
+                      );
+                      progress.dismiss();
+                    } catch (e) {
+                      progress!.dismiss();
+
+                      return CommonWidget.getSnackBar(
+                          message: 'went-wrong',
+                          title: 'Failed',
+                          duration: 2,
+                          color: Colors.red);
+                    }
+                  } else {
+                    CommonWidget.getSnackBar(
+                        message: 'Photo & Name are required',
+                        title: 'required',
+                        duration: 2,
+                        color: Colors.red);
+                  }
+                },
+                child: Container(
+                  height: 40,
+                  decoration: BoxDecoration(
+                      color: ConstColors.darkColor,
+                      borderRadius: BorderRadius.circular(10)),
+                  margin: const EdgeInsets.all(10.0),
+                  child: Center(
                     child: Text(
                       'Next',
                       style: TextStyle(color: Colors.white, fontSize: 16),
                     ),
-                    //`Text` to display
-                    onTap: () async {
-                      print('enter thg escree ');
-
-                      if (image != null && nameController.text.isNotEmpty) {
-                        try {
-                          print('enter thg escree ');
-                          progress!.show();
-                          var snapshot = await FirebaseStorage.instance
-                              .ref()
-                              .child(
-                                  'AllUserImage/${DateTime.now().microsecondsSinceEpoch}')
-                              .putFile(image!);
-                          liveImageURL = await snapshot.ref.getDownloadURL();
-                          await FirebaseFirestore.instance
-                              .collection('All_User_Details')
-                              .doc(GetStorageServices.getToken())
-                              .update({
-                            'profile_image': liveImageURL,
-                            'user_name': nameController.text.toString(),
-                            'is_Profile_check': true
-                          });
-                          CommonMethode.setProfileAllDetails(
-                              imageUrl: liveImageURL!,
-                              name: nameController.text.toString());
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const MyLocation()),
-                            (Route<dynamic> route) => false,
-                          );
-                          progress.dismiss();
-                        } catch (e) {
-                          progress!.dismiss();
-
-                          return CommonWidget.getSnackBar(
-                              message: 'went-wrong',
-                              title: 'Failed',
-                              duration: 2,
-                              color: Colors.red);
-                        }
-                      } else {
-                        CommonWidget.getSnackBar(
-                            message: 'Photo & Name are required',
-                            title: 'required',
-                            duration: 2,
-                            color: Colors.red);
-                      }
-                    },
                   ),
                 ),
               ),
@@ -216,47 +214,43 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
               children: [
                 Column(
                   children: [
-                    Container(
-                      height: 40,
-                      width: 160,
-                      decoration: BoxDecoration(
-                          color: ConstColors.darkColor,
-                          borderRadius: BorderRadius.circular(16)),
-                      margin: const EdgeInsets.all(10.0),
-                      child: Center(
-                        child: GestureDetector(
-                          //`Icon` to display
+                    InkWell(
+                      onTap: () async {
+                        Navigator.of(context).pop();
+                        await imageFromGallery();
+                      },
+                      child: Container(
+                        height: 40,
+                        width: 160,
+                        decoration: BoxDecoration(
+                            color: ConstColors.darkColor,
+                            borderRadius: BorderRadius.circular(16)),
+                        margin: const EdgeInsets.all(10.0),
+                        child: Center(
                           child: Text(
                             'Gallery',
                             style: TextStyle(color: Colors.white, fontSize: 16),
                           ),
-                          //`Text` to display
-                          onTap: () async {
-                            Navigator.of(context).pop();
-                            await imageFromGallery();
-                          },
                         ),
                       ),
                     ),
-                    Container(
-                      height: 40,
-                      width: 160,
-                      decoration: BoxDecoration(
-                          color: ConstColors.darkColor,
-                          borderRadius: BorderRadius.circular(16)),
-                      margin: const EdgeInsets.all(10.0),
-                      child: Center(
-                        child: GestureDetector(
-                          //`Icon` to display
+                    InkWell(
+                      onTap: () async {
+                        Navigator.of(context).pop();
+                        await imageFromCamera();
+                      },
+                      child: Container(
+                        height: 40,
+                        width: 160,
+                        decoration: BoxDecoration(
+                            color: ConstColors.darkColor,
+                            borderRadius: BorderRadius.circular(16)),
+                        margin: const EdgeInsets.all(10.0),
+                        child: Center(
                           child: Text(
                             'Camera',
                             style: TextStyle(color: Colors.white, fontSize: 16),
                           ),
-                          //`Text` to display
-                          onTap: () async {
-                            Navigator.of(context).pop();
-                            await imageFromCamera();
-                          },
                         ),
                       ),
                     ),

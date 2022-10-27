@@ -16,13 +16,16 @@ class InquiryShimmer extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                width: Get.width / 2,
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Card(
                   child: Container(
-                    height: 80,
-                    width: Get.width * 0.05,
-                    color: Colors.grey,
+                    height: 70,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(3),
+                    ),
                   ),
                 ),
               ),

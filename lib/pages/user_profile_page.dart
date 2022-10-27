@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:luxepass/constants/const_variables.dart';
 import 'package:luxepass/get_storage_services/get_storage_service.dart';
+import 'package:luxepass/pages/privacy_policy_screen.dart';
 import 'package:luxepass/providers/my_booking_provider.dart';
 import 'package:provider/provider.dart';
 import '../../constants/constant_colors.dart';
 import '../../constants/constant_widgets.dart';
 import '../providers/navbar_provider.dart';
 import '../services/locator_service.dart';
+import 'about_us_screen.dart';
 import 'authentication/signin.dart';
 import 'package:get/get.dart';
 
@@ -208,6 +210,9 @@ class _UserProfilePageState extends State<UserProfilePage>
                   //   ),
                   // ),
                   ListTile(
+                    onTap: () {
+                      Get.to(() => PrivacyPolicyScreen());
+                    },
                     leading: const Icon(
                       Icons.privacy_tip_rounded,
                       color: ConstColors.darkColor,
@@ -222,6 +227,9 @@ class _UserProfilePageState extends State<UserProfilePage>
                     ),
                   ),
                   ListTile(
+                    onTap: () {
+                      Get.to(() => AboutUsScreen());
+                    },
                     leading: const Icon(
                       Icons.info,
                       color: ConstColors.darkColor,

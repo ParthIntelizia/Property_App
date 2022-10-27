@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:country_codes/country_codes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
@@ -345,8 +344,8 @@ class _HomePageState extends State<HomePage>
                       ConstColors.serviceHeadLineColor),
                 ),
                 Padding(
-                    padding: EdgeInsets.only(right: 15),
-                    child: InkResponse(
+                    padding: EdgeInsets.only(right: 15, left: 15),
+                    child: InkWell(
                       onTap: () {
                         Get.to(() => PopularPage());
                       },
@@ -504,6 +503,7 @@ class _HomePageState extends State<HomePage>
   }
 
   String? gender = "To Sell";
+
   Widget inputForm(String heading, final progress) {
     return Column(
       children: [
@@ -657,7 +657,7 @@ class _HomePageState extends State<HomePage>
                             .hasMatch(_emailController.text);
                         if (emailValid == true) {
                           form = false;
-                          FirebaseFirestore.instance
+                          await FirebaseFirestore.instance
                               .collection('Admin')
                               .doc('inquires_list')
                               .collection('get_a_free_valuation')
@@ -670,6 +670,12 @@ class _HomePageState extends State<HomePage>
                             "user_token": GetStorageServices.getToken(),
                             'crate_date': DateTime.now().toString()
                           });
+
+                          CommonWidget.getSnackBar(
+                              title: "Submitted!",
+                              duration: 2,
+                              message:
+                                  'Your inquiry has been received, We will contact you shortly.');
                         } else {
                           CommonWidget.getSnackBar(
                               color: Colors.red,
@@ -803,6 +809,7 @@ class _HomePageState extends State<HomePage>
                       "Message", FontWeight.w500, 16, Colors.black),
                   const SizedBox(height: 10.0),
                   TextField(
+                    maxLines: 3,
                     controller: _messageController1,
                     decoration: InputDecoration(
                         contentPadding: const EdgeInsets.all(8.0),
@@ -829,7 +836,7 @@ class _HomePageState extends State<HomePage>
                         if (emailValid == true) {
                           form1 = false;
 
-                          FirebaseFirestore.instance
+                          await FirebaseFirestore.instance
                               .collection('Admin')
                               .doc('inquires_list')
                               .collection('free_martgage_check')
@@ -841,6 +848,12 @@ class _HomePageState extends State<HomePage>
                             "user_token": GetStorageServices.getToken(),
                             'crate_date': DateTime.now().toString()
                           });
+
+                          CommonWidget.getSnackBar(
+                              duration: 2,
+                              title: "Submitted!",
+                              message:
+                                  'Your inquiry has been received, We will contact you shortly.');
                         } else {
                           CommonWidget.getSnackBar(
                               color: Colors.red,

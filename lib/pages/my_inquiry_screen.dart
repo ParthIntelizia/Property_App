@@ -192,7 +192,7 @@ class _MyInquiryScreenState extends State<MyInquiryScreen>
               }
               if (snapshot.data!.docs.length != 0) {
                 return ListView.builder(
-                  padding: EdgeInsets.only(left: 20),
+                  padding: EdgeInsets.only(left: 20, right: 20),
                   shrinkWrap: true,
                   itemCount: inquiries.length,
                   itemBuilder: (BuildContext context, int index) {
@@ -292,7 +292,7 @@ class _MyInquiryScreenState extends State<MyInquiryScreen>
           }
           if (snapshot.data!.docs.length != 0) {
             return ListView.builder(
-              padding: EdgeInsets.only(left: 20),
+              padding: EdgeInsets.only(left: 20, right: 20),
               shrinkWrap: true,
               itemCount: inquiries.length,
               itemBuilder: (BuildContext context, int index) {
@@ -388,7 +388,7 @@ class _MyInquiryScreenState extends State<MyInquiryScreen>
           }
           if (snapshot.data!.docs.length != 0) {
             return ListView.builder(
-              padding: EdgeInsets.only(left: 20),
+              padding: EdgeInsets.only(left: 20, right: 20),
               shrinkWrap: true,
               itemCount: inquiries.length,
               itemBuilder: (BuildContext context, int index) {

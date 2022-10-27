@@ -305,54 +305,20 @@ class _SignInScreenState extends State<SignInScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
+                    // Text(
+                    //   countryCode ?? "",
+                    //   style: TextStyle(color: ConstColors.darkColor),
+                    // ),
+                    // SizedBox(
+                    //   width: 10,
+                    // ),
                     Text(
-                      countryCode ?? "",
-                      style: TextStyle(color: ConstColors.darkColor),
+                      'Continue with mobile number',
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500),
                     ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Expanded(
-                      child: TextField(
-                          controller: numberController,
-                          enabled: false,
-                          maxLength: 12,
-                          style: const TextStyle(
-                              color: Color(0xff008080),
-                              fontSize: 14,
-                              fontStyle: FontStyle.normal,
-                              letterSpacing: 1),
-                          keyboardType: TextInputType.none,
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Continue with mobile number',
-                            contentPadding: EdgeInsets.all(10.0),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.grey, width: 1),
-                            ),
-                            // Focused Border
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: ConstColors.lightColor, width: 1),
-                            ),
-                            // Error Border
-                            errorBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: ConstColors.lightColor, width: 1),
-                            ),
-                            // Focused Error Border
-                            focusedErrorBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: ConstColors.lightColor, width: 1),
-                            ),
-                            hintStyle: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 14,
-                                fontStyle: FontStyle.normal),
-                          ),
-                          onChanged: (String value) {}),
-                    )
                   ],
                 ),
               ),
