@@ -34,9 +34,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   TabController? _homePageTabController;
+
   ConstWidgets constWidgets = ConstWidgets();
   bool form = true;
   bool form1 = true;
+
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -45,6 +47,7 @@ class _HomePageState extends State<HomePage>
   final TextEditingController _emailController1 = TextEditingController();
   final TextEditingController _phoneController1 = TextEditingController();
   final TextEditingController _messageController1 = TextEditingController();
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -172,49 +175,60 @@ class _HomePageState extends State<HomePage>
                                 height: 60,
                                 child: Row(
                                   children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        showCategoryWiseData = 'All';
-                                        setState(() {});
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8),
-                                        child: Tab(
-                                            child: Container(
-                                          padding: const EdgeInsets.only(
-                                              left: 20.0,
-                                              right: 20.0,
-                                              top: 7.0,
-                                              bottom: 7.0),
-                                          decoration: BoxDecoration(
-                                              color: ConstColors.searchBoxColor,
-                                              border: Border.all(
-                                                  color: showCategoryWiseData ==
-                                                          'All'
-                                                      ? ConstColors.lightColor
-                                                      : ConstColors
-                                                          .widgetDividerColor,
-                                                  width: 1.0),
-                                              borderRadius:
-                                                  BorderRadius.circular(50)),
-                                          child: Text('All',
-                                              style: GoogleFonts.urbanist(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 13,
-                                                  color:
-                                                      ConstColors.darkColor)),
-                                        )),
-                                      ),
-                                    ),
                                     Expanded(
                                       child: ListView.builder(
-                                        itemCount: snapshot.data.docs.length,
+                                        itemCount:
+                                            snapshot.data.docs.length + 1,
                                         scrollDirection: Axis.horizontal,
                                         itemBuilder: (context, index) {
+                                          if (index == 0) {
+                                            return GestureDetector(
+                                              onTap: () {
+                                                showCategoryWiseData = 'All';
+                                                setState(() {});
+                                              },
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 8),
+                                                child: Tab(
+                                                    child: Container(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 20.0,
+                                                          right: 20.0,
+                                                          top: 7.0,
+                                                          bottom: 7.0),
+                                                  decoration: BoxDecoration(
+                                                      color: ConstColors
+                                                          .searchBoxColor,
+                                                      border: Border.all(
+                                                          color:
+                                                              showCategoryWiseData ==
+                                                                      'All'
+                                                                  ? ConstColors
+                                                                      .lightColor
+                                                                  : ConstColors
+                                                                      .widgetDividerColor,
+                                                          width: 1.0),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              50)),
+                                                  child: Text('All',
+                                                      style:
+                                                          GoogleFonts.urbanist(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              fontSize: 13,
+                                                              color: ConstColors
+                                                                  .darkColor)),
+                                                )),
+                                              ),
+                                            );
+                                          }
                                           var fetchCategory =
-                                              snapshot.data.docs[index];
-
+                                              snapshot.data.docs[index - 1];
                                           return GestureDetector(
                                             onTap: () {
                                               showCategoryWiseData =

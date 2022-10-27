@@ -13,6 +13,7 @@ import 'authentication/signin.dart';
 import 'package:get/get.dart';
 
 import 'edit_profile_screen.dart';
+import 'my_inquiry_screen.dart';
 
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({Key? key}) : super(key: key);
@@ -172,13 +173,20 @@ class _UserProfilePageState extends State<UserProfilePage>
                     ),
                   ),
                   ListTile(
+                    onTap: () {
+                      if (GetStorageServices.getUserLoggedInStatus() == true) {
+                        Get.to(() => MyInquiryScreen());
+                      } else {
+                        Get.to(() => SignInScreen());
+                      }
+                    },
                     leading: const Icon(
                       Icons.settings,
                       color: ConstColors.lightColor,
                       size: 20,
                     ),
                     title: constWidgets.textWidget(
-                        "Setting", FontWeight.w400, 14, Colors.black),
+                        "My Inquiries", FontWeight.w400, 14, Colors.black),
                     trailing: const Icon(
                       Icons.arrow_forward_ios_rounded,
                       color: Colors.grey,
