@@ -104,8 +104,8 @@ class _HomePageState extends State<HomePage>
               ),
               Container(
                 width: width,
-                padding:
-                    const EdgeInsets.only(left: 15.0, top: 15.0, right: 15.0),
+                padding: const EdgeInsets.only(
+                    left: 15.0, top: 15.0, right: 15.0, bottom: 5),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -673,6 +673,7 @@ class _HomePageState extends State<HomePage>
                             .hasMatch(_emailController.text);
                         if (emailValid == true) {
                           form = false;
+
                           await FirebaseFirestore.instance
                               .collection('Admin')
                               .doc('inquires_list')

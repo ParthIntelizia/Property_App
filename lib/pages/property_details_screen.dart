@@ -1,13 +1,16 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:luxepass/constants/common_widget.dart';
 import 'package:luxepass/constants/const_variables.dart';
+import 'package:luxepass/constants/constant.dart';
 import 'package:luxepass/get_storage_services/get_storage_service.dart';
 import 'package:provider/provider.dart';
 import '../../constants/constant_colors.dart';
 import '../../constants/constant_widgets.dart';
 import '../../providers/search_screen_provider.dart';
 import '../home/widgets/unordered_list.dart';
+import 'package:get/get.dart';
 
 class PropertyDetailsPage extends StatefulWidget {
   final fetchData;
@@ -28,6 +31,11 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
   final CarouselController _controller = CarouselController();
   List<String> crouselImage = [];
   bool isContainCheck = false;
+
+  final _fullNameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _messageNameController = TextEditingController();
+
   @override
   void initState() {
     _homePageTabController = TabController(length: 5, vsync: this);
@@ -77,7 +85,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
                               int pageViewIndex) =>
                           SizedBox(
                         width: width,
-                        height: 300,
+                        height: 320,
                         child: Image.network(
                             widget.fetchData['listOfImage'][itemIndex],
                             fit: BoxFit.cover),
@@ -87,7 +95,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
                           _current = index;
                           setState(() {});
                         },
-                        height: 300,
+                        height: 320,
                         autoPlay: crouselImage.length > 1 ? true : false,
                         enlargeCenterPage: true,
                         viewportFraction: 1.0,
@@ -98,7 +106,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
                         ? Positioned(
                             left: 0,
                             right: 0,
-                            bottom: 60.0,
+                            bottom: 40.0,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children:
@@ -125,7 +133,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
                     Column(
                       children: [
                         SizedBox(
-                          height: 12,
+                          height: 15,
                         ),
                         Container(
                           width: width,
@@ -326,7 +334,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
 
   Widget _descriptionWidget(final fetchData) {
     return Container(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -334,7 +342,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
             constWidgets.textWidget("${fetchData['propertyName']}",
                 FontWeight.w700, 20, Colors.black),
             Padding(
-              padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+              padding: const EdgeInsets.only(top: 10.0, bottom: 15.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -516,6 +524,198 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
                   )
                 ],
               ),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 25,
+                  backgroundImage: AssetImage('assets/agent.png'),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CommonWidget.textBoldWight500(
+                        text: "Mark S.", fontSize: 15),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    CommonWidget.textBoldWight500(
+                        text: "Agent", color: Colors.grey, fontSize: 13),
+                  ],
+                ),
+                Spacer(),
+                MaterialButton(
+                  color: themColors309D9D,
+                  height: 50,
+                  minWidth: 120,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(40),
+                  ),
+                  onPressed: () {
+                    Get.dialog(
+                      Dialog(
+                        child: Padding(
+                          padding: EdgeInsets.all(15.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  CommonWidget.textBoldWight700(
+                                      text: "Send a Message", fontSize: 15),
+                                  IconButton(
+                                    onPressed: () {
+                                      Get.back();
+                                    },
+                                    icon: Icon(Icons.close),
+                                  )
+                                ],
+                              ),
+                              TextField(
+                                controller: _fullNameController,
+                                decoration: InputDecoration(
+                                    hintText: "Full Name",
+                                    contentPadding: const EdgeInsets.all(8.0),
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(5.0),
+                                        borderSide: const BorderSide(
+                                            color:
+                                                ConstColors.widgetDividerColor,
+                                            width: 1.0))),
+                              ),
+                              SizedBox(
+                                height: 13,
+                              ),
+                              TextField(
+                                controller: _emailController,
+                                decoration: InputDecoration(
+                                    hintText: "Email",
+                                    contentPadding: const EdgeInsets.all(8.0),
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(5.0),
+                                        borderSide: const BorderSide(
+                                            color:
+                                                ConstColors.widgetDividerColor,
+                                            width: 1.0))),
+                              ),
+                              SizedBox(
+                                height: 13,
+                              ),
+                              TextField(
+                                maxLines: 3,
+                                controller: _messageNameController,
+                                decoration: InputDecoration(
+                                    hintText: "Message",
+                                    contentPadding: const EdgeInsets.all(8.0),
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(5.0),
+                                        borderSide: const BorderSide(
+                                            color:
+                                                ConstColors.widgetDividerColor,
+                                            width: 1.0))),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              MaterialButton(
+                                color: themColors309D9D,
+                                height: 50,
+                                minWidth: 120,
+                                child: Text(
+                                  "Submit",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(40),
+                                ),
+                                onPressed: () async {
+                                  if (_emailController.text.isNotEmpty &&
+                                      _emailController.text.isNotEmpty &&
+                                      _messageNameController.text.isNotEmpty) {
+                                    bool emailValid = RegExp(
+                                            r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
+                                        .hasMatch(_emailController.text);
+
+                                    if (emailValid == true) {
+                                      await FirebaseFirestore.instance
+                                          .collection('Admin')
+                                          .doc('inquires_list')
+                                          .collection('messages')
+                                          .add({
+                                        'full_name':
+                                            _fullNameController.text.toString(),
+                                        "email":
+                                            _emailController.text.toString(),
+                                        "message": _messageNameController.text
+                                            .toString(),
+                                        "user_token":
+                                            GetStorageServices.getToken(),
+                                        'crate_date': DateTime.now().toString()
+                                      });
+
+                                      Get.back();
+                                      _emailController.clear();
+                                      _fullNameController.clear();
+                                      _messageNameController.clear();
+
+                                      CommonWidget.getSnackBar(
+                                          title: "Submitted!",
+                                          duration: 2,
+                                          message:
+                                              'Your message has been received, We will revert you shortly.');
+                                    } else {
+                                      CommonWidget.getSnackBar(
+                                          color: Colors.red,
+                                          duration: 2,
+                                          title: 'Invalid Email',
+                                          message: 'Please Enter Valid Email');
+                                    }
+                                  } else {
+                                    CommonWidget.getSnackBar(
+                                        color: Colors.red,
+                                        duration: 2,
+                                        title: 'required',
+                                        message:
+                                            'Please Enter all filed required');
+                                  }
+                                },
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        'assets/chat.png',
+                        height: 15,
+                        width: 15,
+                      ),
+                      SizedBox(
+                        width: 7,
+                      ),
+                      CommonWidget.textBoldWight500(
+                        text: "Message",
+                        fontSize: 15,
+                        color: Colors.white,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             )
           ],
         ),
