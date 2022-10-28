@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
@@ -39,7 +40,7 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          resizeToAvoidBottomInset: false,
+          //resizeToAvoidBottomInset: false,
           backgroundColor: ConstColors.backgroundColor,
           body: _body()),
     );
@@ -53,229 +54,241 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
       builder: (context) {
         final progress = ProgressHUD.of(context);
 
-        return Container(
-          constraints: BoxConstraints.expand(),
-          decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage(ConstVar.backgroundImg), fit: BoxFit.cover),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                margin: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 20.0),
-                child: Text(
-                  "Profile",
-                  style: GoogleFonts.urbanist(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 26.0,
-                      color: Colors.black),
+        return SingleChildScrollView(
+          child: Container(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(
+                  height: 10,
                 ),
-              ),
-              Stack(
-                alignment: Alignment.bottomRight,
-                children: [
-                  Container(
-                    height: 180,
-                    width: 180,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.grey.withOpacity(0.5)),
-                    child: image == null
-                        ? Icon(
-                            color: Colors.grey,
-                            Icons.person,
-                            size: 120,
-                          )
-                        : ClipRRect(
-                            borderRadius: BorderRadius.circular(500),
-                            child: Image.file(image!, fit: BoxFit.cover)),
+                Container(
+                  margin: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 20.0),
+                  child: Text(
+                    "Profile",
+                    style: GoogleFonts.urbanist(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 26.0,
+                        color: Colors.black),
                   ),
-                  Positioned(
-                    //bottom: 20,
-                    right: 10,
-                    child: CircleAvatar(
-                        backgroundColor: ConstColors.darkColor,
-                        child: IconButton(
-                            onPressed: () {
-                              showDialogWidget();
-                            },
-                            icon: Icon(
-                              Icons.edit,
-                              color: Colors.white,
-                            ))),
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: CommonWidget.textBoldWight500(text: 'User Name'),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: TextField(
-                  controller: nameController,
-                  decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(8.0),
-                      hintText: 'User Name',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          borderSide: const BorderSide(
-                              color: ConstColors.widgetDividerColor,
-                              width: 1.0))),
+                Stack(
+                  alignment: Alignment.bottomRight,
+                  children: [
+                    Container(
+                      height: 150,
+                      width: 150,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.grey.withOpacity(0.5)),
+                      child: image == null
+                          ? Icon(
+                              color: Colors.grey,
+                              Icons.person,
+                              size: 120,
+                            )
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(500),
+                              child: Image.file(image!, fit: BoxFit.cover)),
+                    ),
+                    Positioned(
+                      //bottom: 20,
+                      right: 10,
+                      child: CircleAvatar(
+                          backgroundColor: ConstColors.darkColor,
+                          child: IconButton(
+                              onPressed: () {
+                                showDialogWidget();
+                              },
+                              icon: Icon(
+                                Icons.edit,
+                                color: Colors.white,
+                              ))),
+                    )
+                  ],
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: CommonWidget.textBoldWight500(text: 'Full Name'),
+                SizedBox(
+                  height: 20,
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: TextField(
-                  controller: fullNameController,
-                  decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(8.0),
-                      hintText: 'Full Name',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          borderSide: const BorderSide(
-                              color: ConstColors.widgetDividerColor,
-                              width: 1.0))),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: CommonWidget.textBoldWight500(text: 'User Name'),
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: CommonWidget.textBoldWight500(text: 'Email'),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: TextField(
+                    controller: nameController,
+                    decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(8.0),
+                        hintText: 'User Name',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            borderSide: const BorderSide(
+                                color: ConstColors.widgetDividerColor,
+                                width: 1.0))),
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: TextField(
-                  controller: emailController,
-                  decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(8.0),
-                      hintText: 'Email',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          borderSide: const BorderSide(
-                              color: ConstColors.widgetDividerColor,
-                              width: 1.0))),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: CommonWidget.textBoldWight500(text: 'Full Name'),
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: CommonWidget.textBoldWight500(text: 'Mobile Number'),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: TextField(
+                    controller: fullNameController,
+                    decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(8.0),
+                        hintText: 'Full Name',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            borderSide: const BorderSide(
+                                color: ConstColors.widgetDividerColor,
+                                width: 1.0))),
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: TextField(
-                  controller: mobileController,
-                  decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(8.0),
-                      hintText: 'Mobile Number',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          borderSide: const BorderSide(
-                              color: ConstColors.widgetDividerColor,
-                              width: 1.0))),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: CommonWidget.textBoldWight500(text: 'Email'),
+                  ),
                 ),
-              ),
-              Spacer(),
-              InkWell(
-                onTap: () async {
-                  print('enter thg escree ');
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: TextField(
+                    controller: emailController,
+                    decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(8.0),
+                        hintText: 'Email',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            borderSide: const BorderSide(
+                                color: ConstColors.widgetDividerColor,
+                                width: 1.0))),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: CommonWidget.textBoldWight500(text: 'Mobile Number'),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: TextField(
+                    controller: mobileController,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
+                    decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(8.0),
+                        hintText: 'Mobile Number',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            borderSide: const BorderSide(
+                                color: ConstColors.widgetDividerColor,
+                                width: 1.0))),
+                  ),
+                ),
+                InkWell(
+                  onTap: () async {
+                    print('enter thg escree ');
 
-                  if (image != null &&
-                      nameController.text.isNotEmpty &&
-                      mobileController.text.isNotEmpty &&
-                      fullNameController.text.isNotEmpty &&
-                      emailController.text.isNotEmpty) {
-                    try {
-                      print('enter thg escree ');
-                      progress!.show();
-                      var snapshot = await FirebaseStorage.instance
-                          .ref()
-                          .child(
-                              'AllUserImage/${DateTime.now().microsecondsSinceEpoch}')
-                          .putFile(image!);
-                      liveImageURL = await snapshot.ref.getDownloadURL();
-                      await FirebaseFirestore.instance
-                          .collection('All_User_Details')
-                          .doc(GetStorageServices.getToken())
-                          .update({
-                        'profile_image': liveImageURL,
-                        'user_name': nameController.text.toString(),
-                        'is_Profile_check': true,
-                        'email': emailController.text.toString(),
-                        'mobile': mobileController.text.toString(),
-                        'full_name': fullNameController.text.toString(),
-                      });
-                      CommonMethode.setProfileAllDetails(
-                          mobile: mobileController.text.toString(),
-                          fullName: fullNameController.text.toString(),
-                          email: emailController.text.toString(),
-                          imageUrl: liveImageURL!,
-                          name: nameController.text.toString());
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const MyLocation()),
-                        (Route<dynamic> route) => false,
-                      );
-                      progress.dismiss();
-                    } catch (e) {
-                      progress!.dismiss();
+                    if (image != null &&
+                        nameController.text.isNotEmpty &&
+                        mobileController.text.isNotEmpty &&
+                        fullNameController.text.isNotEmpty &&
+                        emailController.text.isNotEmpty) {
+                      bool emailValid = RegExp(
+                              r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
+                          .hasMatch(emailController.text);
+                      if (emailValid == true) {
+                        try {
+                          print('enter thg escree ');
+                          progress!.show();
+                          var snapshot = await FirebaseStorage.instance
+                              .ref()
+                              .child(
+                                  'AllUserImage/${DateTime.now().microsecondsSinceEpoch}')
+                              .putFile(image!);
+                          liveImageURL = await snapshot.ref.getDownloadURL();
+                          await FirebaseFirestore.instance
+                              .collection('All_User_Details')
+                              .doc(GetStorageServices.getToken())
+                              .update({
+                            'profile_image': liveImageURL,
+                            'user_name': nameController.text.toString(),
+                            'is_Profile_check': true,
+                            'email': emailController.text.trim().toString(),
+                            'mobile': mobileController.text.toString(),
+                            'full_name': fullNameController.text.toString(),
+                          });
+                          CommonMethode.setProfileAllDetails(
+                              mobile: mobileController.text.toString(),
+                              fullName: fullNameController.text.toString(),
+                              email: emailController.text.toString(),
+                              imageUrl: liveImageURL!,
+                              name: nameController.text.toString());
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const MyLocation()),
+                            (Route<dynamic> route) => false,
+                          );
+                          progress.dismiss();
+                        } catch (e) {
+                          progress!.dismiss();
 
-                      return CommonWidget.getSnackBar(
-                          message: 'went-wrong',
-                          title: 'Failed',
+                          return CommonWidget.getSnackBar(
+                              message: 'went-wrong',
+                              title: 'Failed',
+                              duration: 2,
+                              color: Colors.red);
+                        }
+                      } else {
+                        CommonWidget.getSnackBar(
+                            message: 'Please Enter Valid Email',
+                            title: 'Failed',
+                            duration: 2,
+                            color: Colors.red);
+                      }
+                    } else {
+                      CommonWidget.getSnackBar(
+                          message: 'Photo & Name are required',
+                          title: 'required',
                           duration: 2,
                           color: Colors.red);
                     }
-                  } else {
-                    CommonWidget.getSnackBar(
-                        message: 'Photo & Name are required',
-                        title: 'required',
-                        duration: 2,
-                        color: Colors.red);
-                  }
-                },
-                child: Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                      color: ConstColors.darkColor,
-                      borderRadius: BorderRadius.circular(10)),
-                  margin: const EdgeInsets.all(10.0),
-                  child: Center(
-                    child: Text(
-                      'Next',
-                      style: TextStyle(color: Colors.white, fontSize: 16),
+                  },
+                  child: Container(
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: ConstColors.darkColor,
+                        borderRadius: BorderRadius.circular(10)),
+                    margin: const EdgeInsets.all(10.0),
+                    child: Center(
+                      child: Text(
+                        'Next',
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-            ],
+                SizedBox(
+                  height: 20,
+                ),
+              ],
+            ),
           ),
         );
       },
