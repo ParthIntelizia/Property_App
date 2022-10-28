@@ -3,16 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:luxepass/constants/const_variables.dart';
 import 'package:luxepass/pages/property_details_screen.dart';
-import 'package:luxepass/utils/properties_shimmer.dart';
 import '../../constants/constant_colors.dart';
 import '../../constants/constant_widgets.dart';
 import '../get_storage_services/get_storage_service.dart';
 import '../home/widgets/wishl_list_item_widget.dart';
-import '../utils/wishlist_shimmer.dart';
 import 'authentication/signin.dart';
 
 class PopularPage extends StatefulWidget {
-  const PopularPage({Key? key}) : super(key: key);
+  final appTitle;
+  const PopularPage({Key? key, required this.appTitle}) : super(key: key);
 
   @override
   State<PopularPage> createState() => _PopularPageState();
@@ -128,7 +127,7 @@ class _PopularPageState extends State<PopularPage>
                     icon: Icon(Icons.arrow_back_ios),
                   ),
                   constWidgets.textWidget(
-                      "Pupular", FontWeight.w700, 24, Colors.black),
+                      widget.appTitle, FontWeight.w700, 24, Colors.black),
                 ],
               ),
             ),

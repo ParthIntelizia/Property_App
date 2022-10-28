@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:country_codes/country_codes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
@@ -35,9 +34,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   TabController? _homePageTabController;
+
   ConstWidgets constWidgets = ConstWidgets();
   bool form = true;
   bool form1 = true;
+
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -46,6 +47,7 @@ class _HomePageState extends State<HomePage>
   final TextEditingController _emailController1 = TextEditingController();
   final TextEditingController _phoneController1 = TextEditingController();
   final TextEditingController _messageController1 = TextEditingController();
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -114,25 +116,30 @@ class _HomePageState extends State<HomePage>
                             FontWeight.w700, 18, Colors.black),
                       ],
                     ),
-                    Container(
-                      height: 40,
-                      width: 40,
-                      decoration: BoxDecoration(shape: BoxShape.circle),
-                      child: GetStorageServices.getProfileImageValue() == null
-                          ? CircleAvatar(
-                              minRadius: 20,
-                              backgroundColor: Colors.grey.withOpacity(0.5),
-                              child: Icon(
-                                Icons.person,
-                                color: Colors.grey,
+                    GestureDetector(
+                      onTap: () {
+                        locator<NavBarIndex>().setTabCount(4);
+                      },
+                      child: Container(
+                        height: 40,
+                        width: 40,
+                        decoration: BoxDecoration(shape: BoxShape.circle),
+                        child: GetStorageServices.getProfileImageValue() == null
+                            ? CircleAvatar(
+                                minRadius: 20,
+                                backgroundColor: Colors.grey.withOpacity(0.5),
+                                child: Icon(
+                                  Icons.person,
+                                  color: Colors.grey,
+                                ),
+                              )
+                            : ClipRRect(
+                                borderRadius: BorderRadius.circular(300),
+                                child: Image.network(
+                                    '${GetStorageServices.getProfileImageValue()}',
+                                    fit: BoxFit.cover),
                               ),
-                            )
-                          : ClipRRect(
-                              borderRadius: BorderRadius.circular(300),
-                              child: Image.network(
-                                  '${GetStorageServices.getProfileImageValue()}',
-                                  fit: BoxFit.cover),
-                            ),
+                      ),
                     ),
                   ],
                 ),
@@ -173,49 +180,60 @@ class _HomePageState extends State<HomePage>
                                 height: 60,
                                 child: Row(
                                   children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        showCategoryWiseData = 'All';
-                                        setState(() {});
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8),
-                                        child: Tab(
-                                            child: Container(
-                                          padding: const EdgeInsets.only(
-                                              left: 20.0,
-                                              right: 20.0,
-                                              top: 7.0,
-                                              bottom: 7.0),
-                                          decoration: BoxDecoration(
-                                              color: ConstColors.searchBoxColor,
-                                              border: Border.all(
-                                                  color: showCategoryWiseData ==
-                                                          'All'
-                                                      ? ConstColors.lightColor
-                                                      : ConstColors
-                                                          .widgetDividerColor,
-                                                  width: 1.0),
-                                              borderRadius:
-                                                  BorderRadius.circular(50)),
-                                          child: Text('All',
-                                              style: GoogleFonts.urbanist(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 13,
-                                                  color:
-                                                      ConstColors.darkColor)),
-                                        )),
-                                      ),
-                                    ),
                                     Expanded(
                                       child: ListView.builder(
-                                        itemCount: snapshot.data.docs.length,
+                                        itemCount:
+                                            snapshot.data.docs.length + 1,
                                         scrollDirection: Axis.horizontal,
                                         itemBuilder: (context, index) {
+                                          if (index == 0) {
+                                            return GestureDetector(
+                                              onTap: () {
+                                                showCategoryWiseData = 'All';
+                                                setState(() {});
+                                              },
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 8),
+                                                child: Tab(
+                                                    child: Container(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 20.0,
+                                                          right: 20.0,
+                                                          top: 7.0,
+                                                          bottom: 7.0),
+                                                  decoration: BoxDecoration(
+                                                      color: ConstColors
+                                                          .searchBoxColor,
+                                                      border: Border.all(
+                                                          color:
+                                                              showCategoryWiseData ==
+                                                                      'All'
+                                                                  ? ConstColors
+                                                                      .lightColor
+                                                                  : ConstColors
+                                                                      .widgetDividerColor,
+                                                          width: 1.0),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              50)),
+                                                  child: Text('All',
+                                                      style:
+                                                          GoogleFonts.urbanist(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              fontSize: 13,
+                                                              color: ConstColors
+                                                                  .darkColor)),
+                                                )),
+                                              ),
+                                            );
+                                          }
                                           var fetchCategory =
-                                              snapshot.data.docs[index];
-
+                                              snapshot.data.docs[index - 1];
                                           return GestureDetector(
                                             onTap: () {
                                               showCategoryWiseData =
@@ -260,6 +278,7 @@ class _HomePageState extends State<HomePage>
                                                             '${fetchCategory['category_image'][0]}',
                                                             fit: BoxFit.cover),
                                                       ),
+                                                      SizedBox(width: 8),
                                                       // const Icon(Icons.home,
                                                       //     size: 25, color: ConstColors.darkColor),
                                                       Text(
@@ -320,7 +339,7 @@ class _HomePageState extends State<HomePage>
       child: Column(
         children: [
           SizedBox(
-            height: 60,
+            height: 40,
             width: MediaQuery.of(context).size.width,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -330,18 +349,20 @@ class _HomePageState extends State<HomePage>
                   child: constWidgets.textWidget("Popular", FontWeight.w500, 20,
                       ConstColors.serviceHeadLineColor),
                 ),
-                Padding(
-                    padding: EdgeInsets.only(right: 15),
-                    child: InkResponse(
-                      onTap: () {
-                        Get.to(() => PopularPage());
-                      },
+                InkWell(
+                  onTap: () {
+                    Get.to(() => PopularPage(
+                          appTitle: 'Popular',
+                        ));
+                  },
+                  child: Padding(
+                      padding: EdgeInsets.only(right: 15, left: 15),
                       child: Icon(
                         Icons.arrow_forward_ios,
                         color: Colors.black,
                         size: 16,
-                      ),
-                    )),
+                      )),
+                ),
               ],
             ),
           ),
@@ -431,13 +452,21 @@ class _HomePageState extends State<HomePage>
                   child: constWidgets.textWidget("Recommended for you",
                       FontWeight.w500, 20, ConstColors.serviceHeadLineColor),
                 ),
-                // const Padding(
-                //     padding: EdgeInsets.only(right: 15),
-                //     child: Icon(
-                //       Icons.arrow_forward_ios,
-                //       color: Colors.black,
-                //       size: 16,
-                //     )),
+                Spacer(),
+                InkWell(
+                  onTap: () {
+                    Get.to(() => PopularPage(
+                          appTitle: 'Recommended',
+                        ));
+                  },
+                  child: Padding(
+                      padding: EdgeInsets.only(right: 15, left: 15),
+                      child: Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.black,
+                        size: 16,
+                      )),
+                ),
               ],
             ),
           ),
@@ -490,6 +519,7 @@ class _HomePageState extends State<HomePage>
   }
 
   String? gender = "To Sell";
+
   Widget inputForm(String heading, final progress) {
     return Column(
       children: [
@@ -643,7 +673,7 @@ class _HomePageState extends State<HomePage>
                             .hasMatch(_emailController.text);
                         if (emailValid == true) {
                           form = false;
-                          FirebaseFirestore.instance
+                          await FirebaseFirestore.instance
                               .collection('Admin')
                               .doc('inquires_list')
                               .collection('get_a_free_valuation')
@@ -656,6 +686,12 @@ class _HomePageState extends State<HomePage>
                             "user_token": GetStorageServices.getToken(),
                             'crate_date': DateTime.now().toString()
                           });
+
+                          CommonWidget.getSnackBar(
+                              title: "Submitted!",
+                              duration: 2,
+                              message:
+                                  'Your inquiry has been received, We will contact you shortly.');
                         } else {
                           CommonWidget.getSnackBar(
                               color: Colors.red,
@@ -789,6 +825,7 @@ class _HomePageState extends State<HomePage>
                       "Message", FontWeight.w500, 16, Colors.black),
                   const SizedBox(height: 10.0),
                   TextField(
+                    maxLines: 3,
                     controller: _messageController1,
                     decoration: InputDecoration(
                         contentPadding: const EdgeInsets.all(8.0),
@@ -815,7 +852,7 @@ class _HomePageState extends State<HomePage>
                         if (emailValid == true) {
                           form1 = false;
 
-                          FirebaseFirestore.instance
+                          await FirebaseFirestore.instance
                               .collection('Admin')
                               .doc('inquires_list')
                               .collection('free_martgage_check')
@@ -827,6 +864,12 @@ class _HomePageState extends State<HomePage>
                             "user_token": GetStorageServices.getToken(),
                             'crate_date': DateTime.now().toString()
                           });
+
+                          CommonWidget.getSnackBar(
+                              duration: 2,
+                              title: "Submitted!",
+                              message:
+                                  'Your inquiry has been received, We will contact you shortly.');
                         } else {
                           CommonWidget.getSnackBar(
                               color: Colors.red,

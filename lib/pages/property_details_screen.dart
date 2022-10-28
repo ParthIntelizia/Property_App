@@ -78,17 +78,17 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
                               int pageViewIndex) =>
                           SizedBox(
                         width: width,
-                        height: 400,
+                        height: 300,
                         child: Image.network(
                             widget.fetchData['listOfImage'][itemIndex],
-                            fit: BoxFit.fill),
+                            fit: BoxFit.cover),
                       ),
                       options: CarouselOptions(
                         onPageChanged: (index, reason) {
                           _current = index;
                           setState(() {});
                         },
-                        height: 400,
+                        height: 300,
                         autoPlay: crouselImage.length > 1 ? true : false,
                         enlargeCenterPage: true,
                         viewportFraction: 1.0,
@@ -99,7 +99,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
                         ? Positioned(
                             left: 0,
                             right: 0,
-                            bottom: 20.0,
+                            bottom: 60.0,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children:
@@ -126,12 +126,12 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
                     Column(
                       children: [
                         SizedBox(
-                          height: safearea,
+                          height: 12,
                         ),
                         Container(
                           width: width,
-                          padding: const EdgeInsets.only(top: 15.0),
                           child: Row(
+                            mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
