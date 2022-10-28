@@ -25,6 +25,9 @@ class SetProfileScreen extends StatefulWidget {
 
 class _SetProfileScreenState extends State<SetProfileScreen> {
   TextEditingController nameController = TextEditingController();
+  TextEditingController fullNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController mobileController = TextEditingController();
   late CountryModel seletedCountry;
   String? liveImageURL;
 
@@ -112,6 +115,13 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
                 height: 20,
               ),
               Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: CommonWidget.textBoldWight500(text: 'User Name'),
+                ),
+              ),
+              Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: TextField(
                   controller: nameController,
@@ -125,12 +135,79 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
                               width: 1.0))),
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: CommonWidget.textBoldWight500(text: 'Full Name'),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: TextField(
+                  controller: fullNameController,
+                  decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(8.0),
+                      hintText: 'Full Name',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                          borderSide: const BorderSide(
+                              color: ConstColors.widgetDividerColor,
+                              width: 1.0))),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: CommonWidget.textBoldWight500(text: 'Email'),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: TextField(
+                  controller: emailController,
+                  decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(8.0),
+                      hintText: 'Email',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                          borderSide: const BorderSide(
+                              color: ConstColors.widgetDividerColor,
+                              width: 1.0))),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: CommonWidget.textBoldWight500(text: 'Mobile Number'),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: TextField(
+                  controller: mobileController,
+                  decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(8.0),
+                      hintText: 'Mobile Number',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                          borderSide: const BorderSide(
+                              color: ConstColors.widgetDividerColor,
+                              width: 1.0))),
+                ),
+              ),
               Spacer(),
               InkWell(
                 onTap: () async {
                   print('enter thg escree ');
 
-                  if (image != null && nameController.text.isNotEmpty) {
+                  if (image != null &&
+                      nameController.text.isNotEmpty &&
+                      mobileController.text.isNotEmpty &&
+                      fullNameController.text.isNotEmpty &&
+                      emailController.text.isNotEmpty) {
                     try {
                       print('enter thg escree ');
                       progress!.show();
@@ -146,9 +223,15 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
                           .update({
                         'profile_image': liveImageURL,
                         'user_name': nameController.text.toString(),
-                        'is_Profile_check': true
+                        'is_Profile_check': true,
+                        'email': emailController.text.toString(),
+                        'mobile': mobileController.text.toString(),
+                        'full_name': fullNameController.text.toString(),
                       });
                       CommonMethode.setProfileAllDetails(
+                          mobile: mobileController.text.toString(),
+                          fullName: fullNameController.text.toString(),
+                          email: emailController.text.toString(),
                           imageUrl: liveImageURL!,
                           name: nameController.text.toString());
                       Navigator.pushAndRemoveUntil(

@@ -48,4 +48,31 @@ class GetStorageServices {
   static getNameValue() {
     return getStorage.read('setNameValue');
   }
+
+  /// full name
+  static setFullNameValue(String LoginValue) {
+    getStorage.write('setFullNameValue', LoginValue);
+  }
+
+  static getFullNameValue() {
+    return getStorage.read('setFullNameValue');
+  }
+
+  /// email
+  static setEmailValue(String LoginValue) {
+    getStorage.write('setEmailValue', LoginValue);
+  }
+
+  static getEmailValue() {
+    return getStorage.read('setEmailValue');
+  }
+
+  /// mobile
+  static setMobileValue(String LoginValue) {
+    getStorage.write('setMobileValue', LoginValue);
+  }
+
+  static getMobileValue() {
+    return getStorage.read('setMobileValue');
+  }
 }

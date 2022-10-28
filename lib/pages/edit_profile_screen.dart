@@ -28,6 +28,9 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController? nameController;
+  TextEditingController? fullNameController;
+  TextEditingController? emailController;
+  TextEditingController? mobileController;
   late CountryModel selectedCountry;
   String? liveImageURL;
   bool isSignIn = false;
@@ -39,6 +42,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     super.initState();
     nameController =
         TextEditingController(text: GetStorageServices.getNameValue());
+    fullNameController =
+        TextEditingController(text: GetStorageServices.getFullNameValue());
+    emailController =
+        TextEditingController(text: GetStorageServices.getEmailValue());
+    mobileController =
+        TextEditingController(text: GetStorageServices.getMobileValue());
     liveImageURL = GetStorageServices.getProfileImageValue();
   }
 
@@ -58,182 +67,267 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       builder: (context) {
         final progress = ProgressHUD.of(context);
         return Container(
-          constraints: BoxConstraints.expand(),
           decoration: BoxDecoration(
             image: DecorationImage(
                 image: AssetImage(ConstVar.backgroundImg), fit: BoxFit.cover),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(
-                height: 10,
-              ),
-              AppBar(
-                backgroundColor: Colors.white,
-                elevation: 0,
-                centerTitle: true,
-                leading: IconButton(
-                  onPressed: () {
-                    Get.back();
-                  },
-                  icon: Icon(
-                    Icons.arrow_back_ios,
-                    color: Colors.black,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(
+                  height: 10,
+                ),
+                AppBar(
+                  backgroundColor: Colors.white,
+                  elevation: 0,
+                  centerTitle: true,
+                  leading: IconButton(
+                    onPressed: () {
+                      Get.back();
+                    },
+                    icon: Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.black,
+                    ),
+                  ),
+                  title: Text(
+                    "Edit Profile",
+                    style: GoogleFonts.urbanist(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 20.0,
+                        color: Colors.black),
                   ),
                 ),
-                title: Text(
-                  "Edit Profile",
-                  style: GoogleFonts.urbanist(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 20.0,
-                      color: Colors.black),
+                // Container(
+                //   margin: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 20.0),
+                //   child: Row(
+                //     children: [
+                //       IconButton(
+                //         onPressed: () {
+                //           Get.back();
+                //         },
+                //         icon: Icon(Icons.arrow_back_ios),
+                //       ),
+                //       Spacer(),
+                //       Text(
+                //         "Edit Profile",
+                //         style: GoogleFonts.urbanist(
+                //             fontWeight: FontWeight.w700,
+                //             fontSize: 20.0,
+                //             color: Colors.black),
+                //       ),
+                //       Spacer(),
+                //     ],
+                //   ),
+                // ),
+                Stack(
+                  clipBehavior: Clip.none,
+                  alignment: Alignment.bottomRight,
+                  children: [
+                    Container(
+                      height: 170,
+                      width: 170,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.grey.withOpacity(0.5)),
+                      child: image == null
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(500),
+                              child: Image.network(
+                                  GetStorageServices.getProfileImageValue(),
+                                  fit: BoxFit.cover))
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(500),
+                              child: Image.file(image!, fit: BoxFit.cover)),
+                    ),
+                    Positioned(
+                      bottom: 20,
+                      right: -5,
+                      child: CircleAvatar(
+                          backgroundColor: ConstColors.darkColor,
+                          child: IconButton(
+                              onPressed: () {
+                                showDialogWidget();
+                              },
+                              icon: Icon(
+                                Icons.edit,
+                                color: Colors.white,
+                              ))),
+                    )
+                  ],
                 ),
-              ),
-              // Container(
-              //   margin: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 20.0),
-              //   child: Row(
-              //     children: [
-              //       IconButton(
-              //         onPressed: () {
-              //           Get.back();
-              //         },
-              //         icon: Icon(Icons.arrow_back_ios),
-              //       ),
-              //       Spacer(),
-              //       Text(
-              //         "Edit Profile",
-              //         style: GoogleFonts.urbanist(
-              //             fontWeight: FontWeight.w700,
-              //             fontSize: 20.0,
-              //             color: Colors.black),
-              //       ),
-              //       Spacer(),
-              //     ],
-              //   ),
-              // ),
-              Stack(
-                clipBehavior: Clip.none,
-                alignment: Alignment.bottomRight,
-                children: [
-                  Container(
-                    height: 170,
-                    width: 170,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.grey.withOpacity(0.5)),
-                    child: image == null
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(500),
-                            child: Image.network(
-                                GetStorageServices.getProfileImageValue(),
-                                fit: BoxFit.cover))
-                        : ClipRRect(
-                            borderRadius: BorderRadius.circular(500),
-                            child: Image.file(image!, fit: BoxFit.cover)),
+                SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: CommonWidget.textBoldWight500(text: 'User Name'),
                   ),
-                  Positioned(
-                    bottom: 20,
-                    right: -5,
-                    child: CircleAvatar(
-                        backgroundColor: ConstColors.darkColor,
-                        child: IconButton(
-                            onPressed: () {
-                              showDialogWidget();
-                            },
-                            icon: Icon(
-                              Icons.edit,
-                              color: Colors.white,
-                            ))),
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: TextField(
-                  controller: nameController,
-                  decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(8.0),
-                      hintText: 'User Name',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          borderSide: const BorderSide(
-                              color: ConstColors.widgetDividerColor,
-                              width: 1.0))),
                 ),
-              ),
-              Spacer(),
-              InkWell(
-                onTap: () async {
-                  print('enter thg escree ');
 
-                  if (image != null || nameController!.text.isNotEmpty) {
-                    try {
-                      print('enter thg escree ');
-                      progress!.show();
-                      if (image != null) {
-                        var snapshot = await FirebaseStorage.instance
-                            .ref()
-                            .child(
-                                'AllUserImage/${DateTime.now().microsecondsSinceEpoch}')
-                            .putFile(image!);
-                        liveImageURL = await snapshot.ref.getDownloadURL();
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: TextField(
+                    controller: nameController,
+                    decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(8.0),
+                        hintText: 'User Name',
+                        focusColor: ConstColors.darkColor,
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            borderSide: const BorderSide(
+                                color: ConstColors.widgetDividerColor,
+                                width: 1.0))),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: CommonWidget.textBoldWight500(text: 'Full Name'),
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: TextField(
+                    controller: fullNameController,
+                    decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(8.0),
+                        hintText: 'Full Name',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            borderSide: const BorderSide(
+                                color: ConstColors.widgetDividerColor,
+                                width: 1.0))),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: CommonWidget.textBoldWight500(text: 'Email'),
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: TextField(
+                    controller: emailController,
+                    decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(8.0),
+                        hintText: 'Email',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            borderSide: const BorderSide(
+                                color: ConstColors.widgetDividerColor,
+                                width: 1.0))),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: CommonWidget.textBoldWight500(text: 'Mobile Number'),
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: TextField(
+                    controller: mobileController,
+                    decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(8.0),
+                        hintText: 'Mobile Number',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            borderSide: const BorderSide(
+                                color: ConstColors.widgetDividerColor,
+                                width: 1.0))),
+                  ),
+                ),
+                InkWell(
+                  onTap: () async {
+                    print('enter thg escree ');
+
+                    if ((image != null) &&
+                        nameController!.text.isNotEmpty &&
+                        mobileController!.text.isNotEmpty &&
+                        fullNameController!.text.isNotEmpty &&
+                        emailController!.text.isNotEmpty) {
+                      try {
+                        print('enter thg escree ');
+                        progress!.show();
+                        if (image != null) {
+                          var snapshot = await FirebaseStorage.instance
+                              .ref()
+                              .child(
+                                  'AllUserImage/${DateTime.now().microsecondsSinceEpoch}')
+                              .putFile(image!);
+                          liveImageURL = await snapshot.ref.getDownloadURL();
+                        }
+                        await FirebaseFirestore.instance
+                            .collection('All_User_Details')
+                            .doc(GetStorageServices.getToken())
+                            .update({
+                          'profile_image': liveImageURL,
+                          'user_name': nameController!.text.toString(),
+                          'is_Profile_check': true,
+                          'email': emailController!.text.toString(),
+                          'mobile': mobileController!.text.toString(),
+                          'full_name': fullNameController!.text.toString(),
+                        });
+                        CommonMethode.setProfileAllDetails(
+                            mobile: mobileController!.text.toString(),
+                            imageUrl: liveImageURL!,
+                            email: emailController!.text.toString(),
+                            fullName: fullNameController!.text.toString(),
+                            name: nameController!.text.toString());
+
+                        locator<NavBarIndex>().setTabCount(4);
+                        MyNavigator.goToHome(context);
+
+                        progress.dismiss();
+                      } catch (e) {
+                        progress!.dismiss();
+
+                        return CommonWidget.getSnackBar(
+                            message: 'went-wrong',
+                            title: 'Failed',
+                            duration: 2,
+                            color: Colors.red);
                       }
-                      await FirebaseFirestore.instance
-                          .collection('All_User_Details')
-                          .doc(GetStorageServices.getToken())
-                          .update({
-                        'profile_image': liveImageURL,
-                        'user_name': nameController!.text.toString(),
-                        'is_Profile_check': true
-                      });
-                      CommonMethode.setProfileAllDetails(
-                          imageUrl: liveImageURL!,
-                          name: nameController!.text.toString());
-
-                      locator<NavBarIndex>().setTabCount(4);
-                      MyNavigator.goToHome(context);
-
-                      progress.dismiss();
-                    } catch (e) {
-                      progress!.dismiss();
-
-                      return CommonWidget.getSnackBar(
-                          message: 'went-wrong',
-                          title: 'Failed',
+                    } else {
+                      CommonWidget.getSnackBar(
+                          message: 'Photo & Name are required',
+                          title: 'required',
                           duration: 2,
                           color: Colors.red);
                     }
-                  } else {
-                    CommonWidget.getSnackBar(
-                        message: 'Photo & Name are required',
-                        title: 'required',
-                        duration: 2,
-                        color: Colors.red);
-                  }
-                },
-                child: Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                      color: ConstColors.darkColor,
-                      borderRadius: BorderRadius.circular(10)),
-                  margin: const EdgeInsets.all(10.0),
-                  child: Center(
-                    child: Text(
-                      'Update',
-                      style: TextStyle(color: Colors.white, fontSize: 16),
+                  },
+                  child: Container(
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: ConstColors.darkColor,
+                        borderRadius: BorderRadius.circular(10)),
+                    margin: const EdgeInsets.all(10.0),
+                    child: Center(
+                      child: Text(
+                        'Update',
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-            ],
+                SizedBox(
+                  height: 20,
+                ),
+              ],
+            ),
           ),
         );
       },

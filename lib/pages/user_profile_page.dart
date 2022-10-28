@@ -81,9 +81,6 @@ class _UserProfilePageState extends State<UserProfilePage>
                 child: Column(
               children: [
                 SizedBox(
-                  height: safearea,
-                ),
-                SizedBox(
                   width: width,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -120,6 +117,9 @@ class _UserProfilePageState extends State<UserProfilePage>
                       ),
                     ],
                   ),
+                ),
+                SizedBox(
+                  height: safearea,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(15.0),

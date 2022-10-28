@@ -27,7 +27,11 @@ class CommonMethode {
             .doc(GetStorageServices.getToken());
         var fetchData = await getDoc.get();
         CommonMethode.setProfileAllDetails(
-            imageUrl: fetchData['profile_image'], name: fetchData['user_name']);
+            mobile: fetchData['mobile'],
+            email: fetchData['email'],
+            fullName: fetchData['full_name'],
+            imageUrl: fetchData['profile_image'],
+            name: fetchData['user_name']);
       } catch (e) {
         Get.off(SetProfileScreen());
       }
@@ -51,8 +55,15 @@ class CommonMethode {
   }
 
   static setProfileAllDetails(
-      {required String imageUrl, required String name}) {
+      {required String imageUrl,
+      required String name,
+      required String fullName,
+      required String email,
+      required String mobile}) {
     GetStorageServices.setProfileImageValue(imageUrl);
     GetStorageServices.setNameValue(name);
+    GetStorageServices.setFullNameValue(fullName);
+    GetStorageServices.setEmailValue(email);
+    GetStorageServices.setMobileValue(mobile);
   }
 }
