@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
@@ -240,6 +241,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   padding: const EdgeInsets.all(16.0),
                   child: TextField(
                     controller: mobileController,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
                     decoration: InputDecoration(
                         contentPadding: const EdgeInsets.all(8.0),
                         hintText: 'Mobile Number',
@@ -254,49 +259,59 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   onTap: () async {
                     print('enter thg escree ');
 
-                    if ((image != null) &&
-                        nameController!.text.isNotEmpty &&
+                    if (nameController!.text.isNotEmpty &&
                         mobileController!.text.isNotEmpty &&
                         fullNameController!.text.isNotEmpty &&
                         emailController!.text.isNotEmpty) {
-                      try {
-                        print('enter thg escree ');
-                        progress!.show();
-                        if (image != null) {
-                          var snapshot = await FirebaseStorage.instance
-                              .ref()
-                              .child(
-                                  'AllUserImage/${DateTime.now().microsecondsSinceEpoch}')
-                              .putFile(image!);
-                          liveImageURL = await snapshot.ref.getDownloadURL();
+                      bool emailValid = RegExp(
+                              r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
+                          .hasMatch(emailController!.text);
+                      if (emailValid == true) {
+                        try {
+                          print('enter thg escree ');
+                          progress!.show();
+                          if (image != null) {
+                            var snapshot = await FirebaseStorage.instance
+                                .ref()
+                                .child(
+                                    'AllUserImage/${DateTime.now().microsecondsSinceEpoch}')
+                                .putFile(image!);
+                            liveImageURL = await snapshot.ref.getDownloadURL();
+                          }
+                          await FirebaseFirestore.instance
+                              .collection('All_User_Details')
+                              .doc(GetStorageServices.getToken())
+                              .update({
+                            'profile_image': liveImageURL,
+                            'user_name': nameController!.text.toString(),
+                            'is_Profile_check': true,
+                            'email': emailController!.text.trim().toString(),
+                            'mobile': mobileController!.text.toString(),
+                            'full_name': fullNameController!.text.toString(),
+                          });
+                          CommonMethode.setProfileAllDetails(
+                              mobile: mobileController!.text.toString(),
+                              imageUrl: liveImageURL!,
+                              email: emailController!.text.toString(),
+                              fullName: fullNameController!.text.toString(),
+                              name: nameController!.text.toString());
+
+                          locator<NavBarIndex>().setTabCount(4);
+                          MyNavigator.goToHome(context);
+
+                          progress.dismiss();
+                        } catch (e) {
+                          progress!.dismiss();
+
+                          return CommonWidget.getSnackBar(
+                              message: 'went-wrong',
+                              title: 'Failed',
+                              duration: 2,
+                              color: Colors.red);
                         }
-                        await FirebaseFirestore.instance
-                            .collection('All_User_Details')
-                            .doc(GetStorageServices.getToken())
-                            .update({
-                          'profile_image': liveImageURL,
-                          'user_name': nameController!.text.toString(),
-                          'is_Profile_check': true,
-                          'email': emailController!.text.toString(),
-                          'mobile': mobileController!.text.toString(),
-                          'full_name': fullNameController!.text.toString(),
-                        });
-                        CommonMethode.setProfileAllDetails(
-                            mobile: mobileController!.text.toString(),
-                            imageUrl: liveImageURL!,
-                            email: emailController!.text.toString(),
-                            fullName: fullNameController!.text.toString(),
-                            name: nameController!.text.toString());
-
-                        locator<NavBarIndex>().setTabCount(4);
-                        MyNavigator.goToHome(context);
-
-                        progress.dismiss();
-                      } catch (e) {
-                        progress!.dismiss();
-
-                        return CommonWidget.getSnackBar(
-                            message: 'went-wrong',
+                      } else {
+                        CommonWidget.getSnackBar(
+                            message: 'Please Enter Valid Email',
                             title: 'Failed',
                             duration: 2,
                             color: Colors.red);
