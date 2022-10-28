@@ -15,6 +15,7 @@ import 'authentication/signin.dart';
 import 'package:get/get.dart';
 
 import 'edit_profile_screen.dart';
+import 'faqs_screen.dart';
 import 'my_inquiry_screen.dart';
 
 class UserProfilePage extends StatefulWidget {
@@ -244,6 +245,9 @@ class _UserProfilePageState extends State<UserProfilePage>
                     ),
                   ),
                   ListTile(
+                    onTap: () {
+                      Get.to(() => FaqsScreen());
+                    },
                     leading: const Icon(
                       Icons.chat_bubble_outlined,
                       color: ConstColors.darkColor,
