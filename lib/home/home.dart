@@ -116,25 +116,30 @@ class _HomePageState extends State<HomePage>
                             FontWeight.w700, 18, Colors.black),
                       ],
                     ),
-                    Container(
-                      height: 40,
-                      width: 40,
-                      decoration: BoxDecoration(shape: BoxShape.circle),
-                      child: GetStorageServices.getProfileImageValue() == null
-                          ? CircleAvatar(
-                              minRadius: 20,
-                              backgroundColor: Colors.grey.withOpacity(0.5),
-                              child: Icon(
-                                Icons.person,
-                                color: Colors.grey,
+                    GestureDetector(
+                      onTap: () {
+                        locator<NavBarIndex>().setTabCount(4);
+                      },
+                      child: Container(
+                        height: 40,
+                        width: 40,
+                        decoration: BoxDecoration(shape: BoxShape.circle),
+                        child: GetStorageServices.getProfileImageValue() == null
+                            ? CircleAvatar(
+                                minRadius: 20,
+                                backgroundColor: Colors.grey.withOpacity(0.5),
+                                child: Icon(
+                                  Icons.person,
+                                  color: Colors.grey,
+                                ),
+                              )
+                            : ClipRRect(
+                                borderRadius: BorderRadius.circular(300),
+                                child: Image.network(
+                                    '${GetStorageServices.getProfileImageValue()}',
+                                    fit: BoxFit.cover),
                               ),
-                            )
-                          : ClipRRect(
-                              borderRadius: BorderRadius.circular(300),
-                              child: Image.network(
-                                  '${GetStorageServices.getProfileImageValue()}',
-                                  fit: BoxFit.cover),
-                            ),
+                      ),
                     ),
                   ],
                 ),
@@ -273,6 +278,7 @@ class _HomePageState extends State<HomePage>
                                                             '${fetchCategory['category_image'][0]}',
                                                             fit: BoxFit.cover),
                                                       ),
+                                                      SizedBox(width: 8),
                                                       // const Icon(Icons.home,
                                                       //     size: 25, color: ConstColors.darkColor),
                                                       Text(
@@ -333,7 +339,7 @@ class _HomePageState extends State<HomePage>
       child: Column(
         children: [
           SizedBox(
-            height: 60,
+            height: 40,
             width: MediaQuery.of(context).size.width,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -343,18 +349,20 @@ class _HomePageState extends State<HomePage>
                   child: constWidgets.textWidget("Popular", FontWeight.w500, 20,
                       ConstColors.serviceHeadLineColor),
                 ),
-                Padding(
-                    padding: EdgeInsets.only(right: 15, left: 15),
-                    child: InkWell(
-                      onTap: () {
-                        Get.to(() => PopularPage());
-                      },
+                InkWell(
+                  onTap: () {
+                    Get.to(() => PopularPage(
+                          appTitle: 'Popular',
+                        ));
+                  },
+                  child: Padding(
+                      padding: EdgeInsets.only(right: 15, left: 15),
                       child: Icon(
                         Icons.arrow_forward_ios,
                         color: Colors.black,
                         size: 16,
-                      ),
-                    )),
+                      )),
+                ),
               ],
             ),
           ),
@@ -444,13 +452,21 @@ class _HomePageState extends State<HomePage>
                   child: constWidgets.textWidget("Recommended for you",
                       FontWeight.w500, 20, ConstColors.serviceHeadLineColor),
                 ),
-                // const Padding(
-                //     padding: EdgeInsets.only(right: 15),
-                //     child: Icon(
-                //       Icons.arrow_forward_ios,
-                //       color: Colors.black,
-                //       size: 16,
-                //     )),
+                Spacer(),
+                InkWell(
+                  onTap: () {
+                    Get.to(() => PopularPage(
+                          appTitle: 'Recommended',
+                        ));
+                  },
+                  child: Padding(
+                      padding: EdgeInsets.only(right: 15, left: 15),
+                      child: Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.black,
+                        size: 16,
+                      )),
+                ),
               ],
             ),
           ),

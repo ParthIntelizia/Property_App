@@ -19,13 +19,14 @@ class _SearchWidgetState extends State<SearchWidget> {
   Widget build(BuildContext context) {
     return SizedBox(
         child: Padding(
-            padding: const EdgeInsets.all(15),
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
             child: Container(
               height: 50,
               padding: const EdgeInsets.all(5),
               decoration: BoxDecoration(
                   color: ConstColors.searchBoxColor,
-                  border: Border.all(color: ConstColors.widgetDividerColor,width: 1.0),
+                  border: Border.all(
+                      color: ConstColors.widgetDividerColor, width: 1.0),
                   borderRadius: BorderRadius.circular(50)),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -36,6 +37,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
+                        SizedBox(width: 10),
                         const Icon(Icons.search,
                             size: 22, color: ConstColors.lightColor),
                         const SizedBox(
