@@ -272,7 +272,6 @@ class _OTPInputScreenState extends State<OTPInputScreen> {
         print(
             '---------uid in- displayName  user ${_auth.currentUser!.displayName}');
         GetStorageServices.setToken(uid);
-        GetStorageServices.setUserLoggedIn();
         await CommonMethode.likeFiledAdd(context);
       }
     } on FirebaseAuthException catch (e) {
@@ -332,7 +331,7 @@ class _OTPInputScreenState extends State<OTPInputScreen> {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: widget.emailOrPhoneText, password: '123456');
         GetStorageServices.setToken(FirebaseAuth.instance.currentUser!.uid);
-        GetStorageServices.setUserLoggedIn();
+
         CommonMethode.likeFiledAdd(context);
         progress.dismiss();
       } catch (e) {
@@ -340,7 +339,6 @@ class _OTPInputScreenState extends State<OTPInputScreen> {
           await FirebaseAuth.instance.signInWithEmailAndPassword(
               email: widget.emailOrPhoneText, password: '123456');
           GetStorageServices.setToken(FirebaseAuth.instance.currentUser!.uid);
-          GetStorageServices.setUserLoggedIn();
           CommonMethode.likeFiledAdd(context);
           progress.dismiss();
         } on FirebaseAuthException catch (e) {

@@ -124,21 +124,22 @@ class _HomePageState extends State<HomePage>
                         height: 40,
                         width: 40,
                         decoration: BoxDecoration(shape: BoxShape.circle),
-                        child: GetStorageServices.getProfileImageValue() == null
-                            ? CircleAvatar(
-                                minRadius: 20,
-                                backgroundColor: Colors.grey.withOpacity(0.5),
-                                child: Icon(
-                                  Icons.person,
-                                  color: Colors.grey,
-                                ),
-                              )
-                            : ClipRRect(
-                                borderRadius: BorderRadius.circular(300),
-                                child: Image.network(
-                                    '${GetStorageServices.getProfileImageValue()}',
-                                    fit: BoxFit.cover),
-                              ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(300),
+                          child: Image.network(
+                              '${GetStorageServices.getProfileImageValue()}',
+                              errorBuilder: (context, error, stackTrace) =>
+                                  CircleAvatar(
+                                    minRadius: 20,
+                                    backgroundColor:
+                                        Colors.grey.withOpacity(0.5),
+                                    child: Icon(
+                                      Icons.person,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                              fit: BoxFit.cover),
+                        ),
                       ),
                     ),
                   ],

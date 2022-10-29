@@ -473,10 +473,7 @@ class _SignInScreenState extends State<SignInScreen> {
       } catch (e) {
         nameOfUser = FirebaseAuth.instance.currentUser!.email!;
       }
-
       GetStorageServices.setToken(FirebaseAuth.instance.currentUser!.uid);
-
-      GetStorageServices.setUserLoggedIn();
       CommonMethode.likeFiledAdd(context);
     }
 
@@ -513,9 +510,10 @@ class _SignInScreenState extends State<SignInScreen> {
         } catch (e) {
           name = '';
         }
+
         GetStorageServices.setToken(FirebaseAuth.instance.currentUser!.uid);
-        GetStorageServices.setUserLoggedIn();
         log('Token===>>${GetStorageServices.getToken()}');
+
         CommonMethode.likeFiledAdd(context);
       }
     });

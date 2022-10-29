@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../get_storage_services/get_storage_service.dart';
@@ -27,8 +28,8 @@ class CommonMethode {
             .doc(GetStorageServices.getToken());
         var fetchData = await getDoc.get();
         CommonMethode.setProfileAllDetails(
-            mobile: fetchData['mobile'],
-            email: fetchData['email'],
+            uid: FirebaseAuth.instance.currentUser!.uid,
+            emailOrMobile: fetchData['email_or_email'],
             fullName: fetchData['full_name'],
             imageUrl: fetchData['profile_image'],
             name: fetchData['user_name']);
@@ -54,16 +55,18 @@ class CommonMethode {
     }
   }
 
-  static setProfileAllDetails(
-      {required String imageUrl,
-      required String name,
-      required String fullName,
-      required String email,
-      required String mobile}) {
+  static setProfileAllDetails({
+    required String imageUrl,
+    required String name,
+    required String fullName,
+    required String emailOrMobile,
+    required String uid,
+  }) {
+    GetStorageServices.setUserLoggedIn();
+    GetStorageServices.setToken(uid);
     GetStorageServices.setProfileImageValue(imageUrl);
     GetStorageServices.setNameValue(name);
     GetStorageServices.setFullNameValue(fullName);
-    GetStorageServices.setEmailValue(email);
-    GetStorageServices.setMobileValue(mobile);
+    GetStorageServices.setEmailOrMobileValue(emailOrMobile);
   }
 }
