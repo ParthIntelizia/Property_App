@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:luxepass/constants/const_variables.dart';
 import 'package:luxepass/get_storage_services/get_storage_service.dart';
 import 'package:luxepass/pages/privacy_policy_screen.dart';
@@ -27,6 +28,8 @@ class UserProfilePage extends StatefulWidget {
 class _UserProfilePageState extends State<UserProfilePage>
     with SingleTickerProviderStateMixin {
   ConstWidgets constWidgets = ConstWidgets();
+
+  var google = GoogleSignIn();
 
   @override
   void initState() {
@@ -306,6 +309,11 @@ class _UserProfilePageState extends State<UserProfilePage>
     try {
       FacebookAuth.instance.logOut();
     } catch (e) {}
+
+    try {
+      google.signOut();
+    } catch (e) {}
+
     GetStorageServices.clearStorage();
     await FirebaseAuth.instance.signOut();
 

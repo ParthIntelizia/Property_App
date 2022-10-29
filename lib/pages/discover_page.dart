@@ -172,10 +172,6 @@ class _DiscoverPageState extends State<DiscoverPage>
                 .collection('Admin')
                 .doc('all_properties')
                 .collection('property_data')
-                .where('propertySlugName',
-                    isGreaterThanOrEqualTo:
-                        _searchController.text.toLowerCase().toString())
-                .limit(20)
                 .get(),
             builder: (context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
@@ -210,7 +206,7 @@ class _DiscoverPageState extends State<DiscoverPage>
                   },
                 );
               } else {
-                return CircularProgressIndicator();
+                return WishListShimmer();
               }
             },
           )

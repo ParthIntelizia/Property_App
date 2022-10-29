@@ -21,6 +21,7 @@ import '../providers/navbar_provider.dart';
 import '../services/locator_service.dart';
 import '../utils/category_shimmer.dart';
 import '../utils/properties_shimmer.dart';
+import '../utils/wishlist_shimmer.dart';
 import 'widgets/search_widget.dart';
 import 'widgets/service_widget.dart';
 
@@ -471,48 +472,49 @@ class _HomePageState extends State<HomePage>
             ),
           ),
           Padding(
-              padding: const EdgeInsets.only(left: 15),
-              child: FutureBuilder(
-                future: FirebaseFirestore.instance
-                    .collection('Admin')
-                    .doc('all_properties')
-                    .collection('property_data')
-                    .orderBy('create_time', descending: false)
-                    .limit(3)
-                    .get(),
-                builder: (context, AsyncSnapshot snapshot) {
-                  try {
-                    if (snapshot.hasData) {
-                      return ListView.builder(
-                          physics: const BouncingScrollPhysics(),
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: snapshot.data.docs.length,
-                          itemBuilder: (context, index) {
-                            var fetchMenData = snapshot.data.docs[index];
+            padding: const EdgeInsets.only(left: 15),
+            child: FutureBuilder(
+              future: FirebaseFirestore.instance
+                  .collection('Admin')
+                  .doc('all_properties')
+                  .collection('property_data')
+                  .orderBy('create_time', descending: false)
+                  .limit(3)
+                  .get(),
+              builder: (context, AsyncSnapshot snapshot) {
+                try {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: snapshot.data.docs.length,
+                        itemBuilder: (context, index) {
+                          var fetchMenData = snapshot.data.docs[index];
 
-                            return WishListItemWidget(
-                                onTap: () {
-                                  if (GetStorageServices
-                                          .getUserLoggedInStatus() ==
-                                      true) {
-                                    Get.to(() => PropertyDetailsPage(
-                                          fetchData: fetchMenData,
-                                        ));
-                                  } else {
-                                    Get.to(() => const SignInScreen());
-                                  }
-                                },
-                                wishListItemModel: fetchMenData);
-                          });
-                    } else {
-                      return CategoryShimmer();
-                    }
-                  } catch (e) {
-                    return SizedBox();
+                          return WishListItemWidget(
+                              onTap: () {
+                                if (GetStorageServices
+                                        .getUserLoggedInStatus() ==
+                                    true) {
+                                  Get.to(() => PropertyDetailsPage(
+                                        fetchData: fetchMenData,
+                                      ));
+                                } else {
+                                  Get.to(() => const SignInScreen());
+                                }
+                              },
+                              wishListItemModel: fetchMenData);
+                        });
+                  } else {
+                    return WishListShimmer();
                   }
-                },
-              )),
+                } catch (e) {
+                  return SizedBox();
+                }
+              },
+            ),
+          ),
         ],
       ),
     );
@@ -670,7 +672,7 @@ class _HomePageState extends State<HomePage>
                           _pastCodeController.text.isNotEmpty) {
                         bool emailValid = RegExp(
                                 r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
-                            .hasMatch(_emailController.text);
+                            .hasMatch(_emailController.text.trim());
                         if (emailValid == true) {
                           form = false;
 
@@ -681,7 +683,7 @@ class _HomePageState extends State<HomePage>
                               .add({
                             'to_sell & to_let': gender,
                             'full_name': _fullNameController.text.toString(),
-                            "email": _emailController.text.toString(),
+                            "email": _emailController.text.toString().trim(),
                             "phone_number": _phoneController.text.toString(),
                             "postcode": _pastCodeController.text,
                             "user_token": GetStorageServices.getToken(),
@@ -849,7 +851,7 @@ class _HomePageState extends State<HomePage>
                           _messageController1.text.isNotEmpty) {
                         bool emailValid = RegExp(
                                 r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
-                            .hasMatch(_emailController1.text);
+                            .hasMatch(_emailController1.text.trim());
                         if (emailValid == true) {
                           form1 = false;
 
@@ -859,7 +861,7 @@ class _HomePageState extends State<HomePage>
                               .collection('free_martgage_check')
                               .add({
                             'full_name': _fullNameController1.text.toString(),
-                            "email": _emailController1.text.toString(),
+                            "email": _emailController1.text.toString().trim(),
                             "phone_number": _phoneController1.text.toString(),
                             "postcode": _messageController1.text,
                             "user_token": GetStorageServices.getToken(),
