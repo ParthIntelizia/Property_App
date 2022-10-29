@@ -90,27 +90,28 @@ class _UserProfilePageState extends State<UserProfilePage>
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      GetStorageServices.getProfileImageValue() == null
-                          ? CircleAvatar(
-                              minRadius: 26,
-                              maxRadius: 26,
-                              backgroundColor: Colors.grey.withOpacity(0.5),
-                              child: Icon(
-                                Icons.person,
-                                color: Colors.grey,
-                              ),
-                            )
-                          : Container(
-                              height: 60,
-                              width: 60,
-                              decoration: BoxDecoration(shape: BoxShape.circle),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(300),
-                                child: Image.network(
-                                    '${GetStorageServices.getProfileImageValue()}',
-                                    fit: BoxFit.cover),
-                              ),
-                            ),
+                      Container(
+                        height: 60,
+                        width: 60,
+                        decoration: BoxDecoration(shape: BoxShape.circle),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(300),
+                          child: Image.network(
+                              errorBuilder: (context, error, stackTrace) =>
+                                  CircleAvatar(
+                                    minRadius: 26,
+                                    maxRadius: 26,
+                                    backgroundColor:
+                                        Colors.grey.withOpacity(0.5),
+                                    child: Icon(
+                                      Icons.person,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                              '${GetStorageServices.getProfileImageValue()}',
+                              fit: BoxFit.cover),
+                        ),
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0, top: 2),
                         child: constWidgets.textWidget(

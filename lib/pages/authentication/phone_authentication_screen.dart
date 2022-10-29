@@ -270,69 +270,6 @@ class _PhoneAuthenticationScreenState extends State<PhoneAuthenticationScreen> {
                             ],
                           ),
                         ),
-                        // Padding(
-                        //   padding: EdgeInsets.symmetric(horizontal: 26),
-                        //   child: TextField(
-                        //       controller: numberController,
-                        //       enabled: true,
-                        //       style: TextStyle(
-                        //           color: ConstColors.darkColor,
-                        //           fontSize: 14,
-                        //           fontStyle: FontStyle.normal,
-                        //           letterSpacing: 1),
-                        //       keyboardType: TextInputType.phone,
-                        //       decoration: InputDecoration(
-                        //         hintText: 'Continue with mobile number',
-                        //         //contentPadding: EdgeInsets.all(10.0),
-                        //         prefixIcon: Padding(
-                        //           padding: const EdgeInsets.only(top: 11),
-                        //           child: Text(
-                        //             countryCode ?? "",
-                        //             style:
-                        //                 TextStyle(color: ConstColors.darkColor),
-                        //           ),
-                        //         ),
-                        //         enabledBorder: UnderlineInputBorder(
-                        //           borderSide:
-                        //               BorderSide(color: Colors.grey, width: 1),
-                        //         ),
-                        //         // Focused Border
-                        //         focusedBorder: UnderlineInputBorder(
-                        //           borderSide: BorderSide(
-                        //               color: ConstColors.lightColor, width: 1),
-                        //         ),
-                        //         // Error Border
-                        //         errorBorder: UnderlineInputBorder(
-                        //           borderSide: BorderSide(
-                        //               color: ConstColors.lightColor, width: 1),
-                        //         ),
-                        //         // Focused Error Border
-                        //         focusedErrorBorder: UnderlineInputBorder(
-                        //           borderSide: BorderSide(
-                        //               color: ConstColors.lightColor, width: 1),
-                        //         ),
-                        //         hintStyle: TextStyle(
-                        //             color: Colors.grey,
-                        //             fontSize: 14,
-                        //             fontStyle: FontStyle.normal),
-                        //       ),
-                        //       inputFormatters: [
-                        //         FilteringTextInputFormatter.allow(
-                        //             RegExp(r'[0-9]')),
-                        //         FilteringTextInputFormatter.digitsOnly
-                        //       ],
-                        //       onChanged: (String value) {
-                        //         if (value.length >= 8) {
-                        //           setState(() {
-                        //             isTrue = true;
-                        //           });
-                        //         } else {
-                        //           setState(() {
-                        //             isTrue = false;
-                        //           });
-                        //         }
-                        //       }),
-                        // ),
                         Container(
                           height: 60.0,
                           margin:
@@ -445,7 +382,7 @@ class _PhoneAuthenticationScreenState extends State<PhoneAuthenticationScreen> {
         progress.show();
 
         await _auth.verifyPhoneNumber(
-          phoneNumber: countryCode! + numberController.text,
+          phoneNumber: countryCode! + numberController.text.trim().toString(),
           verificationCompleted: (phoneAuthCredential) async {
             progress.dismiss();
           },

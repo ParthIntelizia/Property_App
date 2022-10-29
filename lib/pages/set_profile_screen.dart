@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,7 +12,6 @@ import 'package:luxepass/constants/constant.dart';
 import '../../constants/constant_colors.dart';
 import '../../models/CountryModel.dart';
 import '../constants/common_widget.dart';
-import '../constants/const_variables.dart';
 import '../get_storage_services/get_storage_service.dart';
 import 'authentication/my_location_page.dart';
 
@@ -28,8 +28,7 @@ class SetProfileScreen extends StatefulWidget {
 class _SetProfileScreenState extends State<SetProfileScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController fullNameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController mobileController = TextEditingController();
+  TextEditingController emailOrMobileController = TextEditingController();
   late CountryModel seletedCountry;
   String? liveImageURL;
 
@@ -176,47 +175,17 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Align(
                     alignment: Alignment.centerLeft,
-                    child: CommonWidget.textBoldWight500(text: 'Email'),
+                    child:
+                        CommonWidget.textBoldWight500(text: 'Email/Phone no'),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: TextField(
-                    controller: emailController,
+                    controller: emailOrMobileController,
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.all(8.0),
-                      hintText: 'Email',
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                        borderSide:
-                            BorderSide(color: Colors.grey.shade300, width: 1.5),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                        borderSide:
-                            BorderSide(color: themColors309D9D, width: 1.5),
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: CommonWidget.textBoldWight500(text: 'Phone No'),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: TextField(
-                    controller: mobileController,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(8.0),
-                      hintText: 'Phone No',
+                      hintText: 'Email/Phone no',
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0),
                         borderSide:
@@ -234,60 +203,53 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
                   onTap: () async {
                     print('enter thg escree ');
 
-                    if (image != null &&
+                    if (image != null ||
                         nameController.text.isNotEmpty &&
-                        mobileController.text.isNotEmpty &&
-                        fullNameController.text.isNotEmpty &&
-                        emailController.text.isNotEmpty) {
-                      bool emailValid = RegExp(
-                              r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
-                          .hasMatch(emailController.text);
-                      if (emailValid == true) {
-                        try {
-                          print('enter thg escree ');
-                          progress!.show();
+                            fullNameController.text.isNotEmpty &&
+                            emailOrMobileController.text.isNotEmpty) {
+                      try {
+                        print('enter thg escree ');
+                        progress!.show();
+                        if (image != null) {
                           var snapshot = await FirebaseStorage.instance
                               .ref()
                               .child(
                                   'AllUserImage/${DateTime.now().microsecondsSinceEpoch}')
                               .putFile(image!);
                           liveImageURL = await snapshot.ref.getDownloadURL();
-                          await FirebaseFirestore.instance
-                              .collection('All_User_Details')
-                              .doc(GetStorageServices.getToken())
-                              .update({
-                            'profile_image': liveImageURL,
-                            'user_name': nameController.text.toString(),
-                            'is_Profile_check': true,
-                            'email': emailController.text.trim().toString(),
-                            'mobile': mobileController.text.toString(),
-                            'full_name': fullNameController.text.toString(),
-                          });
-                          CommonMethode.setProfileAllDetails(
-                              mobile: mobileController.text.toString(),
-                              fullName: fullNameController.text.toString(),
-                              email: emailController.text.toString(),
-                              imageUrl: liveImageURL!,
-                              name: nameController.text.toString());
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const MyLocation()),
-                            (Route<dynamic> route) => false,
-                          );
-                          progress.dismiss();
-                        } catch (e) {
-                          progress!.dismiss();
-
-                          return CommonWidget.getSnackBar(
-                              message: 'went-wrong',
-                              title: 'Failed',
-                              duration: 2,
-                              color: Colors.red);
+                        } else {
+                          liveImageURL = '';
                         }
-                      } else {
-                        CommonWidget.getSnackBar(
-                            message: 'Please Enter Valid Email',
+                        await FirebaseFirestore.instance
+                            .collection('All_User_Details')
+                            .doc(GetStorageServices.getToken())
+                            .update({
+                          'profile_image': liveImageURL,
+                          'user_name': nameController.text.toString(),
+                          'is_Profile_check': true,
+                          'email_or_email':
+                              emailOrMobileController.text.trim().toString(),
+                          'full_name': fullNameController.text.toString(),
+                        });
+                        CommonMethode.setProfileAllDetails(
+                            uid: await FirebaseAuth.instance.currentUser!.uid,
+                            fullName: fullNameController.text.toString(),
+                            emailOrMobile:
+                                emailOrMobileController.text.toString(),
+                            imageUrl: liveImageURL!,
+                            name: nameController.text.toString());
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const MyLocation()),
+                          (Route<dynamic> route) => false,
+                        );
+                        progress.dismiss();
+                      } catch (e) {
+                        progress!.dismiss();
+
+                        return CommonWidget.getSnackBar(
+                            message: 'went-wrong',
                             title: 'Failed',
                             duration: 2,
                             color: Colors.red);

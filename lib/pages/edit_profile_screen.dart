@@ -31,8 +31,7 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController? nameController;
   TextEditingController? fullNameController;
-  TextEditingController? emailController;
-  TextEditingController? mobileController;
+  TextEditingController? emailOrMobileController;
   late CountryModel selectedCountry;
   String? liveImageURL;
   bool isSignIn = false;
@@ -46,11 +45,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         TextEditingController(text: GetStorageServices.getNameValue());
     fullNameController =
         TextEditingController(text: GetStorageServices.getFullNameValue());
-    emailController =
-        TextEditingController(text: GetStorageServices.getEmailValue());
-    mobileController =
-        TextEditingController(text: GetStorageServices.getMobileValue());
-    liveImageURL = GetStorageServices.getProfileImageValue();
+    emailOrMobileController =
+        TextEditingController(text: GetStorageServices.getEmailOrMobileValue());
+    liveImageURL = GetStorageServices.getProfileImageValue() == null ||
+            GetStorageServices.getProfileImageValue() == ''
+        ? ''
+        : GetStorageServices.getProfileImageValue();
   }
 
   @override
@@ -134,15 +134,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: Colors.grey.withOpacity(0.5)),
-                      child: image == null
-                          ? ClipRRect(
-                              borderRadius: BorderRadius.circular(500),
-                              child: Image.network(
-                                  GetStorageServices.getProfileImageValue(),
-                                  fit: BoxFit.cover))
-                          : ClipRRect(
-                              borderRadius: BorderRadius.circular(500),
-                              child: Image.file(image!, fit: BoxFit.cover)),
+                      child: showImageWidget(),
                     ),
                     Positioned(
                       bottom: 20,
@@ -224,17 +216,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Align(
                     alignment: Alignment.centerLeft,
-                    child: CommonWidget.textBoldWight500(text: 'Email'),
+                    child:
+                        CommonWidget.textBoldWight500(text: 'Email/Phone no'),
                   ),
                 ),
 
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: TextField(
-                    controller: emailController,
+                    controller: emailOrMobileController,
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.all(8.0),
-                      hintText: 'Email',
+                      hintText: 'Email/Phone no',
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0),
                         borderSide:
@@ -248,95 +241,53 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: CommonWidget.textBoldWight500(text: 'Phone No'),
-                  ),
-                ),
 
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: TextField(
-                    controller: mobileController,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(8.0),
-                      hintText: 'Phone No',
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                        borderSide:
-                            BorderSide(color: Colors.grey.shade300, width: 1.5),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                        borderSide:
-                            BorderSide(color: themColors309D9D, width: 1.5),
-                      ),
-                    ),
-                  ),
-                ),
                 InkWell(
                   onTap: () async {
                     print('enter thg escree ');
 
                     if (nameController!.text.isNotEmpty &&
-                        mobileController!.text.isNotEmpty &&
                         fullNameController!.text.isNotEmpty &&
-                        emailController!.text.isNotEmpty) {
-                      bool emailValid = RegExp(
-                              r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
-                          .hasMatch(emailController!.text);
-                      if (emailValid == true) {
-                        try {
-                          print('enter thg escree ');
-                          progress!.show();
-                          if (image != null) {
-                            var snapshot = await FirebaseStorage.instance
-                                .ref()
-                                .child(
-                                    'AllUserImage/${DateTime.now().microsecondsSinceEpoch}')
-                                .putFile(image!);
-                            liveImageURL = await snapshot.ref.getDownloadURL();
-                          }
-                          await FirebaseFirestore.instance
-                              .collection('All_User_Details')
-                              .doc(GetStorageServices.getToken())
-                              .update({
-                            'profile_image': liveImageURL,
-                            'user_name': nameController!.text.toString(),
-                            'is_Profile_check': true,
-                            'email': emailController!.text.trim().toString(),
-                            'mobile': mobileController!.text.toString(),
-                            'full_name': fullNameController!.text.toString(),
-                          });
-                          CommonMethode.setProfileAllDetails(
-                              mobile: mobileController!.text.toString(),
-                              imageUrl: liveImageURL!,
-                              email: emailController!.text.toString(),
-                              fullName: fullNameController!.text.toString(),
-                              name: nameController!.text.toString());
-
-                          locator<NavBarIndex>().setTabCount(4);
-                          MyNavigator.goToHome(context);
-
-                          progress.dismiss();
-                        } catch (e) {
-                          progress!.dismiss();
-
-                          return CommonWidget.getSnackBar(
-                              message: 'went-wrong',
-                              title: 'Failed',
-                              duration: 2,
-                              color: Colors.red);
+                        emailOrMobileController!.text.isNotEmpty) {
+                      try {
+                        print('enter thg escree ');
+                        progress!.show();
+                        if (image != null) {
+                          var snapshot = await FirebaseStorage.instance
+                              .ref()
+                              .child(
+                                  'AllUserImage/${DateTime.now().microsecondsSinceEpoch}')
+                              .putFile(image!);
+                          liveImageURL = await snapshot.ref.getDownloadURL();
                         }
-                      } else {
-                        CommonWidget.getSnackBar(
-                            message: 'Please Enter Valid Email',
+                        await FirebaseFirestore.instance
+                            .collection('All_User_Details')
+                            .doc(GetStorageServices.getToken())
+                            .update({
+                          'profile_image': liveImageURL,
+                          'user_name': nameController!.text.toString(),
+                          'is_Profile_check': true,
+                          'email_or_email':
+                              emailOrMobileController!.text.trim().toString(),
+                          'full_name': fullNameController!.text.toString(),
+                        });
+                        CommonMethode.setProfileAllDetails(
+                            uid: GetStorageServices.getToken(),
+                            imageUrl: liveImageURL!,
+                            emailOrMobile:
+                                emailOrMobileController!.text.toString(),
+                            fullName: fullNameController!.text.toString(),
+                            name: nameController!.text.toString());
+
+                        locator<NavBarIndex>().setTabCount(4);
+                        MyNavigator.goToHome(context);
+
+                        progress.dismiss();
+                      } catch (e) {
+                        progress!.dismiss();
+
+                        return CommonWidget.getSnackBar(
+                            message: 'went-wrong',
                             title: 'Failed',
                             duration: 2,
                             color: Colors.red);
@@ -449,5 +400,34 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         await _picker.pickImage(source: ImageSource.camera);
     image = File(pickImage!.path);
     setState(() {});
+  }
+
+  showImageWidget() {
+    try {
+      return image == null
+          ? ClipRRect(
+              borderRadius: BorderRadius.circular(500),
+              child: Image.network(
+                '${GetStorageServices.getProfileImageValue()}',
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Icon(
+                  color: Colors.grey,
+                  Icons.person,
+                  size: 120,
+                ),
+              ))
+          : ClipRRect(
+              borderRadius: BorderRadius.circular(500),
+              child: Image.file(
+                image!,
+                fit: BoxFit.cover,
+              ));
+    } catch (e) {
+      return Icon(
+        color: Colors.grey,
+        Icons.person,
+        size: 120,
+      );
+    }
   }
 }

@@ -59,20 +59,11 @@ class GetStorageServices {
   }
 
   /// email
-  static setEmailValue(String LoginValue) {
+  static setEmailOrMobileValue(String LoginValue) {
     getStorage.write('setEmailValue', LoginValue);
   }
 
-  static getEmailValue() {
+  static getEmailOrMobileValue() {
     return getStorage.read('setEmailValue');
-  }
-
-  /// mobile
-  static setMobileValue(String LoginValue) {
-    getStorage.write('setMobileValue', LoginValue);
-  }
-
-  static getMobileValue() {
-    return getStorage.read('setMobileValue');
   }
 }
