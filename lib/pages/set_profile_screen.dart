@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:luxepass/constants/common_method.dart';
+import 'package:luxepass/constants/constant.dart';
 import '../../constants/constant_colors.dart';
 import '../../models/CountryModel.dart';
 import '../constants/common_widget.dart';
@@ -124,13 +125,24 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
                   child: TextField(
                     controller: nameController,
                     decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.all(8.0),
-                        hintText: 'User Name',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5.0),
-                            borderSide: const BorderSide(
-                                color: ConstColors.widgetDividerColor,
-                                width: 1.0))),
+                      contentPadding: const EdgeInsets.all(8.0),
+                      hintText: 'User Name',
+                      // border: OutlineInputBorder(
+                      //   borderRadius: BorderRadius.circular(5.0),
+                      //   borderSide: const BorderSide(
+                      //       color: ConstColors.widgetDividerColor, width: 1.0),
+                      // ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                        borderSide:
+                            BorderSide(color: Colors.grey.shade300, width: 1.5),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                        borderSide:
+                            BorderSide(color: themColors309D9D, width: 1.5),
+                      ),
+                    ),
                   ),
                 ),
                 Padding(
@@ -145,13 +157,19 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
                   child: TextField(
                     controller: fullNameController,
                     decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.all(8.0),
-                        hintText: 'Full Name',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5.0),
-                            borderSide: const BorderSide(
-                                color: ConstColors.widgetDividerColor,
-                                width: 1.0))),
+                      contentPadding: const EdgeInsets.all(8.0),
+                      hintText: 'Full Name',
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                        borderSide:
+                            BorderSide(color: Colors.grey.shade300, width: 1.5),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                        borderSide:
+                            BorderSide(color: themColors309D9D, width: 1.5),
+                      ),
+                    ),
                   ),
                 ),
                 Padding(
@@ -166,20 +184,26 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
                   child: TextField(
                     controller: emailController,
                     decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.all(8.0),
-                        hintText: 'Email',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5.0),
-                            borderSide: const BorderSide(
-                                color: ConstColors.widgetDividerColor,
-                                width: 1.0))),
+                      contentPadding: const EdgeInsets.all(8.0),
+                      hintText: 'Email',
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                        borderSide:
+                            BorderSide(color: Colors.grey.shade300, width: 1.5),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                        borderSide:
+                            BorderSide(color: themColors309D9D, width: 1.5),
+                      ),
+                    ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Align(
                     alignment: Alignment.centerLeft,
-                    child: CommonWidget.textBoldWight500(text: 'Mobile Number'),
+                    child: CommonWidget.textBoldWight500(text: 'Phone No'),
                   ),
                 ),
                 Padding(
@@ -191,13 +215,19 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
                       FilteringTextInputFormatter.digitsOnly
                     ],
                     decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.all(8.0),
-                        hintText: 'Mobile Number',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5.0),
-                            borderSide: const BorderSide(
-                                color: ConstColors.widgetDividerColor,
-                                width: 1.0))),
+                      contentPadding: const EdgeInsets.all(8.0),
+                      hintText: 'Phone No',
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                        borderSide:
+                            BorderSide(color: Colors.grey.shade300, width: 1.5),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                        borderSide:
+                            BorderSide(color: themColors309D9D, width: 1.5),
+                      ),
+                    ),
                   ),
                 ),
                 InkWell(
@@ -264,8 +294,8 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
                       }
                     } else {
                       CommonWidget.getSnackBar(
-                          message: 'Photo & Name are required',
-                          title: 'required',
+                          message: 'All fields are required',
+                          title: 'Required',
                           duration: 2,
                           color: Colors.red);
                     }
