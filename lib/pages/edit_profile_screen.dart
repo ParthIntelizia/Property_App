@@ -252,7 +252,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Align(
                     alignment: Alignment.centerLeft,
-                    child: CommonWidget.textBoldWight500(text: 'Mobile Number'),
+                    child: CommonWidget.textBoldWight500(text: 'Phone No'),
                   ),
                 ),
 
@@ -266,7 +266,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ],
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.all(8.0),
-                      hintText: 'Mobile Number',
+                      hintText: 'Phone No',
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0),
                         borderSide:

@@ -203,7 +203,7 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Align(
                     alignment: Alignment.centerLeft,
-                    child: CommonWidget.textBoldWight500(text: 'Mobile Number'),
+                    child: CommonWidget.textBoldWight500(text: 'Phone No'),
                   ),
                 ),
                 Padding(
@@ -216,7 +216,7 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
                     ],
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.all(8.0),
-                      hintText: 'Mobile Number',
+                      hintText: 'Phone No',
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0),
                         borderSide:
