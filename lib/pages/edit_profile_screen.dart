@@ -31,7 +31,9 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController? nameController;
   TextEditingController? fullNameController;
-  TextEditingController? emailOrMobileController;
+  TextEditingController? emailController;
+  TextEditingController? mobileController;
+
   late CountryModel selectedCountry;
   String? liveImageURL;
   bool isSignIn = false;
@@ -45,8 +47,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         TextEditingController(text: GetStorageServices.getNameValue());
     fullNameController =
         TextEditingController(text: GetStorageServices.getFullNameValue());
-    emailOrMobileController =
-        TextEditingController(text: GetStorageServices.getEmailOrMobileValue());
+    emailController =
+        TextEditingController(text: GetStorageServices.getEmail());
+    mobileController =
+        TextEditingController(text: GetStorageServices.getMobile());
+
     liveImageURL = GetStorageServices.getProfileImageValue() == null ||
             GetStorageServices.getProfileImageValue() == ''
         ? ''
@@ -216,18 +221,45 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Align(
                     alignment: Alignment.centerLeft,
-                    child:
-                        CommonWidget.textBoldWight500(text: 'Email/Phone no'),
+                    child: CommonWidget.textBoldWight500(text: 'Email'),
                   ),
                 ),
 
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: TextField(
-                    controller: emailOrMobileController,
+                    controller: emailController,
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.all(8.0),
-                      hintText: 'Email/Phone no',
+                      hintText: 'Email',
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                        borderSide:
+                            BorderSide(color: Colors.grey.shade300, width: 1.5),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                        borderSide:
+                            BorderSide(color: themColors309D9D, width: 1.5),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: CommonWidget.textBoldWight500(text: 'Phone No'),
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: TextField(
+                    controller: mobileController,
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(8.0),
+                      hintText: 'Phone No',
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0),
                         borderSide:
@@ -248,7 +280,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
                     if (nameController!.text.isNotEmpty &&
                         fullNameController!.text.isNotEmpty &&
-                        emailOrMobileController!.text.isNotEmpty) {
+                        emailController!.text.isNotEmpty &&
+                        mobileController!.text.isNotEmpty) {
                       try {
                         print('enter thg escree ');
                         progress!.show();
@@ -267,15 +300,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           'profile_image': liveImageURL,
                           'user_name': nameController!.text.toString(),
                           'is_Profile_check': true,
-                          'email_or_email':
-                              emailOrMobileController!.text.trim().toString(),
+                          'email': emailController!.text.trim().toString(),
+                          'phone_no': mobileController!.text.trim().toString(),
                           'full_name': fullNameController!.text.toString(),
                         });
                         CommonMethode.setProfileAllDetails(
                             uid: GetStorageServices.getToken(),
                             imageUrl: liveImageURL!,
-                            emailOrMobile:
-                                emailOrMobileController!.text.toString(),
+                            email: emailController!.text.trim(),
+                            mobile: mobileController!.text.trim(),
                             fullName: fullNameController!.text.toString(),
                             name: nameController!.text.toString());
 

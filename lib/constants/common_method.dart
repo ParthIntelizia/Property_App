@@ -11,7 +11,7 @@ class CommonMethode {
     return SizedBox(height: height, width: width);
   }
 
-  static likeFiledAdd(BuildContext context) async {
+  static likeFiledAdd(BuildContext context, {bool? isEmail}) async {
     print('grehgrehgdrhd   ${GetStorageServices.getToken()}');
     final equipmentCollection = FirebaseFirestore.instance
         .collection("All_User_Details")
@@ -28,11 +28,13 @@ class CommonMethode {
             .doc(GetStorageServices.getToken());
         var fetchData = await getDoc.get();
         CommonMethode.setProfileAllDetails(
-            uid: FirebaseAuth.instance.currentUser!.uid,
-            emailOrMobile: fetchData['email_or_email'],
-            fullName: fetchData['full_name'],
-            imageUrl: fetchData['profile_image'],
-            name: fetchData['user_name']);
+          uid: FirebaseAuth.instance.currentUser!.uid,
+          fullName: fetchData['full_name'],
+          imageUrl: fetchData['profile_image'],
+          name: fetchData['user_name'],
+          email: fetchData['email'],
+          mobile: fetchData['phone_no'],
+        );
       } catch (e) {
         Get.off(SetProfileScreen());
       }
@@ -59,7 +61,8 @@ class CommonMethode {
     required String imageUrl,
     required String name,
     required String fullName,
-    required String emailOrMobile,
+    required String email,
+    required String mobile,
     required String uid,
   }) {
     GetStorageServices.setUserLoggedIn();
@@ -67,6 +70,7 @@ class CommonMethode {
     GetStorageServices.setProfileImageValue(imageUrl);
     GetStorageServices.setNameValue(name);
     GetStorageServices.setFullNameValue(fullName);
-    GetStorageServices.setEmailOrMobileValue(emailOrMobile);
+    GetStorageServices.setEmail(email);
+    GetStorageServices.setMobile(mobile);
   }
 }

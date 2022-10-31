@@ -43,6 +43,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
   @override
   void initState() {
     _homePageTabController = TabController(length: 5, vsync: this);
+    print('vinay   ${widget.fetchData['listOfImage'][0]}');
     widget.fetchData['listOfImage'].forEach((element) {
       crouselImage.add(element as String);
     });
@@ -103,7 +104,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
                         autoPlay: crouselImage.length > 1 ? true : false,
                         enlargeCenterPage: true,
                         viewportFraction: 1.0,
-                        initialPage: 1,
+                        initialPage: 0,
                       ),
                     ),
                     crouselImage.length > 1
