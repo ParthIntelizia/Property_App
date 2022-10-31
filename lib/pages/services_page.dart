@@ -76,13 +76,13 @@ class _ServicesPageState extends State<ServicesPage>
                 children: [
                   constWidgets.textWidget(
                       "Services", FontWeight.w700, 22, Colors.black),
-                  IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.more_vert,
-                        size: 24.0,
-                        color: Colors.grey,
-                      ))
+                  // IconButton(
+                  //     onPressed: () {},
+                  //     icon: const Icon(
+                  //       Icons.more_vert,
+                  //       size: 24.0,
+                  //       color: Colors.grey,
+                  //     ))
                 ],
               ),
             )),

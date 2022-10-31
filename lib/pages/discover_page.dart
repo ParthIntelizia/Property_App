@@ -123,13 +123,13 @@ class _DiscoverPageState extends State<DiscoverPage>
                 children: [
                   constWidgets.textWidget(
                       "Discover", FontWeight.w700, 24, Colors.black),
-                  IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.add_road,
-                        size: 24.0,
-                        color: ConstColors.darkColor,
-                      ))
+                  // IconButton(
+                  //     onPressed: () {},
+                  //     icon: const Icon(
+                  //       Icons.add_road,
+                  //       size: 24.0,
+                  //       color: ConstColors.darkColor,
+                  //     ))
                 ],
               ),
             ),
