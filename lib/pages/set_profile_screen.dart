@@ -16,7 +16,9 @@ import '../get_storage_services/get_storage_service.dart';
 import 'authentication/my_location_page.dart';
 
 class SetProfileScreen extends StatefulWidget {
-  const SetProfileScreen({Key? key}) : super(key: key);
+  const SetProfileScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -28,13 +30,33 @@ class SetProfileScreen extends StatefulWidget {
 class _SetProfileScreenState extends State<SetProfileScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController fullNameController = TextEditingController();
-  TextEditingController emailOrMobileController = TextEditingController();
+  TextEditingController? emailController;
+  TextEditingController? mobileController;
   late CountryModel seletedCountry;
   String? liveImageURL;
 
   bool isSignIn = false;
   bool google = false;
   File? image;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (GetStorageServices.getIsEmailOrPhone() != null) {
+      if (GetStorageServices.getIsEmailOrPhone() == true) {
+        emailController =
+            TextEditingController(text: GetStorageServices.getEmail());
+        mobileController = TextEditingController();
+      } else {
+        mobileController =
+            TextEditingController(text: GetStorageServices.getMobile());
+        emailController = TextEditingController();
+      }
+    } else {
+      mobileController = TextEditingController();
+      emailController = TextEditingController();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -175,17 +197,43 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Align(
                     alignment: Alignment.centerLeft,
-                    child:
-                        CommonWidget.textBoldWight500(text: 'Email/Phone no'),
+                    child: CommonWidget.textBoldWight500(text: 'Email'),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: TextField(
-                    controller: emailOrMobileController,
+                    controller: emailController,
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.all(8.0),
-                      hintText: 'Email/Phone no',
+                      hintText: 'Email',
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                        borderSide:
+                            BorderSide(color: Colors.grey.shade300, width: 1.5),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                        borderSide:
+                            BorderSide(color: themColors309D9D, width: 1.5),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: CommonWidget.textBoldWight500(text: 'Phone no'),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: TextField(
+                    controller: mobileController,
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(8.0),
+                      hintText: 'Phone no',
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0),
                         borderSide:
@@ -206,7 +254,8 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
                     if (image != null ||
                         nameController.text.isNotEmpty &&
                             fullNameController.text.isNotEmpty &&
-                            emailOrMobileController.text.isNotEmpty) {
+                            emailController!.text.isNotEmpty &&
+                            mobileController!.text.isNotEmpty) {
                       try {
                         print('enter thg escree ');
                         progress!.show();
@@ -227,15 +276,16 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
                           'profile_image': liveImageURL,
                           'user_name': nameController.text.toString(),
                           'is_Profile_check': true,
-                          'email_or_email':
-                              emailOrMobileController.text.trim().toString(),
+                          'email': emailController!.text.trim().toString(),
+                          'phone_no': mobileController!.text.trim().toString(),
                           'full_name': fullNameController.text.toString(),
                         });
+
                         CommonMethode.setProfileAllDetails(
                             uid: await FirebaseAuth.instance.currentUser!.uid,
                             fullName: fullNameController.text.toString(),
-                            emailOrMobile:
-                                emailOrMobileController.text.toString(),
+                            email: emailController!.text.trim(),
+                            mobile: mobileController!.text.trim(),
                             imageUrl: liveImageURL!,
                             name: nameController.text.toString());
                         Navigator.pushAndRemoveUntil(

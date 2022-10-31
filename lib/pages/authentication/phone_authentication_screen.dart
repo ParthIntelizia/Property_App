@@ -54,12 +54,16 @@ class _PhoneAuthenticationScreenState extends State<PhoneAuthenticationScreen> {
   String? countryCode;
   late CountryModel seletedCountry;
   bool isFirstCheck = false;
+
   // AuthRepository authRepository=AuthRepository();
+
   getCountryCode() async {
     await CountryCodes.init();
 
     final CountryDetails details = CountryCodes.detailsForLocale();
-    countryCode = details.dialCode;
+    //countryCode = details.dialCode;
+    countryCode = '+91';
+
     setState(() {});
     print(details.dialCode); // Displays the dial code, for example +1.
   }
@@ -111,7 +115,6 @@ class _PhoneAuthenticationScreenState extends State<PhoneAuthenticationScreen> {
             child: Builder(
               builder: (context) {
                 final progress = ProgressHUD.of(context);
-
                 return Container(
                     constraints: const BoxConstraints.expand(),
                     decoration: const BoxDecoration(

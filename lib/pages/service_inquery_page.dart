@@ -173,7 +173,8 @@ class _ServiceEnquiryPageState extends State<ServiceEnquiryPage> {
                                       _messageController1.text.isNotEmpty) {
                                     bool emailValid = RegExp(
                                             r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
-                                        .hasMatch(_emailController1.text);
+                                        .hasMatch(
+                                            _emailController1.text.trim());
 
                                     if (emailValid == true) {
                                       progress!.show();
@@ -184,8 +185,9 @@ class _ServiceEnquiryPageState extends State<ServiceEnquiryPage> {
                                           .add({
                                         'full_name': _fullNameController1.text
                                             .toString(),
-                                        "email":
-                                            _emailController1.text.toString(),
+                                        "email": _emailController1.text
+                                            .toString()
+                                            .trim(),
                                         "phone_number":
                                             _phoneController1.text.toString(),
                                         "message": _messageController1.text,

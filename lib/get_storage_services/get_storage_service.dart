@@ -59,11 +59,29 @@ class GetStorageServices {
   }
 
   /// email
-  static setEmailOrMobileValue(String LoginValue) {
+  static setEmail(String LoginValue) {
     getStorage.write('setEmailValue', LoginValue);
   }
 
-  static getEmailOrMobileValue() {
+  static getEmail() {
     return getStorage.read('setEmailValue');
+  }
+
+  /// mobile
+  static setMobile(String LoginValue) {
+    getStorage.write('setMobile', LoginValue);
+  }
+
+  static getMobile() {
+    return getStorage.read('setMobile');
+  }
+
+  /// is Email or phone
+  static setIsEmailOrPhone(bool LoginValue) {
+    getStorage.write('setIsEmailOrPhone', LoginValue);
+  }
+
+  static getIsEmailOrPhone() {
+    return getStorage.read('setIsEmailOrPhone');
   }
 }

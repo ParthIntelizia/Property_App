@@ -9,8 +9,12 @@ import 'package:provider/provider.dart';
 import '../../constants/constant_colors.dart';
 import '../../constants/constant_widgets.dart';
 import '../../providers/search_screen_provider.dart';
+
 import '../home/widgets/unordered_list.dart';
 import 'package:get/get.dart';
+
+import '../home/widgets/wishl_list_item_widget.dart';
+import 'authentication/signin.dart';
 
 class PropertyDetailsPage extends StatefulWidget {
   final fetchData;
@@ -39,6 +43,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
   @override
   void initState() {
     _homePageTabController = TabController(length: 5, vsync: this);
+    print('vinay   ${widget.fetchData['listOfImage'][0]}');
     widget.fetchData['listOfImage'].forEach((element) {
       crouselImage.add(element as String);
     });
@@ -99,7 +104,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
                         autoPlay: crouselImage.length > 1 ? true : false,
                         enlargeCenterPage: true,
                         viewportFraction: 1.0,
-                        initialPage: 1,
+                        initialPage: 0,
                       ),
                     ),
                     crouselImage.length > 1
@@ -336,6 +341,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: SingleChildScrollView(
+        physics: NeverScrollableScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -528,6 +534,16 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
             SizedBox(
               height: 30,
             ),
+            constWidgets.textWidget(
+                "Near By  Places", FontWeight.w700, 20, Colors.black),
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: constWidgets.textWidget("- ${fetchData['nearByPlaces']}",
+                  FontWeight.w500, 12, Colors.black),
+            ),
+            SizedBox(
+              height: 30,
+            ),
             Row(
               children: [
                 CircleAvatar(
@@ -645,7 +661,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
                                       _messageNameController.text.isNotEmpty) {
                                     bool emailValid = RegExp(
                                             r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
-                                        .hasMatch(_emailController.text);
+                                        .hasMatch(_emailController.text.trim());
 
                                     if (emailValid == true) {
                                       await FirebaseFirestore.instance
@@ -655,8 +671,9 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
                                           .add({
                                         'full_name':
                                             _fullNameController.text.toString(),
-                                        "email":
-                                            _emailController.text.toString(),
+                                        "email": _emailController.text
+                                            .toString()
+                                            .trim(),
                                         "message": _messageNameController.text
                                             .toString(),
                                         "user_token":
@@ -716,7 +733,47 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
                   ),
                 ),
               ],
-            )
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            constWidgets.textWidget(
+                "Similar Properties", FontWeight.w700, 20, Colors.black),
+            SizedBox(
+              height: 15,
+            ),
+            FutureBuilder(
+              future: FirebaseFirestore.instance
+                  .collection('Admin')
+                  .doc('all_properties')
+                  .collection('property_data')
+                  .get(),
+              builder: (context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  List<DocumentSnapshot> properties = snapshot.data!.docs;
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: 1,
+                    itemBuilder: (context, index) {
+                      var fetchData = properties[2];
+                      return WishListItemWidget(
+                          onTap: () {
+                            Get.to(() => PropertyDetailsPage(
+                                  fetchData: fetchData,
+                                ));
+                          },
+                          wishListItemModel: fetchData);
+                    },
+                  );
+                } else {
+                  return CircularProgressIndicator();
+                }
+              },
+            ),
+            SizedBox(
+              height: 50,
+            ),
           ],
         ),
       ),

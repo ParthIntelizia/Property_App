@@ -32,7 +32,16 @@ class _MyInquiryScreenState extends State<MyInquiryScreen>
   @override
   void initState() {
     tabController = TabController(length: 3, vsync: this);
+    tabController!.animation!.addListener(tabListener);
     super.initState();
+  }
+
+  void tabListener() {
+    if (selected != tabController!.animation!.value.round()) {
+      setState(() {
+        selected = tabController!.animation!.value.round();
+      });
+    }
   }
 
   @override
@@ -77,7 +86,7 @@ class _MyInquiryScreenState extends State<MyInquiryScreen>
                     controller: tabController,
                     onTap: (value) {
                       setState(() {
-                        selected = value;
+                        selected = tabController!.index;
                       });
                     },
                     tabs: List.generate(
@@ -106,6 +115,7 @@ class _MyInquiryScreenState extends State<MyInquiryScreen>
                 ),
                 Expanded(
                   child: TabBarView(
+                    //physics: NeverScrollableScrollPhysics(),
                     controller: tabController,
                     children: [
                       serviceInquiry(),
@@ -115,7 +125,7 @@ class _MyInquiryScreenState extends State<MyInquiryScreen>
                           Padding(
                             padding: EdgeInsets.only(left: 20, top: 20),
                             child: CommonWidget.textBoldWight700(
-                                text: 'Service Inquiries', fontSize: 15),
+                                text: 'Valuation Inquiries', fontSize: 15),
                           ),
                           CommonWidget.commonSizedBox(height: 20),
                           Expanded(
@@ -167,7 +177,7 @@ class _MyInquiryScreenState extends State<MyInquiryScreen>
         Padding(
           padding: EdgeInsets.only(left: 20, top: 20),
           child: CommonWidget.textBoldWight700(
-              text: 'Valuation Inquiries', fontSize: 15),
+              text: 'Service Inquiries', fontSize: 15),
         ),
         CommonWidget.commonSizedBox(height: 20),
         StreamBuilder<QuerySnapshot>(
