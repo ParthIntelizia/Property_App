@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
@@ -32,7 +31,7 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
   TextEditingController fullNameController = TextEditingController();
   TextEditingController? emailController;
   TextEditingController? mobileController;
-  late CountryModel seletedCountry;
+
   String? liveImageURL;
 
   bool isSignIn = false;
@@ -42,6 +41,8 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    print(
+        'getIsEmailOrPhone set prof   ${GetStorageServices.getIsEmailOrPhone()}');
     if (GetStorageServices.getIsEmailOrPhone() != null) {
       if (GetStorageServices.getIsEmailOrPhone() == true) {
         emailController =
@@ -253,9 +254,7 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
 
                     if (image != null ||
                         nameController.text.isNotEmpty &&
-                            fullNameController.text.isNotEmpty &&
-                            emailController!.text.isNotEmpty &&
-                            mobileController!.text.isNotEmpty) {
+                            fullNameController.text.isNotEmpty) {
                       try {
                         print('enter thg escree ');
                         progress!.show();
@@ -276,8 +275,12 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
                           'profile_image': liveImageURL,
                           'user_name': nameController.text.toString(),
                           'is_Profile_check': true,
-                          'email': emailController!.text.trim().toString(),
-                          'phone_no': mobileController!.text.trim().toString(),
+                          'email': emailController!.text.isNotEmpty
+                              ? emailController!.text.trim().toString()
+                              : '',
+                          'phone_no': mobileController!.text.isNotEmpty
+                              ? mobileController!.text.trim().toString()
+                              : '',
                           'full_name': fullNameController.text.toString(),
                         });
 

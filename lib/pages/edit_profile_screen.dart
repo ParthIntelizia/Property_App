@@ -47,10 +47,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         TextEditingController(text: GetStorageServices.getNameValue());
     fullNameController =
         TextEditingController(text: GetStorageServices.getFullNameValue());
-    emailController =
-        TextEditingController(text: GetStorageServices.getEmail());
-    mobileController =
-        TextEditingController(text: GetStorageServices.getMobile());
+    emailController = TextEditingController(
+        text: GetStorageServices.getEmail() == null
+            ? ''
+            : GetStorageServices.getEmail());
+    mobileController = TextEditingController(
+        text: GetStorageServices.getMobile() == null
+            ? ''
+            : GetStorageServices.getMobile());
 
     liveImageURL = GetStorageServices.getProfileImageValue() == null ||
             GetStorageServices.getProfileImageValue() == ''
@@ -279,9 +283,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     print('enter thg escree ');
 
                     if (nameController!.text.isNotEmpty &&
-                        fullNameController!.text.isNotEmpty &&
-                        emailController!.text.isNotEmpty &&
-                        mobileController!.text.isNotEmpty) {
+                        fullNameController!.text.isNotEmpty) {
                       try {
                         print('enter thg escree ');
                         progress!.show();
@@ -300,8 +302,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           'profile_image': liveImageURL,
                           'user_name': nameController!.text.toString(),
                           'is_Profile_check': true,
-                          'email': emailController!.text.trim().toString(),
-                          'phone_no': mobileController!.text.trim().toString(),
+                          'email': emailController!.text.isNotEmpty
+                              ? emailController!.text.trim().toString()
+                              : '',
+                          'phone_no': mobileController!.text.isNotEmpty
+                              ? mobileController!.text.trim().toString()
+                              : '',
                           'full_name': fullNameController!.text.toString(),
                         });
                         CommonMethode.setProfileAllDetails(

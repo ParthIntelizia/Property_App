@@ -103,6 +103,8 @@ class _SignInScreenState extends State<SignInScreen> {
             ),
             GestureDetector(
               onTap: () {
+                GetStorageServices.clearStorage();
+
                 _performLogin();
               },
               child: Container(
@@ -189,6 +191,8 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
             GestureDetector(
               onTap: () {
+                GetStorageServices.clearStorage();
+
                 signInWithGoogle();
               },
               child: Container(
@@ -233,6 +237,8 @@ class _SignInScreenState extends State<SignInScreen> {
             ),
             GestureDetector(
               onTap: () {
+                GetStorageServices.clearStorage();
+
                 locator<NavigationService>().navigateTo("/emailAuth");
               },
               child: Container(
@@ -296,6 +302,8 @@ class _SignInScreenState extends State<SignInScreen> {
             ),
             GestureDetector(
               onTap: () {
+                GetStorageServices.clearStorage();
+
                 locator<NavigationService>().navigateTo("/mobileAuth");
               },
               child: Container(
@@ -471,8 +479,14 @@ class _SignInScreenState extends State<SignInScreen> {
       try {
         nameOfUser = FirebaseAuth.instance.currentUser!.displayName!;
       } catch (e) {
-        nameOfUser = FirebaseAuth.instance.currentUser!.email!;
+        nameOfUser = user!.email!;
       }
+      try {
+        GetStorageServices.setEmail(user!.email!);
+
+        GetStorageServices.setIsEmailOrPhone(true);
+      } catch (e) {}
+
       GetStorageServices.setToken(FirebaseAuth.instance.currentUser!.uid);
       CommonMethode.likeFiledAdd(context);
     }
