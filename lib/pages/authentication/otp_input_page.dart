@@ -264,10 +264,10 @@ class _OTPInputScreenState extends State<OTPInputScreen> {
     try {
       final authCredential =
           await _auth.signInWithCredential(phoneAuthCredential);
+      GetStorageServices.setMobile(widget.emailOrPhoneText);
 
       if (authCredential.user != null) {
         GetStorageServices.setIsEmailOrPhone(false);
-
         String uid = _auth.currentUser!.uid.toString();
 
         print('---------uid in current user $uid');
@@ -330,6 +330,8 @@ class _OTPInputScreenState extends State<OTPInputScreen> {
     // 716432
     if (validOtp) {
       try {
+        GetStorageServices.setEmail(widget.emailOrPhoneText);
+
         GetStorageServices.setIsEmailOrPhone(true);
 
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
