@@ -176,58 +176,7 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
                                 padding: const EdgeInsets.only(right: 10.0),
                                 child: Row(
                                   children: [
-                                    FutureBuilder(
-                                      builder:
-                                          (context, AsyncSnapshot snapshot) {
-                                        if (snapshot.hasData) {
-                                          try {
-                                            print(
-                                                'like not goo  ${widget.fetchData['productId']}');
-                                            isContainCheck = snapshot
-                                                .data['list_of_like']
-                                                .contains(widget
-                                                    .fetchData['productId']);
-                                            print(
-                                                'list_of_like  ${snapshot.data['list_of_like'].contains(widget.fetchData['productId'])}');
-                                          } catch (e) {
-                                            isContainCheck = false;
-                                          }
-
-                                          return GestureDetector(
-                                            onTap: () {
-                                              likeUnLike(
-                                                  productId: widget
-                                                      .fetchData['productId']);
-                                            },
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          100),
-                                                  color: Colors.white),
-                                              height: 30,
-                                              width: 30,
-                                              child: Center(
-                                                child: likeWidget(snapshot),
-                                              ),
-                                            ),
-                                          );
-                                        } else {
-                                          return Container(
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(100),
-                                                color: Colors.white),
-                                            height: 30,
-                                            width: 30,
-                                          );
-                                        }
-                                      },
-                                      future: FirebaseFirestore.instance
-                                          .collection('All_User_Details')
-                                          .doc(GetStorageServices.getToken())
-                                          .get(),
-                                    ),
+                                    //  likeButton(),
                                     const SizedBox(
                                       width: 10,
                                     ),
@@ -262,6 +211,51 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
         },
         body: _descriptionWidget(widget.fetchData),
       ),
+    );
+  }
+
+  FutureBuilder<DocumentSnapshot<Map<String, dynamic>>> likeButton() {
+    return FutureBuilder(
+      builder: (context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData) {
+          try {
+            print('like not goo  ${widget.fetchData['productId']}');
+            isContainCheck = snapshot.data['list_of_like']
+                .contains(widget.fetchData['productId']);
+            print(
+                'list_of_like  ${snapshot.data['list_of_like'].contains(widget.fetchData['productId'])}');
+          } catch (e) {
+            isContainCheck = false;
+          }
+
+          return GestureDetector(
+            onTap: () {
+              likeUnLike(productId: widget.fetchData['productId']);
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100),
+                  color: Colors.white),
+              height: 30,
+              width: 30,
+              child: Center(
+                child: likeWidget(snapshot),
+              ),
+            ),
+          );
+        } else {
+          return Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100), color: Colors.white),
+            height: 30,
+            width: 30,
+          );
+        }
+      },
+      future: FirebaseFirestore.instance
+          .collection('All_User_Details')
+          .doc(GetStorageServices.getToken())
+          .get(),
     );
   }
 
@@ -349,36 +343,18 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
                 FontWeight.w700, 20, Colors.black),
             Padding(
               padding: const EdgeInsets.only(top: 10.0, bottom: 15.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(0.0, 5.0, 10.0, 5.0),
-                    height: 25,
-                    child: Row(children: [
-                      const Icon(
-                        Icons.location_on,
-                        color: Colors.grey,
-                        size: 12,
-                      ),
-                      constWidgets.textWidget("${fetchData['address']}",
-                          FontWeight.w400, 12, Colors.grey),
-                    ]),
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(0.0, 5.0, 10.0, 5.0),
+                height: 25,
+                child: Row(children: [
+                  const Icon(
+                    Icons.location_on,
+                    color: Colors.grey,
+                    size: 12,
                   ),
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
-                    height: 30,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        constWidgets.textWidget(
-                            "⭐ 4.2   ", FontWeight.w600, 12, Colors.black),
-                        constWidgets.textWidget("${fetchData['category']}",
-                            FontWeight.w600, 12, ConstColors.darkColor)
-                      ],
-                    ),
-                  ),
-                ],
+                  constWidgets.textWidget("${fetchData['address']}",
+                      FontWeight.w400, 12, Colors.grey),
+                ]),
               ),
             ),
             Container(
@@ -394,32 +370,32 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(
-                      width: 60,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.all(5.0),
-                            child: Icon(Icons.square,
-                                size: 20, color: ConstColors.lightColor),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10.0),
-                            child: constWidgets.textWidget(
-                                "${fetchData['size']}",
-                                FontWeight.w500,
-                                10,
-                                Colors.grey),
-                          )
-                        ],
-                      )),
-                  Container(
-                    height: 50,
-                    width: 0.5,
-                    color: ConstColors.widgetDividerColor,
-                  ),
+                  // SizedBox(
+                  //     width: 60,
+                  //     child: Column(
+                  //       mainAxisAlignment: MainAxisAlignment.center,
+                  //       crossAxisAlignment: CrossAxisAlignment.center,
+                  //       children: [
+                  //         const Padding(
+                  //           padding: EdgeInsets.all(5.0),
+                  //           child: Icon(Icons.square,
+                  //               size: 20, color: ConstColors.lightColor),
+                  //         ),
+                  //         Padding(
+                  //           padding: const EdgeInsets.only(top: 10.0),
+                  //           child: constWidgets.textWidget(
+                  //               "${fetchData['size']}",
+                  //               FontWeight.w500,
+                  //               10,
+                  //               Colors.grey),
+                  //         )
+                  //       ],
+                  //     )),
+                  // Container(
+                  //   height: 50,
+                  //   width: 0.5,
+                  //   color: ConstColors.widgetDividerColor,
+                  // ),
                   SizedBox(
                       width: 80,
                       child: Column(

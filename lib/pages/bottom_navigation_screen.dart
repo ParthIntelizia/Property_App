@@ -71,7 +71,7 @@ class _BottomNavigationBarState extends State<BottomNavigationBarScreen>
     checkConnection();
     _dynamicPageList
       ..add(const HomePage())
-      ..add(const MyWishListPage())
+      //  ..add(const MyWishListPage())
       ..add(const ServicesPage())
       ..add(const DiscoverPage())
       ..add(const UserProfilePage());
@@ -116,11 +116,22 @@ class _BottomNavigationBarState extends State<BottomNavigationBarScreen>
                           onPressed: () {
                             setNavBarIndex(context, 0);
                           }),
+                      // IconButton(
+                      //     iconSize: 22,
+                      //     icon: SvgPicture.asset('assets/icons/favourite.svg',
+                      //         height: 26,
+                      //         width: 26,
+                      //         color: indexCounter == 1
+                      //             ? ConstColors.darkColor
+                      //             : Colors.grey),
+                      //     onPressed: () {
+                      //       setNavBarIndex(context, 1);
+                      //     }),
                       IconButton(
                           iconSize: 22,
-                          icon: SvgPicture.asset('assets/icons/favourite.svg',
-                              height: 26,
-                              width: 26,
+                          icon: SvgPicture.asset('assets/icons/services.svg',
+                              height: 23,
+                              width: 23,
                               color: indexCounter == 1
                                   ? ConstColors.darkColor
                                   : Colors.grey),
@@ -129,9 +140,9 @@ class _BottomNavigationBarState extends State<BottomNavigationBarScreen>
                           }),
                       IconButton(
                           iconSize: 22,
-                          icon: SvgPicture.asset('assets/icons/services.svg',
-                              height: 23,
-                              width: 23,
+                          icon: SvgPicture.asset('assets/icons/search.svg',
+                              height: 24,
+                              width: 24,
                               color: indexCounter == 2
                                   ? ConstColors.darkColor
                                   : Colors.grey),
@@ -140,25 +151,14 @@ class _BottomNavigationBarState extends State<BottomNavigationBarScreen>
                           }),
                       IconButton(
                           iconSize: 22,
-                          icon: SvgPicture.asset('assets/icons/search.svg',
-                              height: 24,
-                              width: 24,
+                          icon: SvgPicture.asset('assets/icons/profile.svg',
+                              height: 23,
+                              width: 23,
                               color: indexCounter == 3
                                   ? ConstColors.darkColor
                                   : Colors.grey),
                           onPressed: () {
                             setNavBarIndex(context, 3);
-                          }),
-                      IconButton(
-                          iconSize: 22,
-                          icon: SvgPicture.asset('assets/icons/profile.svg',
-                              height: 23,
-                              width: 23,
-                              color: indexCounter == 4
-                                  ? ConstColors.darkColor
-                                  : Colors.grey),
-                          onPressed: () {
-                            setNavBarIndex(context, 4);
                           })
                     ]))),
       ),
