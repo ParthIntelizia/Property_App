@@ -1,11 +1,14 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:luxepass/constants/constant_colors.dart';
 import 'package:luxepass/pages/services_page.dart';
 import 'package:luxepass/pages/user_profile_page.dart';
+import '../get_storage_services/get_storage_service.dart';
 import '../home/home.dart';
 import '../providers/navbar_provider.dart';
 import '../services/locator_service.dart';
+import 'authentication/signin.dart';
 import 'discover_page.dart';
 import 'my_wish_list_page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -136,7 +139,12 @@ class _BottomNavigationBarState extends State<BottomNavigationBarScreen>
                                   ? ConstColors.darkColor
                                   : Colors.grey),
                           onPressed: () {
-                            setNavBarIndex(context, 1);
+                            if (GetStorageServices.getUserLoggedInStatus() ==
+                                true) {
+                              setNavBarIndex(context, 1);
+                            } else {
+                              Get.to(() => SignInScreen());
+                            }
                           }),
                       IconButton(
                           iconSize: 22,
@@ -147,7 +155,12 @@ class _BottomNavigationBarState extends State<BottomNavigationBarScreen>
                                   ? ConstColors.darkColor
                                   : Colors.grey),
                           onPressed: () {
-                            setNavBarIndex(context, 2);
+                            if (GetStorageServices.getUserLoggedInStatus() ==
+                                true) {
+                              setNavBarIndex(context, 2);
+                            } else {
+                              Get.to(() => SignInScreen());
+                            }
                           }),
                       IconButton(
                           iconSize: 22,
@@ -158,7 +171,12 @@ class _BottomNavigationBarState extends State<BottomNavigationBarScreen>
                                   ? ConstColors.darkColor
                                   : Colors.grey),
                           onPressed: () {
-                            setNavBarIndex(context, 3);
+                            if (GetStorageServices.getUserLoggedInStatus() ==
+                                true) {
+                              setNavBarIndex(context, 3);
+                            } else {
+                              Get.to(() => SignInScreen());
+                            }
                           })
                     ]))),
       ),

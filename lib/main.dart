@@ -74,7 +74,8 @@ class MyApp extends StatelessWidget {
       navigatorKey: locator<NavigationService>().navigatorKey,
       routes: routes,
       debugShowCheckedModeBanner: false,
-      home: const Splash(),
+      home: const BottomNavigationBarScreen(),
+      // home: const Splash(),
     );
   }
 }

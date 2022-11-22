@@ -520,195 +520,169 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
             SizedBox(
               height: 30,
             ),
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 25,
-                  backgroundImage: AssetImage('assets/agent.png'),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CommonWidget.textBoldWight500(
-                        text: "Mark S.", fontSize: 15),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    CommonWidget.textBoldWight500(
-                        text: "Agent", color: Colors.grey, fontSize: 13),
-                  ],
-                ),
-                Spacer(),
-                MaterialButton(
-                  color: themColors309D9D,
-                  height: 50,
-                  minWidth: 120,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(40),
-                  ),
-                  onPressed: () {
-                    Get.dialog(
-                      Dialog(
-                        child: Padding(
-                          padding: EdgeInsets.all(15.0),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  CommonWidget.textBoldWight700(
-                                      text: "Send a Message", fontSize: 15),
-                                  IconButton(
-                                    onPressed: () {
-                                      Get.back();
-                                    },
-                                    icon: Icon(Icons.close),
-                                  )
-                                ],
+            MaterialButton(
+              color: themColors309D9D,
+              height: 50,
+              minWidth: 120,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(40),
+              ),
+              onPressed: () {
+                if (GetStorageServices.getUserLoggedInStatus() == true) {
+                  Get.dialog(
+                    Dialog(
+                      child: Padding(
+                        padding: EdgeInsets.all(15.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CommonWidget.textBoldWight700(
+                                    text: "Send a Message", fontSize: 15),
+                                IconButton(
+                                  onPressed: () {
+                                    Get.back();
+                                  },
+                                  icon: Icon(Icons.close),
+                                )
+                              ],
+                            ),
+                            TextField(
+                              controller: _fullNameController,
+                              decoration: InputDecoration(
+                                  hintText: "Full Name",
+                                  contentPadding: const EdgeInsets.all(8.0),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5.0),
+                                      borderSide: const BorderSide(
+                                          color: ConstColors.widgetDividerColor,
+                                          width: 1.0))),
+                            ),
+                            SizedBox(
+                              height: 13,
+                            ),
+                            TextField(
+                              controller: _emailController,
+                              decoration: InputDecoration(
+                                  hintText: "Email",
+                                  contentPadding: const EdgeInsets.all(8.0),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5.0),
+                                      borderSide: const BorderSide(
+                                          color: ConstColors.widgetDividerColor,
+                                          width: 1.0))),
+                            ),
+                            SizedBox(
+                              height: 13,
+                            ),
+                            TextField(
+                              maxLines: 3,
+                              controller: _messageNameController,
+                              decoration: InputDecoration(
+                                  hintText: "Message",
+                                  contentPadding: const EdgeInsets.all(8.0),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5.0),
+                                      borderSide: const BorderSide(
+                                          color: ConstColors.widgetDividerColor,
+                                          width: 1.0))),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            MaterialButton(
+                              color: themColors309D9D,
+                              height: 50,
+                              minWidth: 120,
+                              child: Text(
+                                "Submit",
+                                style: TextStyle(color: Colors.white),
                               ),
-                              TextField(
-                                controller: _fullNameController,
-                                decoration: InputDecoration(
-                                    hintText: "Full Name",
-                                    contentPadding: const EdgeInsets.all(8.0),
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(5.0),
-                                        borderSide: const BorderSide(
-                                            color:
-                                                ConstColors.widgetDividerColor,
-                                            width: 1.0))),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(40),
                               ),
-                              SizedBox(
-                                height: 13,
-                              ),
-                              TextField(
-                                controller: _emailController,
-                                decoration: InputDecoration(
-                                    hintText: "Email",
-                                    contentPadding: const EdgeInsets.all(8.0),
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(5.0),
-                                        borderSide: const BorderSide(
-                                            color:
-                                                ConstColors.widgetDividerColor,
-                                            width: 1.0))),
-                              ),
-                              SizedBox(
-                                height: 13,
-                              ),
-                              TextField(
-                                maxLines: 3,
-                                controller: _messageNameController,
-                                decoration: InputDecoration(
-                                    hintText: "Message",
-                                    contentPadding: const EdgeInsets.all(8.0),
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(5.0),
-                                        borderSide: const BorderSide(
-                                            color:
-                                                ConstColors.widgetDividerColor,
-                                            width: 1.0))),
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              MaterialButton(
-                                color: themColors309D9D,
-                                height: 50,
-                                minWidth: 120,
-                                child: Text(
-                                  "Submit",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(40),
-                                ),
-                                onPressed: () async {
-                                  if (_emailController.text.isNotEmpty &&
-                                      _emailController.text.isNotEmpty &&
-                                      _messageNameController.text.isNotEmpty) {
-                                    bool emailValid = RegExp(
-                                            r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
-                                        .hasMatch(_emailController.text.trim());
+                              onPressed: () async {
+                                if (_emailController.text.isNotEmpty &&
+                                    _emailController.text.isNotEmpty &&
+                                    _messageNameController.text.isNotEmpty) {
+                                  bool emailValid = RegExp(
+                                          r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
+                                      .hasMatch(_emailController.text.trim());
 
-                                    if (emailValid == true) {
-                                      await FirebaseFirestore.instance
-                                          .collection('Admin')
-                                          .doc('inquires_list')
-                                          .collection('messages')
-                                          .add({
-                                        'full_name':
-                                            _fullNameController.text.toString(),
-                                        "email": _emailController.text
-                                            .toString()
-                                            .trim(),
-                                        "message": _messageNameController.text
-                                            .toString(),
-                                        "user_token":
-                                            GetStorageServices.getToken(),
-                                        'crate_date': DateTime.now().toString()
-                                      });
+                                  if (emailValid == true) {
+                                    await FirebaseFirestore.instance
+                                        .collection('Admin')
+                                        .doc('inquires_list')
+                                        .collection('messages')
+                                        .add({
+                                      'full_name':
+                                          _fullNameController.text.toString(),
+                                      "email": _emailController.text
+                                          .toString()
+                                          .trim(),
+                                      "message": _messageNameController.text
+                                          .toString(),
+                                      "user_token":
+                                          GetStorageServices.getToken(),
+                                      'crate_date': DateTime.now().toString()
+                                    });
 
-                                      Get.back();
-                                      _emailController.clear();
-                                      _fullNameController.clear();
-                                      _messageNameController.clear();
+                                    Get.back();
+                                    _emailController.clear();
+                                    _fullNameController.clear();
+                                    _messageNameController.clear();
 
-                                      CommonWidget.getSnackBar(
-                                          title: "Submitted!",
-                                          duration: 2,
-                                          message:
-                                              'Your message has been received, We will revert you shortly.');
-                                    } else {
-                                      CommonWidget.getSnackBar(
-                                          color: Colors.red,
-                                          duration: 2,
-                                          title: 'Invalid Email',
-                                          message: 'Please Enter Valid Email');
-                                    }
+                                    CommonWidget.getSnackBar(
+                                        title: "Submitted!",
+                                        duration: 2,
+                                        message:
+                                            'Your message has been received, We will revert you shortly.');
                                   } else {
                                     CommonWidget.getSnackBar(
                                         color: Colors.red,
                                         duration: 2,
-                                        title: 'required',
-                                        message:
-                                            'Please Enter all filed required');
+                                        title: 'Invalid Email',
+                                        message: 'Please Enter Valid Email');
                                   }
-                                },
-                              )
-                            ],
-                          ),
+                                } else {
+                                  CommonWidget.getSnackBar(
+                                      color: Colors.red,
+                                      duration: 2,
+                                      title: 'required',
+                                      message:
+                                          'Please Enter all filed required');
+                                }
+                              },
+                            )
+                          ],
                         ),
                       ),
-                    );
-                  },
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        'assets/chat.png',
-                        height: 15,
-                        width: 15,
-                      ),
-                      SizedBox(
-                        width: 7,
-                      ),
-                      CommonWidget.textBoldWight500(
-                        text: "Message",
-                        fontSize: 15,
-                        color: Colors.white,
-                      ),
-                    ],
+                    ),
+                  );
+                } else {
+                  Get.to(() => SignInScreen());
+                }
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/chat.png',
+                    height: 15,
+                    width: 15,
                   ),
-                ),
-              ],
+                  SizedBox(
+                    width: 7,
+                  ),
+                  CommonWidget.textBoldWight500(
+                    text: "Message",
+                    fontSize: 15,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
             ),
             SizedBox(
               height: 30,
