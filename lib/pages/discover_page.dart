@@ -123,13 +123,13 @@ class _DiscoverPageState extends State<DiscoverPage>
                 children: [
                   constWidgets.textWidget(
                       "Discover", FontWeight.w700, 24, Colors.black),
-                  IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.add_road,
-                        size: 24.0,
-                        color: ConstColors.darkColor,
-                      ))
+                  // IconButton(
+                  //     onPressed: () {},
+                  //     icon: const Icon(
+                  //       Icons.add_road,
+                  //       size: 24.0,
+                  //       color: ConstColors.darkColor,
+                  //     ))
                 ],
               ),
             ),
@@ -193,14 +193,9 @@ class _DiscoverPageState extends State<DiscoverPage>
                     var fetchData = properties[index];
                     return WishListItemWidget(
                         onTap: () {
-                          if (GetStorageServices.getUserLoggedInStatus() ==
-                              true) {
-                            Get.to(() => PropertyDetailsPage(
-                                  fetchData: fetchData,
-                                ));
-                          } else {
-                            Get.to(() => const SignInScreen());
-                          }
+                          Get.to(() => PropertyDetailsPage(
+                                fetchData: fetchData,
+                              ));
                         },
                         wishListItemModel: fetchData);
                   },
@@ -222,14 +217,9 @@ class _DiscoverPageState extends State<DiscoverPage>
                   var fetchData = products[index];
                   return WishListItemWidget(
                       onTap: () {
-                        if (GetStorageServices.getUserLoggedInStatus() ==
-                            true) {
-                          Get.to(() => PropertyDetailsPage(
-                                fetchData: fetchData,
-                              ));
-                        } else {
-                          Get.to(() => const SignInScreen());
-                        }
+                        Get.to(() => PropertyDetailsPage(
+                              fetchData: fetchData,
+                            ));
                       },
                       wishListItemModel: fetchData);
                 },

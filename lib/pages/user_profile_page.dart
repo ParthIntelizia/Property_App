@@ -71,13 +71,13 @@ class _UserProfilePageState extends State<UserProfilePage>
                 children: [
                   constWidgets.textWidget(
                       "Profile ", FontWeight.w600, 20, Colors.black),
-                  IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.more_vert,
-                        size: 20.0,
-                        color: ConstColors.lightColor,
-                      ))
+                  // IconButton(
+                  //     onPressed: () {},
+                  //     icon: const Icon(
+                  //       Icons.more_vert,
+                  //       size: 20.0,
+                  //       color: ConstColors.lightColor,
+                  //     ))
                 ],
               ),
             )),

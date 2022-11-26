@@ -195,14 +195,9 @@ class _PopularPageState extends State<PopularPage>
                     var fetchData = properties[index];
                     return WishListItemWidget(
                         onTap: () {
-                          if (GetStorageServices.getUserLoggedInStatus() ==
-                              true) {
-                            Get.to(() => PropertyDetailsPage(
-                                  fetchData: fetchData,
-                                ));
-                          } else {
-                            Get.to(() => const SignInScreen());
-                          }
+                          Get.to(() => PropertyDetailsPage(
+                                fetchData: fetchData,
+                              ));
                         },
                         wishListItemModel: fetchData);
                   },
@@ -224,14 +219,9 @@ class _PopularPageState extends State<PopularPage>
                   var fetchData = products[index];
                   return WishListItemWidget(
                       onTap: () {
-                        if (GetStorageServices.getUserLoggedInStatus() ==
-                            true) {
-                          Get.to(() => PropertyDetailsPage(
-                                fetchData: fetchData,
-                              ));
-                        } else {
-                          Get.to(() => const SignInScreen());
-                        }
+                        Get.to(() => PropertyDetailsPage(
+                              fetchData: fetchData,
+                            ));
                       },
                       wishListItemModel: fetchData);
                 },

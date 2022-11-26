@@ -123,15 +123,9 @@ class _CategoryWiseScreenState extends State<CategoryWiseScreen>
                                 'getSingleProductData  ${getSingleProductData['address']}');
                             return WishListItemWidget(
                                 onTap: () {
-                                  if (GetStorageServices
-                                          .getUserLoggedInStatus() ==
-                                      true) {
-                                    Get.to(() => PropertyDetailsPage(
-                                          fetchData: getSingleProductData,
-                                        ));
-                                  } else {
-                                    Get.to(() => const SignInScreen());
-                                  }
+                                  Get.to(() => PropertyDetailsPage(
+                                        fetchData: getSingleProductData,
+                                      ));
                                 },
                                 wishListItemModel: getSingleProductData);
                           } else {

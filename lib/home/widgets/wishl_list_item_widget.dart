@@ -45,79 +45,77 @@ class _WishListItemWidgetState extends State<WishListItemWidget> {
               ),
               const SizedBox(width: 10),
               SizedBox(
-                  width: MediaQuery.of(context).size.width -
-                      162, // Full Width - 15padding +15 Padding + 50+10 ( Profile pic width) ,
+                  // width: MediaQuery.of(context).size.width -
+                  //     162, // Full Width - 15padding +15 Padding + 50+10 ( Profile pic width) ,
                   child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      constWidgets.textWidget(
-                          '${widget.wishListItemModel['propertyName']}',
-                          FontWeight.w700,
-                          16,
-                          Colors.black),
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(0.0, 5.0, 10.0, 5.0),
-                        height: 25,
-                        child: Row(children: [
-                          const Icon(
-                            Icons.location_on,
-                            color: ConstColors.darkColor,
-                            size: 12,
-                          ),
-                          constWidgets.textWidget(
-                              '${widget.wishListItemModel['address']}',
-                              FontWeight.w600,
-                              10,
-                              Colors.grey),
-                        ]),
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  constWidgets.textWidget(
+                      '${widget.wishListItemModel['propertyName']}',
+                      FontWeight.w700,
+                      16,
+                      Colors.black),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(0.0, 5.0, 10.0, 5.0),
+                    height: 25,
+                    child: Row(children: [
+                      const Icon(
+                        Icons.location_on,
+                        color: ConstColors.darkColor,
+                        size: 12,
                       ),
-                      Container(
-                          padding:
-                              const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 10.0),
-                          child: RichText(
-                            text: TextSpan(
-                              text: String.fromCharCodes(Runes('\u0024')),
-                              style: GoogleFonts.urbanist(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 14.0,
-                                  color: ConstColors.darkColor),
-                              children: <TextSpan>[
-                                TextSpan(
-                                    text:
-                                        '${widget.wishListItemModel['price']}',
-                                    style: GoogleFonts.urbanist(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 14.0,
-                                        color: ConstColors.darkColor)),
-                                TextSpan(
-                                    text: '/year',
-                                    style: GoogleFonts.urbanist(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 10.0,
-                                        color: Colors.grey))
-                              ],
-                            ),
-                          )),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 0.0, left: 5.0, right: 0.0, bottom: 5.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            constWidgets.textWidget(
-                                "⭐ 4.2   ", FontWeight.w600, 12, Colors.yellow),
-                            constWidgets.textWidget(
-                                "⚈ ${widget.wishListItemModel['category']}",
-                                FontWeight.w500,
-                                12,
-                                ConstColors.darkColor)
+                      constWidgets.textWidget(
+                          '${widget.wishListItemModel['address']}',
+                          FontWeight.w600,
+                          10,
+                          Colors.grey),
+                    ]),
+                  ),
+                  Container(
+                      padding: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 10.0),
+                      child: RichText(
+                        text: TextSpan(
+                          text: String.fromCharCodes(Runes('\u0024')),
+                          style: GoogleFonts.urbanist(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14.0,
+                              color: ConstColors.darkColor),
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: '${widget.wishListItemModel['price']}',
+                                style: GoogleFonts.urbanist(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 14.0,
+                                    color: ConstColors.darkColor)),
+                            TextSpan(
+                                text: '/year',
+                                style: GoogleFonts.urbanist(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 10.0,
+                                    color: Colors.grey))
                           ],
                         ),
-                      ),
-                    ],
-                  )),
+                      )),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        top: 0.0, left: 5.0, right: 0.0, bottom: 5.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        constWidgets.textWidget(
+                            "⭐ 4.2   ", FontWeight.w600, 12, Colors.yellow),
+                        constWidgets.textWidget(
+                            "⚈ ${widget.wishListItemModel['category']}",
+                            FontWeight.w500,
+                            12,
+                            ConstColors.darkColor)
+                      ],
+                    ),
+                  ),
+                ],
+              )),
             ]),
       ),
     );

@@ -416,14 +416,10 @@ class _HomePageState extends State<HomePage>
                               location: fetchData['address'],
                               price: '\$${fetchData['price']}'),
                           onTap: () {
-                            if (GetStorageServices.getUserLoggedInStatus() ==
-                                true) {
-                              Get.to(() => PropertyDetailsPage(
-                                    fetchData: fetchData,
-                                  ));
-                            } else {
-                              Get.to(() => const SignInScreen());
-                            }
+                            Get.to(() => PropertyDetailsPage(
+                                  fetchData: fetchData,
+                                ));
+
                             // MyNavigator.goToEventDetailsScreen(context);
                           },
                         );
@@ -495,15 +491,9 @@ class _HomePageState extends State<HomePage>
 
                           return WishListItemWidget(
                               onTap: () {
-                                if (GetStorageServices
-                                        .getUserLoggedInStatus() ==
-                                    true) {
-                                  Get.to(() => PropertyDetailsPage(
-                                        fetchData: fetchMenData,
-                                      ));
-                                } else {
-                                  Get.to(() => const SignInScreen());
-                                }
+                                Get.to(() => PropertyDetailsPage(
+                                      fetchData: fetchMenData,
+                                    ));
                               },
                               wishListItemModel: fetchMenData);
                         });

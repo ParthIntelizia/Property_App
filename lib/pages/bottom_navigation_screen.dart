@@ -1,11 +1,14 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:luxepass/constants/constant_colors.dart';
 import 'package:luxepass/pages/services_page.dart';
 import 'package:luxepass/pages/user_profile_page.dart';
+import '../get_storage_services/get_storage_service.dart';
 import '../home/home.dart';
 import '../providers/navbar_provider.dart';
 import '../services/locator_service.dart';
+import 'authentication/signin.dart';
 import 'discover_page.dart';
 import 'my_wish_list_page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -71,7 +74,7 @@ class _BottomNavigationBarState extends State<BottomNavigationBarScreen>
     checkConnection();
     _dynamicPageList
       ..add(const HomePage())
-      ..add(const MyWishListPage())
+      //  ..add(const MyWishListPage())
       ..add(const ServicesPage())
       ..add(const DiscoverPage())
       ..add(const UserProfilePage());
@@ -116,49 +119,64 @@ class _BottomNavigationBarState extends State<BottomNavigationBarScreen>
                           onPressed: () {
                             setNavBarIndex(context, 0);
                           }),
-                      IconButton(
-                          iconSize: 22,
-                          icon: SvgPicture.asset('assets/icons/favourite.svg',
-                              height: 26,
-                              width: 26,
-                              color: indexCounter == 1
-                                  ? ConstColors.darkColor
-                                  : Colors.grey),
-                          onPressed: () {
-                            setNavBarIndex(context, 1);
-                          }),
+                      // IconButton(
+                      //     iconSize: 22,
+                      //     icon: SvgPicture.asset('assets/icons/favourite.svg',
+                      //         height: 26,
+                      //         width: 26,
+                      //         color: indexCounter == 1
+                      //             ? ConstColors.darkColor
+                      //             : Colors.grey),
+                      //     onPressed: () {
+                      //       setNavBarIndex(context, 1);
+                      //     }),
                       IconButton(
                           iconSize: 22,
                           icon: SvgPicture.asset('assets/icons/services.svg',
                               height: 23,
                               width: 23,
-                              color: indexCounter == 2
+                              color: indexCounter == 1
                                   ? ConstColors.darkColor
                                   : Colors.grey),
                           onPressed: () {
-                            setNavBarIndex(context, 2);
+                            if (GetStorageServices.getUserLoggedInStatus() ==
+                                true) {
+                              setNavBarIndex(context, 1);
+                            } else {
+                              Get.to(() => SignInScreen());
+                            }
                           }),
                       IconButton(
                           iconSize: 22,
                           icon: SvgPicture.asset('assets/icons/search.svg',
                               height: 24,
                               width: 24,
-                              color: indexCounter == 3
+                              color: indexCounter == 2
                                   ? ConstColors.darkColor
                                   : Colors.grey),
                           onPressed: () {
-                            setNavBarIndex(context, 3);
+                            if (GetStorageServices.getUserLoggedInStatus() ==
+                                true) {
+                              setNavBarIndex(context, 2);
+                            } else {
+                              Get.to(() => SignInScreen());
+                            }
                           }),
                       IconButton(
                           iconSize: 22,
                           icon: SvgPicture.asset('assets/icons/profile.svg',
                               height: 23,
                               width: 23,
-                              color: indexCounter == 4
+                              color: indexCounter == 3
                                   ? ConstColors.darkColor
                                   : Colors.grey),
                           onPressed: () {
-                            setNavBarIndex(context, 4);
+                            if (GetStorageServices.getUserLoggedInStatus() ==
+                                true) {
+                              setNavBarIndex(context, 3);
+                            } else {
+                              Get.to(() => SignInScreen());
+                            }
                           })
                     ]))),
       ),
