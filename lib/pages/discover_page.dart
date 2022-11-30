@@ -25,10 +25,12 @@ class _DiscoverPageState extends State<DiscoverPage>
     with SingleTickerProviderStateMixin {
   ConstWidgets constWidgets = ConstWidgets();
   ScrollController _scrollController = ScrollController();
+
   bool hasMore = true; // flag for more products available or not
   bool isLoading = false;
-  List<DocumentSnapshot> products = []; // stores fetched products
 
+  List<DocumentSnapshot> products = []; // stor
+  // es fetched products
   int documentLimit = 10; // documents to be fetched per request
   TextEditingController? _searchController;
   DocumentSnapshot? lastDocument;
@@ -48,7 +50,6 @@ class _DiscoverPageState extends State<DiscoverPage>
         getProducts();
       }
     });
-
     getProducts();
     super.initState();
   }
@@ -130,11 +131,11 @@ class _DiscoverPageState extends State<DiscoverPage>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  IconButton(
-                    onPressed: () {
+                  InkResponse(
+                    onTap: () {
                       Get.back();
                     },
-                    icon: Icon(Icons.arrow_back_ios),
+                    child: Icon(Icons.arrow_back_ios),
                   ),
                   // constWidgets.textWidget(
                   //     "Discover", FontWeight.w700, 24, Colors.black),
@@ -212,63 +213,63 @@ class _DiscoverPageState extends State<DiscoverPage>
   }
 
   Widget _descriptionWidget() {
-    return _searchController!.text.isNotEmpty
-        ? FutureBuilder(
-            future: FirebaseFirestore.instance
-                .collection('Admin')
-                .doc('all_properties')
-                .collection('property_data')
-                .get(),
-            builder: (context, AsyncSnapshot snapshot) {
-              if (snapshot.hasData) {
-                List<DocumentSnapshot> properties = snapshot.data!.docs;
-                if (_searchController!.text.isNotEmpty) {
-                  properties = properties.where((element) {
-                    return element
-                        .get('propertyName')
-                        .toString()
-                        .toLowerCase()
-                        .contains(_searchController!.text.toLowerCase());
-                  }).toList();
-                }
-                return ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: properties.length,
-                  itemBuilder: (context, index) {
-                    var fetchData = properties[index];
-                    return WishListItemWidget(
-                        onTap: () {
-                          Get.to(() => PropertyDetailsPage(
-                                fetchData: fetchData,
-                              ));
-                        },
-                        wishListItemModel: fetchData);
-                  },
-                );
-              } else {
-                return WishListShimmer();
-              }
-            },
-          )
-        : products.length == 0
-            ? Center(
-                child: Text(isLoading ? '' : 'Empty'),
-              )
-            : ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: products.length,
-                itemBuilder: (context, index) {
-                  var fetchData = products[index];
-                  return WishListItemWidget(
-                      onTap: () {
-                        Get.to(() => PropertyDetailsPage(
-                              fetchData: fetchData,
-                            ));
-                      },
-                      wishListItemModel: fetchData);
-                },
-              );
+    print("propert length==>>${products.length}");
+    return FutureBuilder(
+      future: FirebaseFirestore.instance
+          .collection('Admin')
+          .doc('all_properties')
+          .collection('property_data')
+          .get(),
+      builder: (context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData) {
+          List<DocumentSnapshot> properties = snapshot.data!.docs;
+          if (_searchController!.text.isNotEmpty) {
+            properties = properties.where((element) {
+              return element
+                  // .get('propertyName')
+                  .get('address')
+                  .toString()
+                  .toLowerCase()
+                  .contains(_searchController!.text.toLowerCase());
+            }).toList();
+          }
+          try {
+            return ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: properties.length,
+              itemBuilder: (context, index) {
+                var fetchData = properties[index];
+                return WishListItemWidget(
+                    onTap: () {
+                      Get.to(() => PropertyDetailsPage(
+                            fetchData: fetchData,
+                          ));
+                    },
+                    wishListItemModel: fetchData);
+              },
+            );
+          } catch (e) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/services/villa.png',
+                    scale: 3,
+                  ),
+                  // Text(
+                  //   'Hii',
+                  //   textScaleFactor: 3,
+                  // )
+                ],
+              ),
+            );
+          }
+        } else {
+          return WishListShimmer();
+        }
+      },
+    );
   }
 }

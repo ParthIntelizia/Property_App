@@ -21,6 +21,7 @@ class BottomNavigationBarScreen extends StatefulWidget {
 class _BottomNavigationBarState extends State<BottomNavigationBarScreen>
     with WidgetsBindingObserver {
   final _bottomNavigationBarColor = Colors.white;
+
   bool checkConn = true;
   final List<Widget> _dynamicPageList = [];
 

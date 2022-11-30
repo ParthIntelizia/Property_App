@@ -11,8 +11,6 @@ class ConstWidgets {
     );
   }
 
-
-
   Widget logo() {
     return Image.asset(
       "assets/logo.png",

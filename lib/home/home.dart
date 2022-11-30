@@ -236,66 +236,74 @@ class _HomePageState extends State<HomePage>
                                           }
                                           var fetchCategory =
                                               snapshot.data.docs[index - 1];
-                                          return GestureDetector(
-                                            onTap: () {
-                                              showCategoryWiseData =
-                                                  fetchCategory[
-                                                      'category_name'];
-                                              setState(() {});
-                                            },
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 8),
-                                              child: Tab(
-                                                  child: Container(
-                                                padding: const EdgeInsets.only(
-                                                    left: 15.0,
-                                                    right: 15.0,
-                                                    top: 5.0,
-                                                    bottom: 5.0),
-                                                decoration: BoxDecoration(
-                                                    color: ConstColors
-                                                        .searchBoxColor,
-                                                    border: Border.all(
-                                                        color: showCategoryWiseData ==
-                                                                fetchCategory[
-                                                                    'category_name']
-                                                            ? ConstColors
-                                                                .lightColor
-                                                            : ConstColors
-                                                                .widgetDividerColor,
-                                                        width: 1.0),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            50)),
-                                                child: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      SizedBox(
-                                                        height: 22,
-                                                        width: 22,
-                                                        child: Image.network(
-                                                            '${fetchCategory['category_image'][0]}',
-                                                            fit: BoxFit.cover),
-                                                      ),
-                                                      SizedBox(width: 8),
-                                                      // const Icon(Icons.home,
-                                                      //     size: 25, color: ConstColors.darkColor),
-                                                      Text(
-                                                          '${fetchCategory['category_name']}',
-                                                          style: GoogleFonts.urbanist(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontSize: 13,
-                                                              color: ConstColors
-                                                                  .darkColor))
-                                                    ]),
-                                              )),
-                                            ),
-                                          );
+                                          return fetchCategory[
+                                                      'category_name'] ==
+                                                  "All"
+                                              ? SizedBox()
+                                              : GestureDetector(
+                                                  onTap: () {
+                                                    showCategoryWiseData =
+                                                        fetchCategory[
+                                                            'category_name'];
+                                                    setState(() {});
+                                                  },
+                                                  child: Padding(
+                                                    padding: const EdgeInsets
+                                                            .symmetric(
+                                                        horizontal: 8),
+                                                    child: Tab(
+                                                        child: Container(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 15.0,
+                                                              right: 15.0,
+                                                              top: 5.0,
+                                                              bottom: 5.0),
+                                                      decoration: BoxDecoration(
+                                                          color: ConstColors
+                                                              .searchBoxColor,
+                                                          border: Border.all(
+                                                              color: showCategoryWiseData ==
+                                                                      fetchCategory[
+                                                                          'category_name']
+                                                                  ? ConstColors
+                                                                      .lightColor
+                                                                  : ConstColors
+                                                                      .widgetDividerColor,
+                                                              width: 1.0),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      50)),
+                                                      child: Row(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: [
+                                                            SizedBox(
+                                                              height: 22,
+                                                              width: 22,
+                                                              child: Image.network(
+                                                                  '${fetchCategory['category_image'][0]}',
+                                                                  fit: BoxFit
+                                                                      .cover),
+                                                            ),
+                                                            SizedBox(width: 8),
+                                                            // const Icon(Icons.home,
+                                                            //     size: 25, color: ConstColors.darkColor),
+                                                            Text(
+                                                                '${fetchCategory['category_name']}',
+                                                                style: GoogleFonts.urbanist(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                    fontSize:
+                                                                        13,
+                                                                    color: ConstColors
+                                                                        .darkColor))
+                                                          ]),
+                                                    )),
+                                                  ),
+                                                );
                                         },
                                       ),
                                     ),

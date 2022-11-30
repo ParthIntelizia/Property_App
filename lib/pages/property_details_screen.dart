@@ -9,10 +9,8 @@ import 'package:provider/provider.dart';
 import '../../constants/constant_colors.dart';
 import '../../constants/constant_widgets.dart';
 import '../../providers/search_screen_provider.dart';
-
 import '../home/widgets/unordered_list.dart';
 import 'package:get/get.dart';
-
 import '../home/widgets/wishl_list_item_widget.dart';
 import 'authentication/signin.dart';
 
@@ -53,10 +51,11 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-      backgroundColor: ConstColors.backgroundColor,
-      body: _body(),
-    ));
+      child: Scaffold(
+        backgroundColor: ConstColors.backgroundColor,
+        body: _body(),
+      ),
+    );
   }
 
   Widget _body() {
