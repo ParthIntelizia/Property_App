@@ -6,13 +6,16 @@ import 'package:luxepass/pages/property_details_screen.dart';
 import 'package:luxepass/utils/properties_shimmer.dart';
 import '../../constants/constant_colors.dart';
 import '../../constants/constant_widgets.dart';
+import '../constants/constant.dart';
 import '../get_storage_services/get_storage_service.dart';
 import '../home/widgets/wishl_list_item_widget.dart';
 import '../utils/wishlist_shimmer.dart';
 import 'authentication/signin.dart';
 
 class DiscoverPage extends StatefulWidget {
-  const DiscoverPage({Key? key}) : super(key: key);
+  final searchData;
+
+  const DiscoverPage({super.key, required this.searchData});
 
   @override
   State<DiscoverPage> createState() => _DiscoverPageState();
@@ -27,10 +30,16 @@ class _DiscoverPageState extends State<DiscoverPage>
   List<DocumentSnapshot> products = []; // stores fetched products
 
   int documentLimit = 10; // documents to be fetched per request
-  TextEditingController _searchController = TextEditingController();
+  TextEditingController? _searchController;
   DocumentSnapshot? lastDocument;
+
   @override
   void initState() {
+    try {
+      _searchController = TextEditingController(text: widget.searchData);
+    } catch (e) {
+      _searchController = TextEditingController();
+    }
     _scrollController.addListener(() {
       double maxScroll = _scrollController.position.maxScrollExtent;
       double currentScroll = _scrollController.position.pixels;
@@ -121,8 +130,14 @@ class _DiscoverPageState extends State<DiscoverPage>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  constWidgets.textWidget(
-                      "Discover", FontWeight.w700, 24, Colors.black),
+                  IconButton(
+                    onPressed: () {
+                      Get.back();
+                    },
+                    icon: Icon(Icons.arrow_back_ios),
+                  ),
+                  // constWidgets.textWidget(
+                  //     "Discover", FontWeight.w700, 24, Colors.black),
                   // IconButton(
                   //     onPressed: () {},
                   //     icon: const Icon(
@@ -133,31 +148,62 @@ class _DiscoverPageState extends State<DiscoverPage>
                 ],
               ),
             ),
-            Container(
-              padding: const EdgeInsets.all(15),
-              width: width,
-              child: Container(
-                height: 50,
-                padding: const EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  color: ConstColors.searchBoxColor,
-                  border: Border.all(
-                      color: ConstColors.widgetDividerColor, width: 1.0),
-                  borderRadius: BorderRadius.circular(50),
-                ),
+            SizedBox(
+              height: 50,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),
                 child: TextFormField(
-                  controller: _searchController,
+                  //autofocus: true,
                   onChanged: (value) {
                     setState(() {});
                   },
+                  controller: _searchController,
                   decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.search),
-                    hintText: "Search",
-                    border: InputBorder.none,
-                  ),
+                      contentPadding: EdgeInsets.only(top: 10),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: themColors309D9D),
+                      ),
+                      hintText: "Search",
+                      prefixIcon: InkResponse(
+                        onTap: () {},
+                        child: Icon(
+                          Icons.search,
+                        ),
+                      )),
                 ),
               ),
             ),
+            SizedBox(
+              height: 10,
+            ),
+            // Container(
+            //   padding: const EdgeInsets.all(15),
+            //   width: width,
+            //   child: Container(
+            //     height: 50,
+            //     padding: const EdgeInsets.all(5),
+            //     decoration: BoxDecoration(
+            //       color: ConstColors.searchBoxColor,
+            //       border: Border.all(
+            //           color: ConstColors.widgetDividerColor, width: 1.0),
+            //       borderRadius: BorderRadius.circular(50),
+            //     ),
+            //     child: TextFormField(
+            //       controller: _searchController,
+            //       onChanged: (value) {
+            //         setState(() {});
+            //       },
+            //       decoration: InputDecoration(
+            //         prefixIcon: Icon(Icons.search),
+            //         hintText: "Search",
+            //         border: InputBorder.none,
+            //       ),
+            //     ),
+            //   ),
+            // ),
             _descriptionWidget()
           ],
         ),
@@ -166,7 +212,7 @@ class _DiscoverPageState extends State<DiscoverPage>
   }
 
   Widget _descriptionWidget() {
-    return _searchController.text.isNotEmpty
+    return _searchController!.text.isNotEmpty
         ? FutureBuilder(
             future: FirebaseFirestore.instance
                 .collection('Admin')
@@ -176,13 +222,13 @@ class _DiscoverPageState extends State<DiscoverPage>
             builder: (context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
                 List<DocumentSnapshot> properties = snapshot.data!.docs;
-                if (_searchController.text.isNotEmpty) {
+                if (_searchController!.text.isNotEmpty) {
                   properties = properties.where((element) {
                     return element
                         .get('propertyName')
                         .toString()
                         .toLowerCase()
-                        .contains(_searchController.text.toLowerCase());
+                        .contains(_searchController!.text.toLowerCase());
                   }).toList();
                 }
                 return ListView.builder(

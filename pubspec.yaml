@@ -88,7 +88,7 @@ flutter:
     - assets/services/
     - assets/icons/
     - assets/country.JSON
-    - assets/login_corosal_img/
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

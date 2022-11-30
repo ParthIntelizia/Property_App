@@ -11,6 +11,8 @@ import 'package:luxepass/pages/authentication/signin.dart';
 import 'package:luxepass/pages/bottom_navigation_screen.dart';
 import 'package:luxepass/pages/property_details_screen.dart';
 import 'package:luxepass/pages/review_booking_page.dart';
+import 'package:luxepass/pages/search_filter.dart';
+import 'package:luxepass/pages/search_page.dart';
 import 'package:luxepass/pages/set_profile_screen.dart';
 import 'package:luxepass/pages/splash_screen.dart';
 import 'package:luxepass/providers/my_booking_provider.dart';
@@ -70,12 +72,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     FlutterStatusbarcolor.setStatusBarColor(ConstColors.lightColor);
     return GetMaterialApp(
-      title: 'Property',
-      navigatorKey: locator<NavigationService>().navigatorKey,
-      routes: routes,
-      debugShowCheckedModeBanner: false,
-      home: const BottomNavigationBarScreen(),
-      // home: const Splash(),
-    );
+        title: 'Property',
+        navigatorKey: locator<NavigationService>().navigatorKey,
+        routes: routes,
+        debugShowCheckedModeBanner: false,
+        home: BottomNavigationBarScreen()
+        // home: const Splash(),
+        );
   }
 }

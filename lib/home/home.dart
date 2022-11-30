@@ -153,7 +153,7 @@ class _HomePageState extends State<HomePage>
               child: Column(children: [
                 InkWell(
                   onTap: () {
-                    locator<NavBarIndex>().setTabCount(3);
+                    locator<NavBarIndex>().setTabCount(2);
 
                     // Navigator.push(
                     //   context,
@@ -376,63 +376,64 @@ class _HomePageState extends State<HomePage>
 
   Widget popularWidget(List<ServiceModel> services) {
     return Padding(
-        padding: const EdgeInsets.only(left: 15),
-        child: FutureBuilder(
-          future: showCategoryWiseData == 'All'
-              ? FirebaseFirestore.instance
-                  .collection('Admin')
-                  .doc('all_properties')
-                  .collection('property_data')
-                  .orderBy('create_time', descending: true)
-                  .limit(10)
-                  .get()
-              : FirebaseFirestore.instance
-                  .collection('Admin')
-                  .doc('all_properties')
-                  .collection('property_data')
-                  .where('category', isEqualTo: showCategoryWiseData)
-                  .orderBy('create_time', descending: true)
-                  .limit(10)
-                  .get(),
-          builder: (context, AsyncSnapshot snapshot) {
-            if (snapshot.hasData) {
-              try {
-                return SizedBox(
-                  height: snapshot.data.docs.length == 0 ? 0 : 350,
-                  width: double.infinity,
-                  child: ListView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      scrollDirection: Axis.horizontal,
-                      shrinkWrap: true,
-                      itemCount: snapshot.data.docs.length,
-                      itemBuilder: (context, index) {
-                        var fetchData = snapshot.data.docs[index];
+      padding: const EdgeInsets.only(left: 15),
+      child: FutureBuilder(
+        future: showCategoryWiseData == 'All'
+            ? FirebaseFirestore.instance
+                .collection('Admin')
+                .doc('all_properties')
+                .collection('property_data')
+                .orderBy('create_time', descending: true)
+                .limit(10)
+                .get()
+            : FirebaseFirestore.instance
+                .collection('Admin')
+                .doc('all_properties')
+                .collection('property_data')
+                .where('category', isEqualTo: showCategoryWiseData)
+                .orderBy('create_time', descending: true)
+                .limit(10)
+                .get(),
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            try {
+              return SizedBox(
+                height: snapshot.data.docs.length == 0 ? 0 : 350,
+                width: double.infinity,
+                child: ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
+                    itemCount: snapshot.data.docs.length,
+                    itemBuilder: (context, index) {
+                      var fetchData = snapshot.data.docs[index];
 
-                        return InkWell(
-                          child: Services(
-                              highlight1: fetchData['category'],
-                              title: fetchData['propertyName'],
-                              image: fetchData['listOfImage'][0],
-                              location: fetchData['address'],
-                              price: '\$${fetchData['price']}'),
-                          onTap: () {
-                            Get.to(() => PropertyDetailsPage(
-                                  fetchData: fetchData,
-                                ));
+                      return InkWell(
+                        child: Services(
+                            highlight1: fetchData['category'],
+                            title: fetchData['propertyName'],
+                            image: fetchData['listOfImage'][0],
+                            location: fetchData['address'],
+                            price: '\$${fetchData['price']}'),
+                        onTap: () {
+                          Get.to(() => PropertyDetailsPage(
+                                fetchData: fetchData,
+                              ));
 
-                            // MyNavigator.goToEventDetailsScreen(context);
-                          },
-                        );
-                      }),
-                );
-              } catch (e) {
-                return SizedBox();
-              }
-            } else {
-              return PropertiesShimmer();
+                          // MyNavigator.goToEventDetailsScreen(context);
+                        },
+                      );
+                    }),
+              );
+            } catch (e) {
+              return SizedBox();
             }
-          },
-        ));
+          } else {
+            return PropertiesShimmer();
+          }
+        },
+      ),
+    );
   }
 
   Widget recomendedFunction(List<WishListItemModel> services) {
