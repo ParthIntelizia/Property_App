@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:luxepass/constants/constant.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:get/get.dart';
-
 import '../providers/web_loading_provider.dart';
 
 class WebViewScreen extends StatefulWidget {
