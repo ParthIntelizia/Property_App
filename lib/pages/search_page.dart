@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:luxepass/constants/common_widget.dart';
 import 'package:luxepass/constants/constant.dart';
 import 'package:get/get.dart';
-import 'package:luxepass/pages/search_filter.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:google_api_headers/google_api_headers.dart';
-
+import 'package:luxepass/pages/search_filter.dart';
 import '../models/google_api_repo.dart';
 
 class SearchPage extends StatefulWidget {
@@ -18,9 +17,12 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final searchController = TextEditingController();
+
   String kGoogleApiKey = 'AIzaSyBLjgELUHE9X1z5OI0if3tMRDG5nWK2Rt8';
   PlaceApi _placeApi = PlaceApi.instance;
+
   bool buscando = false;
+
   List<Place> _predictions = [];
   final homeScaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -78,7 +80,7 @@ class _SearchPageState extends State<SearchPage> {
                     hintText: "Search Property here",
                     prefixIcon: InkResponse(
                       onTap: () {
-                        _handlePressButton();
+                        //_handlePressButton();
                         // Get.to(
                         //   () => SearchFilter(searchText: searchController.text),
                         // );
@@ -111,12 +113,12 @@ class _SearchPageState extends State<SearchPage> {
                         itemCount: _predictions.length,
                         itemBuilder: (_, i) {
                           final Place item = _predictions[i];
-
                           return GestureDetector(
                             onTap: () {
                               try {
                                 print(
                                     'all get address for  ${item.structuredFormatting['main_text']}');
+
                                 List structuredFormatting = item
                                     .structuredFormatting['secondary_text']
                                     .toString()
@@ -131,6 +133,13 @@ class _SearchPageState extends State<SearchPage> {
                               Get.back();
                             },
                             child: ListTile(
+                              onTap: () {
+                                Get.to(
+                                  () => SearchFilter(
+                                    searchText: item.description,
+                                  ),
+                                );
+                              },
                               title: Text(item.description!),
                             ),
                           );
@@ -149,19 +158,26 @@ class _SearchPageState extends State<SearchPage> {
                           SizedBox(
                             height: 20,
                           ),
-                          CommonWidget.textBoldWight500(
-                              text: "Find your next home", fontSize: 20),
+                          Center(
+                            child: CommonWidget.textBoldWight500(
+                                text: "Find your next home", fontSize: 20),
+                          ),
                           SizedBox(
                             height: 20,
                           ),
-                          CommonWidget.textBoldWight500(
-                              text: "Search listings for sale or to rent. Your",
-                              fontSize: 15,
-                              color: Colors.grey),
-                          CommonWidget.textBoldWight500(
-                              text: "recent searches will appear here.",
-                              fontSize: 15,
-                              color: Colors.grey),
+                          Center(
+                            child: CommonWidget.textBoldWight500(
+                                text:
+                                    "Search listings for sale or to rent. Your",
+                                fontSize: 15,
+                                color: Colors.grey),
+                          ),
+                          Center(
+                            child: CommonWidget.textBoldWight500(
+                                text: "recent searches will appear here.",
+                                fontSize: 15,
+                                color: Colors.grey),
+                          ),
                         ],
                       ),
               )

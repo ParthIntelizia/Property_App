@@ -7,6 +7,7 @@ import '../../constants/constant_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
+import '../utils/web_view.dart';
 import 'authentication/signin.dart';
 
 class ServicesPage extends StatefulWidget {
@@ -115,11 +116,27 @@ class _ServicesPageState extends State<ServicesPage>
     return InkWell(
       onTap: () {
         if (GetStorageServices.getUserLoggedInStatus() == true) {
-          Get.to(
-            () => ServiceEnquiryPage(
-              enquiryName: keyPoints[index],
-            ),
-          );
+          if (index == 2) {
+            Get.to(
+              () => WebViewScreen(
+                link: "https://www.sdlauctions.co.uk/search/",
+              ),
+            );
+          } else if (index == 3) {
+            Get.to(
+              () => WebViewScreen(
+                link: "https://www.speedconveyancing.co.uk/",
+              ),
+            );
+          }
+          if (index != 2 && index != 3) {
+            Get.to(
+              () => ServiceEnquiryPage(
+                enquiryName: keyPoints[index],
+                index: index,
+              ),
+            );
+          }
         } else {
           Get.to(() => SignInScreen());
         }

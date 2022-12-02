@@ -213,7 +213,7 @@ class _DiscoverPageState extends State<DiscoverPage>
   }
 
   Widget _descriptionWidget() {
-    print("propert length==>>${products.length}");
+    print("property length==>>${products.length}");
     return FutureBuilder(
       future: FirebaseFirestore.instance
           .collection('Admin')
