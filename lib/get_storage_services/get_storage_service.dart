@@ -84,4 +84,13 @@ class GetStorageServices {
   static getIsEmailOrPhone() {
     return getStorage.read('setIsEmailOrPhone');
   }
+
+  ///  set Country short code
+  static setCountryCode(String countyCode) {
+    getStorage.write('countyCode', countyCode);
+  }
+
+  static getCountryCode() {
+    return getStorage.read('countyCode');
+  }
 }

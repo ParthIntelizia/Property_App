@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:country_codes/country_codes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
@@ -64,10 +65,18 @@ class _HomePageState extends State<HomePage>
   }
 
   String showCategoryWiseData = 'All';
+  setCountryCode() async {
+    await CountryCodes.init();
+
+    final CountryDetails details = CountryCodes.detailsForLocale();
+    print('ddddddddd    ${details.alpha2Code}');
+    GetStorageServices.setCountryCode(details.alpha2Code!);
+  }
 
   @override
   void initState() {
     super.initState();
+    setCountryCode();
     _homePageTabController = TabController(length: 3, vsync: this);
   }
 
