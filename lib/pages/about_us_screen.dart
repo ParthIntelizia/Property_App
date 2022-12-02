@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -57,11 +58,13 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Image.network(
-                      "https://www.therightpropertycompany.co.uk/wp-content/uploads/2016/12/background-image-04.png",
+                    CachedNetworkImage(
+                      imageUrl:
+                          "https://www.therightpropertycompany.co.uk/wp-content/uploads/2016/12/background-image-04.png",
                       height: 250,
                       width: double.infinity,
                     ),
+
                     SizedBox(
                       height: 20,
                     ),
