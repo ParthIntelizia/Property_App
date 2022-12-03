@@ -23,6 +23,7 @@ class _DiscoverPageState extends State<DiscoverPage>
     with SingleTickerProviderStateMixin {
   ConstWidgets constWidgets = ConstWidgets();
   ScrollController _scrollController = ScrollController();
+
   SerachController _serachController = Get.put(SerachController());
   bool hasMore = true; // flag for more products available or not
   bool isLoading = false;
@@ -50,7 +51,9 @@ class _DiscoverPageState extends State<DiscoverPage>
         getProducts();
       }
     });
+
     getProducts();
+
     super.initState();
   }
 
@@ -100,10 +103,11 @@ class _DiscoverPageState extends State<DiscoverPage>
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-      backgroundColor: ConstColors.backgroundColor,
-      body: _body(),
-    ));
+      child: Scaffold(
+        backgroundColor: ConstColors.backgroundColor,
+        body: _body(),
+      ),
+    );
   }
 
   Widget _body() {
