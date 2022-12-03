@@ -9,6 +9,7 @@ import '../../constants/constant_widgets.dart';
 import '../constants/constant.dart';
 import '../get_storage_services/get_storage_service.dart';
 import '../home/widgets/wishl_list_item_widget.dart';
+import '../providers/serach_screen_controller.dart';
 import '../utils/wishlist_shimmer.dart';
 import 'authentication/signin.dart';
 
@@ -25,7 +26,7 @@ class _DiscoverPageState extends State<DiscoverPage>
     with SingleTickerProviderStateMixin {
   ConstWidgets constWidgets = ConstWidgets();
   ScrollController _scrollController = ScrollController();
-
+  SerachController _serachController = Get.put(SerachController());
   bool hasMore = true; // flag for more products available or not
   bool isLoading = false;
 
@@ -219,6 +220,12 @@ class _DiscoverPageState extends State<DiscoverPage>
           .collection('Admin')
           .doc('all_properties')
           .collection('property_data')
+          .where('city', isGreaterThanOrEqualTo: 'surat')
+          .where('state', isGreaterThanOrEqualTo: 'gujrat')
+          .where('address1', isGreaterThanOrEqualTo: 'nana varchha')
+          // .where('city', isGreaterThanOrEqualTo: _serachController.city)
+          // .where('state', isGreaterThanOrEqualTo: _serachController.state)
+          // .where('address1', isGreaterThanOrEqualTo: _serachController.address1)
           .get(),
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.hasData) {
