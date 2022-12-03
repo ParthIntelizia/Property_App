@@ -10,6 +10,7 @@ import '../home/widgets/wishl_list_item_widget.dart';
 import '../providers/serach_screen_controller.dart';
 import '../utils/wishlist_shimmer.dart';
 
+
 class DiscoverPage extends StatefulWidget {
   final searchData;
 
