@@ -219,12 +219,11 @@ class _DiscoverPageState extends State<DiscoverPage>
     return FutureBuilder(
       future: FirebaseFirestore.instance
           .collection('property_data')
-          .where('address_search', isGreaterThanOrEqualTo: controller.address1)
-          //.where('address_search', isGreaterThanOrEqualTo: controller.address1)
+          //.where('address_search', isGreaterThanOrEqualTo: widget.searchData)
+          // .where('address_search',
+          //     isGreaterThanOrEqualTo:
+          //         controller.address1.toString().toLowerCase())
           //.where('country_search', isGreaterThanOrEqualTo: controller.city)
-          // .where('city', isGreaterThanOrEqualTo: _serachController.city)
-          // .where('state', isGreaterThanOrEqualTo: _serachController.state)
-          // .where('address1', isGreaterThanOrEqualTo: _serachController.address1)
           .get(),
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.hasData) {
@@ -233,10 +232,11 @@ class _DiscoverPageState extends State<DiscoverPage>
             properties = properties.where((element) {
               return element
                   // .get('propertyName')
-                  .get('address')
+                  .get('address_search')
+                  // .get('address')
                   .toString()
                   .toLowerCase()
-                  .contains(_searchController!.text.toLowerCase());
+                  .contains(widget.searchData.toString().toLowerCase());
             }).toList();
           }
           try {
