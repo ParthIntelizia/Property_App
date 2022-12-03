@@ -21,7 +21,9 @@ class _SearchPageState extends State<SearchPage> {
 
   String kGoogleApiKey = 'AIzaSyBLjgELUHE9X1z5OI0if3tMRDG5nWK2Rt8';
   PlaceApi _placeApi = PlaceApi.instance;
+
   SerachController _serachController = Get.put(SerachController());
+
   bool buscando = false;
 
   List<Place> _predictions = [];

@@ -273,14 +273,14 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                   },
                   child: Container(
                     height: 50,
-                    width: 100,
+                    width: 150,
                     margin: const EdgeInsets.only(top: 15.0),
                     decoration: const BoxDecoration(
                         color: ConstColors.darkColor,
                         borderRadius: BorderRadius.all(Radius.circular(25))),
                     child: Center(
                       child: constWidgets.textWidget(
-                          "Submit", FontWeight.w700, 12, Colors.white),
+                          "Submit", FontWeight.w700, 13, Colors.white),
                     ),
                   ),
                 ),

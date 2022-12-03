@@ -33,6 +33,8 @@ class _DiscoverPageState extends State<DiscoverPage>
   TextEditingController? _searchController;
   DocumentSnapshot? lastDocument;
 
+  SerachController controller = Get.put(SerachController());
+
   @override
   void initState() {
     try {
@@ -211,9 +213,8 @@ class _DiscoverPageState extends State<DiscoverPage>
     return FutureBuilder(
       future: FirebaseFirestore.instance
           .collection('property_data')
-          .where('city', isGreaterThanOrEqualTo: 'surat')
-          .where('state', isGreaterThanOrEqualTo: 'gujrat')
-          .where('address1', isGreaterThanOrEqualTo: 'nana varchha')
+          .where('address_search', isGreaterThanOrEqualTo: controller.address1)
+          .where('country_search', isGreaterThanOrEqualTo: controller.city)
           // .where('city', isGreaterThanOrEqualTo: _serachController.city)
           // .where('state', isGreaterThanOrEqualTo: _serachController.state)
           // .where('address1', isGreaterThanOrEqualTo: _serachController.address1)

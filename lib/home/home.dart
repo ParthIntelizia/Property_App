@@ -128,7 +128,7 @@ class _HomePageState extends State<HomePage>
                     ),
                     GestureDetector(
                       onTap: () {
-                        locator<NavBarIndex>().setTabCount(4);
+                        locator<NavBarIndex>().setTabCount(3);
                       },
                       child: Container(
                         height: 40,
