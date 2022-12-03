@@ -115,8 +115,6 @@ class _MyWishListPageState extends State<MyWishListPage>
                             myWishListProvider.allServices![index];
                         return FutureBuilder(
                           future: FirebaseFirestore.instance
-                              .collection('Admin')
-                              .doc('all_properties')
                               .collection('property_data')
                               .where('productId',
                                   isEqualTo: snapshot.data['list_of_like']

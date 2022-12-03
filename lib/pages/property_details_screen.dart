@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -90,9 +91,15 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
                           SizedBox(
                         width: width,
                         height: 320,
-                        child: Image.network(
-                            widget.fetchData['listOfImage'][itemIndex],
-                            fit: BoxFit.cover),
+                        child: CachedNetworkImage(
+                          imageUrl: widget.fetchData['listOfImage'][itemIndex],
+                          height: 320,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                        ),
+                        // child: Image.network(
+                        //     widget.fetchData['listOfImage'][itemIndex],
+                        //     fit: BoxFit.cover),
                       ),
                       options: CarouselOptions(
                         onPageChanged: (index, reason) {
@@ -692,11 +699,8 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
               height: 15,
             ),
             FutureBuilder(
-              future: FirebaseFirestore.instance
-                  .collection('Admin')
-                  .doc('all_properties')
-                  .collection('property_data')
-                  .get(),
+              future:
+                  FirebaseFirestore.instance.collection('property_data').get(),
               builder: (context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
                   List<DocumentSnapshot> properties = snapshot.data!.docs;

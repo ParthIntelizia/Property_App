@@ -1,10 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../constants/common_widget.dart';
 import '../constants/constant_colors.dart';
 import '../constants/constant_widgets.dart';
@@ -57,8 +57,9 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Image.network(
-                      "https://www.therightpropertycompany.co.uk/wp-content/uploads/2016/12/background-image-04.png",
+                    CachedNetworkImage(
+                      imageUrl:
+                          "https://www.therightpropertycompany.co.uk/wp-content/uploads/2016/12/background-image-04.png",
                       height: 250,
                       width: double.infinity,
                     ),
@@ -270,14 +271,14 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                   },
                   child: Container(
                     height: 50,
-                    width: 100,
+                    width: 150,
                     margin: const EdgeInsets.only(top: 15.0),
                     decoration: const BoxDecoration(
                         color: ConstColors.darkColor,
                         borderRadius: BorderRadius.all(Radius.circular(25))),
                     child: Center(
                       child: constWidgets.textWidget(
-                          "Submit", FontWeight.w700, 12, Colors.white),
+                          "Submit", FontWeight.w700, 13, Colors.white),
                     ),
                   ),
                 ),

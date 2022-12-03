@@ -3,15 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:luxepass/constants/const_variables.dart';
 import 'package:luxepass/pages/property_details_screen.dart';
-import 'package:luxepass/utils/properties_shimmer.dart';
 import '../../constants/constant_colors.dart';
 import '../../constants/constant_widgets.dart';
 import '../constants/constant.dart';
-import '../get_storage_services/get_storage_service.dart';
 import '../home/widgets/wishl_list_item_widget.dart';
 import '../providers/serach_screen_controller.dart';
 import '../utils/wishlist_shimmer.dart';
-import 'authentication/signin.dart';
 
 class DiscoverPage extends StatefulWidget {
   final searchData;
@@ -26,6 +23,7 @@ class _DiscoverPageState extends State<DiscoverPage>
     with SingleTickerProviderStateMixin {
   ConstWidgets constWidgets = ConstWidgets();
   ScrollController _scrollController = ScrollController();
+
   SerachController _serachController = Get.put(SerachController());
   bool hasMore = true; // flag for more products available or not
   bool isLoading = false;
@@ -35,6 +33,8 @@ class _DiscoverPageState extends State<DiscoverPage>
   int documentLimit = 10; // documents to be fetched per request
   TextEditingController? _searchController;
   DocumentSnapshot? lastDocument;
+
+  SerachController controller = Get.put(SerachController());
 
   @override
   void initState() {
@@ -51,7 +51,9 @@ class _DiscoverPageState extends State<DiscoverPage>
         getProducts();
       }
     });
+
     getProducts();
+
     super.initState();
   }
 
@@ -70,16 +72,12 @@ class _DiscoverPageState extends State<DiscoverPage>
       QuerySnapshot querySnapshot;
       if (lastDocument == null) {
         querySnapshot = await FirebaseFirestore.instance
-            .collection('Admin')
-            .doc('all_properties')
             .collection('property_data')
             .orderBy('create_time', descending: true)
             .limit(documentLimit)
             .get();
       } else {
         querySnapshot = await FirebaseFirestore.instance
-            .collection('Admin')
-            .doc('all_properties')
             .collection('property_data')
             .orderBy('create_time', descending: true)
             .startAfterDocument(lastDocument!)
@@ -105,10 +103,11 @@ class _DiscoverPageState extends State<DiscoverPage>
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-      backgroundColor: ConstColors.backgroundColor,
-      body: _body(),
-    ));
+      child: Scaffold(
+        backgroundColor: ConstColors.backgroundColor,
+        body: _body(),
+      ),
+    );
   }
 
   Widget _body() {
@@ -215,14 +214,13 @@ class _DiscoverPageState extends State<DiscoverPage>
 
   Widget _descriptionWidget() {
     print("property length==>>${products.length}");
+    print("Address==>>${controller.address1}");
     return FutureBuilder(
       future: FirebaseFirestore.instance
-          .collection('Admin')
-          .doc('all_properties')
           .collection('property_data')
-          .where('city', isGreaterThanOrEqualTo: 'surat')
-          .where('state', isGreaterThanOrEqualTo: 'gujrat')
-          .where('address1', isGreaterThanOrEqualTo: 'nana varchha')
+          .where('address_search', isGreaterThanOrEqualTo: controller.address1)
+          //.where('address_search', isGreaterThanOrEqualTo: controller.address1)
+          //.where('country_search', isGreaterThanOrEqualTo: controller.city)
           // .where('city', isGreaterThanOrEqualTo: _serachController.city)
           // .where('state', isGreaterThanOrEqualTo: _serachController.state)
           // .where('address1', isGreaterThanOrEqualTo: _serachController.address1)

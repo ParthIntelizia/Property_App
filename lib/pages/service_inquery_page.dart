@@ -64,15 +64,15 @@ class _ServiceEnquiryPageState extends State<ServiceEnquiryPage> {
     },
     {
       'image':
-          'https://www.therightpropertycompany.co.uk/wp-content/uploads/2020/05/build-a-house-4503738_1920-1024x769.jpg',
-      'description':
-          "We can give you advice on the best mortgage products to suit you, and can recommend local and national solicitors to handle the legal process for you. Contact us on 01384 231999 or fill the contact form below and we will contact you. FIRST TIME BUYER, REMORTGAGE, BUY TO LET, RIGHT TO BUY\nFREE MORTGAGE CHECK\nYOUR HOME MAY BE REPOSSESSED IF YOU DO NOT KEEP UP REPAYMENTS ON YOUR MORTGAGE\nAll advice is provided by Armchair Mortgages who regulated by the FCA.\nFCA Number 612752",
-    },
-    {
-      'image':
           'https://www.therightpropertycompany.co.uk/wp-content/uploads/2020/07/1.jpg',
       'description':
           "At The Right Property Company, we comprise a team of experienced, multi-skilled in house professionals that offer a range of services: including full electrical wiring, alarms, CCTV, fire alarm systems and electrical certificates, and the installation of new boilers, boiler replacement, and central heating services. Our staff are members of Checkatrade, Gas Safe, and a number of industry recognised and revered accreditations. You can rest assured you’ll be investing in the right degree of quality for your home.",
+    },
+    {
+      'image':
+          'https://www.therightpropertycompany.co.uk/wp-content/uploads/2020/05/build-a-house-4503738_1920-1024x769.jpg',
+      'description':
+          "We can give you advice on the best mortgage products to suit you, and can recommend local and national solicitors to handle the legal process for you. Contact us on 01384 231999 or fill the contact form below and we will contact you. FIRST TIME BUYER, REMORTGAGE, BUY TO LET, RIGHT TO BUY\nFREE MORTGAGE CHECK\nYOUR HOME MAY BE REPOSSESSED IF YOU DO NOT KEEP UP REPAYMENTS ON YOUR MORTGAGE\nAll advice is provided by Armchair Mortgages who regulated by the FCA.\nFCA Number 612752",
     },
     {
       'image':
@@ -122,6 +122,9 @@ class _ServiceEnquiryPageState extends State<ServiceEnquiryPage> {
                               FontWeight.w500,
                               20,
                               ConstColors.serviceHeadLineColor),
+                          SizedBox(
+                            height: 10,
+                          ),
                           CachedNetworkImage(
                             imageUrl: services[widget.index]['image'],
                             height: 250,
@@ -272,10 +275,17 @@ class _ServiceEnquiryPageState extends State<ServiceEnquiryPage> {
                                           title: 'Invalid Email',
                                           message: 'Please Enter Valid Email');
                                     }
+
                                     progress!.dismiss();
 
                                     setState(() {});
                                     Get.back();
+
+                                    CommonWidget.getSnackBar(
+                                        title: "Submitted!",
+                                        duration: 2,
+                                        message:
+                                            'Your inquiry has been received, We will contact you shortly.');
                                   } else {
                                     CommonWidget.getSnackBar(
                                         color: Colors.red,

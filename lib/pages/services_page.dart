@@ -6,7 +6,6 @@ import '../../constants/constant_colors.dart';
 import '../../constants/constant_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-
 import '../utils/web_view.dart';
 import 'authentication/signin.dart';
 
@@ -39,10 +38,10 @@ class _ServicesPageState extends State<ServicesPage>
     "Auction ",
     "Conveyancing",
     "EPC",
-    "Accomodation",
+    "Accommodation",
     "Heating & Electrical",
     "Mortgages",
-    "Insepection Report"
+    "Inspection Report"
   ];
 
   @override
@@ -142,31 +141,32 @@ class _ServicesPageState extends State<ServicesPage>
         }
       },
       child: Container(
-          height: 80,
-          decoration: BoxDecoration(
-              color: ConstColors.searchBoxColor,
-              border:
-                  Border.all(color: ConstColors.widgetDividerColor, width: 0.5),
-              borderRadius: BorderRadius.circular(5)),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: SvgPicture.asset(
-                  servicesImage[index],
-                  height: 30,
-                  width: 30,
-                ),
+        height: 80,
+        decoration: BoxDecoration(
+            color: ConstColors.searchBoxColor,
+            border:
+                Border.all(color: ConstColors.widgetDividerColor, width: 0.5),
+            borderRadius: BorderRadius.circular(5)),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: SvgPicture.asset(
+                servicesImage[index],
+                height: 30,
+                width: 30,
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: constWidgets.textWidget(
-                    keyPoints[index], FontWeight.w500, 12, Colors.grey),
-              )
-            ],
-          )),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: constWidgets.textWidget(
+                  keyPoints[index], FontWeight.w500, 12, Colors.grey),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
