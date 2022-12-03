@@ -6,16 +6,16 @@ class GetStorageServices {
     getStorage.erase();
   }
 
-  static setUserName({required String username}) async {
-    await getStorage.write('username', username);
+  static setUserName({required String username}) {
+    getStorage.write('username', username);
   }
 
   static getUserName() {
     return getStorage.read('username');
   }
 
-  static setUserLoggedIn() async {
-    await getStorage.write('isUserLoggedIn', true);
+  static setUserLoggedIn() {
+    getStorage.write('isUserLoggedIn', true);
   }
 
   static getUserLoggedInStatus() {
@@ -23,8 +23,8 @@ class GetStorageServices {
   }
 
   /// user uid
-  static setToken(String userUid) async {
-    await getStorage.write('token', userUid);
+  static setToken(String userUid) {
+    getStorage.write('token', userUid);
   }
 
   static getToken() {
@@ -32,8 +32,8 @@ class GetStorageServices {
   }
 
   /// profile image
-  static setProfileImageValue(String LoginValue) async {
-    await getStorage.write('setProfileImage', LoginValue);
+  static setProfileImageValue(String LoginValue) {
+    getStorage.write('setProfileImage', LoginValue);
   }
 
   static getProfileImageValue() {
@@ -41,8 +41,8 @@ class GetStorageServices {
   }
 
   /// name image
-  static setNameValue(String LoginValue) async {
-    await getStorage.write('setNameValue', LoginValue);
+  static setNameValue(String LoginValue) {
+    getStorage.write('setNameValue', LoginValue);
   }
 
   static getNameValue() {
@@ -50,8 +50,8 @@ class GetStorageServices {
   }
 
   /// full name
-  static setFullNameValue(String LoginValue) async {
-    await getStorage.write('setFullNameValue', LoginValue);
+  static setFullNameValue(String LoginValue) {
+    getStorage.write('setFullNameValue', LoginValue);
   }
 
   static getFullNameValue() {
@@ -59,8 +59,8 @@ class GetStorageServices {
   }
 
   /// email
-  static setEmail(String LoginValue) async {
-    await getStorage.write('setEmailValue', LoginValue);
+  static setEmail(String LoginValue) {
+    getStorage.write('setEmailValue', LoginValue);
   }
 
   static getEmail() {
@@ -68,8 +68,8 @@ class GetStorageServices {
   }
 
   /// mobile
-  static setMobile(String LoginValue) async {
-    await getStorage.write('setMobile', LoginValue);
+  static setMobile(String LoginValue) {
+    getStorage.write('setMobile', LoginValue);
   }
 
   static getMobile() {
@@ -77,8 +77,8 @@ class GetStorageServices {
   }
 
   /// is Email or phone
-  static setIsEmailOrPhone(bool LoginValue) async {
-    await getStorage.write('setIsEmailOrPhone', LoginValue);
+  static setIsEmailOrPhone(bool LoginValue) {
+    getStorage.write('setIsEmailOrPhone', LoginValue);
   }
 
   static getIsEmailOrPhone() {
@@ -86,8 +86,8 @@ class GetStorageServices {
   }
 
   ///  set Country short code
-  static setCountryCode(String countyCode) async {
-    await getStorage.write('countyCode', countyCode);
+  static setCountryCode(String countyCode) {
+    getStorage.write('countyCode', countyCode);
   }
 
   static getCountryCode() {

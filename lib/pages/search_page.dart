@@ -116,7 +116,7 @@ class _SearchPageState extends State<SearchPage> {
                         itemCount: _predictions.length,
                         itemBuilder: (_, i) {
                           final Place item = _predictions[i];
-                          return GestureDetector(
+                          return ListTile(
                             onTap: () {
                               try {
                                 print(
@@ -159,18 +159,14 @@ class _SearchPageState extends State<SearchPage> {
                                       structuredFormatting.length - 3];
                                 }
                               } catch (e) {}
+                              Get.to(
+                                () => SearchFilter(
+                                  ///searchText: item.description,
+                                  searchText: searchController.text,
+                                ),
+                              );
                             },
-                            child: ListTile(
-                              onTap: () {
-                                Get.to(
-                                  () => SearchFilter(
-                                    //searchText: item.description,
-                                    searchText: searchController.text,
-                                  ),
-                                );
-                              },
-                              title: Text(item.description!),
-                            ),
+                            title: Text(item.description!),
                           );
                         })
                     : Column(
