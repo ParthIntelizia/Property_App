@@ -210,11 +210,13 @@ class _DiscoverPageState extends State<DiscoverPage>
 
   Widget _descriptionWidget() {
     print("property length==>>${products.length}");
+    print("Address==>>${controller.address1}");
     return FutureBuilder(
       future: FirebaseFirestore.instance
           .collection('property_data')
           .where('address_search', isGreaterThanOrEqualTo: controller.address1)
-          .where('country_search', isGreaterThanOrEqualTo: controller.city)
+          //.where('address_search', isGreaterThanOrEqualTo: controller.address1)
+          //.where('country_search', isGreaterThanOrEqualTo: controller.city)
           // .where('city', isGreaterThanOrEqualTo: _serachController.city)
           // .where('state', isGreaterThanOrEqualTo: _serachController.state)
           // .where('address1', isGreaterThanOrEqualTo: _serachController.address1)

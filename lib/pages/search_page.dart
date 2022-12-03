@@ -125,6 +125,7 @@ class _SearchPageState extends State<SearchPage> {
                                     .structuredFormatting['secondary_text']
                                     .toString()
                                     .split(',');
+
                                 print(
                                     'all strat of uiuiuiuib    ${structuredFormatting.length}  country ');
                                 List itm = item.description!.split(',');
@@ -132,9 +133,14 @@ class _SearchPageState extends State<SearchPage> {
                                 int count = itm.length - 2;
 
                                 print('last but not list $count  $itm');
+
                                 if (structuredFormatting.length == 2) {
                                   _serachController.address1 =
                                       item.structuredFormatting['main_text'];
+
+                                  print(
+                                      "ADDRESS==>>${item.structuredFormatting['main_text']}");
+
                                   _serachController.state = '';
                                   _serachController.city =
                                       structuredFormatting.first;
@@ -158,7 +164,8 @@ class _SearchPageState extends State<SearchPage> {
                               onTap: () {
                                 Get.to(
                                   () => SearchFilter(
-                                    searchText: item.description,
+                                    //searchText: item.description,
+                                    searchText: searchController.text,
                                   ),
                                 );
                               },

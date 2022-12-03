@@ -275,10 +275,17 @@ class _ServiceEnquiryPageState extends State<ServiceEnquiryPage> {
                                           title: 'Invalid Email',
                                           message: 'Please Enter Valid Email');
                                     }
+
                                     progress!.dismiss();
 
                                     setState(() {});
                                     Get.back();
+
+                                    CommonWidget.getSnackBar(
+                                        title: "Submitted!",
+                                        duration: 2,
+                                        message:
+                                            'Your inquiry has been received, We will contact you shortly.');
                                   } else {
                                     CommonWidget.getSnackBar(
                                         color: Colors.red,

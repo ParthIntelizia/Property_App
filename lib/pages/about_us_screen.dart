@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../constants/common_widget.dart';
 import '../constants/constant_colors.dart';
 import '../constants/constant_widgets.dart';
@@ -64,7 +63,6 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                       height: 250,
                       width: double.infinity,
                     ),
-
                     SizedBox(
                       height: 20,
                     ),
