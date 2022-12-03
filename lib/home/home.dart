@@ -397,15 +397,11 @@ class _HomePageState extends State<HomePage>
       child: FutureBuilder(
         future: showCategoryWiseData == 'All'
             ? FirebaseFirestore.instance
-                .collection('Admin')
-                .doc('all_properties')
                 .collection('property_data')
                 .orderBy('create_time', descending: true)
                 .limit(10)
                 .get()
             : FirebaseFirestore.instance
-                .collection('Admin')
-                .doc('all_properties')
                 .collection('property_data')
                 .where('category', isEqualTo: showCategoryWiseData)
                 .orderBy('create_time', descending: true)
@@ -490,8 +486,6 @@ class _HomePageState extends State<HomePage>
             padding: const EdgeInsets.only(left: 15),
             child: FutureBuilder(
               future: FirebaseFirestore.instance
-                  .collection('Admin')
-                  .doc('all_properties')
                   .collection('property_data')
                   .orderBy('create_time', descending: false)
                   .limit(3)

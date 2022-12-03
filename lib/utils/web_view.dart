@@ -16,6 +16,7 @@ class WebViewScreen extends StatefulWidget {
 
 class _WebViewScreenState extends State<WebViewScreen> {
   final LoadingWebPageBloc loadingWebPageBloc = LoadingWebPageBloc();
+
   void initState() {
     super.initState();
     // Enable hybrid composition.
@@ -27,13 +28,14 @@ class _WebViewScreenState extends State<WebViewScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-          backgroundColor: themColors309D9D,
-          leading: InkWell(
-            onTap: () {
-              Get.back();
-            },
-            child: Icon(Icons.arrow_back_ios),
-          )),
+        backgroundColor: themColors309D9D,
+        leading: InkWell(
+          onTap: () {
+            Get.back();
+          },
+          child: Icon(Icons.arrow_back_ios),
+        ),
+      ),
       body: Container(
         child: Stack(
           children: <Widget>[

@@ -58,16 +58,12 @@ class _PopularPageState extends State<PopularPage>
       QuerySnapshot querySnapshot;
       if (lastDocument == null) {
         querySnapshot = await FirebaseFirestore.instance
-            .collection('Admin')
-            .doc('all_properties')
             .collection('property_data')
             .orderBy('create_time', descending: true)
             .limit(documentLimit)
             .get();
       } else {
         querySnapshot = await FirebaseFirestore.instance
-            .collection('Admin')
-            .doc('all_properties')
             .collection('property_data')
             .orderBy('create_time', descending: true)
             .startAfterDocument(lastDocument!)
@@ -167,8 +163,6 @@ class _PopularPageState extends State<PopularPage>
     return _searchController.text.isNotEmpty
         ? FutureBuilder(
             future: FirebaseFirestore.instance
-                .collection('Admin')
-                .doc('all_properties')
                 .collection('property_data')
                 .where('propertySlugName',
                     isGreaterThanOrEqualTo:

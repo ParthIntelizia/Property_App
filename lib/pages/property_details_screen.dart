@@ -692,11 +692,8 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage>
               height: 15,
             ),
             FutureBuilder(
-              future: FirebaseFirestore.instance
-                  .collection('Admin')
-                  .doc('all_properties')
-                  .collection('property_data')
-                  .get(),
+              future:
+                  FirebaseFirestore.instance.collection('property_data').get(),
               builder: (context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
                   List<DocumentSnapshot> properties = snapshot.data!.docs;

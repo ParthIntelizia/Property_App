@@ -3,14 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:luxepass/constants/const_variables.dart';
 import 'package:luxepass/pages/property_details_screen.dart';
-import 'package:luxepass/utils/properties_shimmer.dart';
 import '../../constants/constant_colors.dart';
 import '../../constants/constant_widgets.dart';
 import '../constants/constant.dart';
-import '../get_storage_services/get_storage_service.dart';
 import '../home/widgets/wishl_list_item_widget.dart';
 import '../utils/wishlist_shimmer.dart';
-import 'authentication/signin.dart';
 
 class DiscoverPage extends StatefulWidget {
   final searchData;
@@ -69,16 +66,12 @@ class _DiscoverPageState extends State<DiscoverPage>
       QuerySnapshot querySnapshot;
       if (lastDocument == null) {
         querySnapshot = await FirebaseFirestore.instance
-            .collection('Admin')
-            .doc('all_properties')
             .collection('property_data')
             .orderBy('create_time', descending: true)
             .limit(documentLimit)
             .get();
       } else {
         querySnapshot = await FirebaseFirestore.instance
-            .collection('Admin')
-            .doc('all_properties')
             .collection('property_data')
             .orderBy('create_time', descending: true)
             .startAfterDocument(lastDocument!)
@@ -215,11 +208,7 @@ class _DiscoverPageState extends State<DiscoverPage>
   Widget _descriptionWidget() {
     print("property length==>>${products.length}");
     return FutureBuilder(
-      future: FirebaseFirestore.instance
-          .collection('Admin')
-          .doc('all_properties')
-          .collection('property_data')
-          .get(),
+      future: FirebaseFirestore.instance.collection('property_data').get(),
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.hasData) {
           List<DocumentSnapshot> properties = snapshot.data!.docs;
