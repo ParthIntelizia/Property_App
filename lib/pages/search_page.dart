@@ -7,6 +7,7 @@ import 'package:google_maps_webservice/places.dart';
 import 'package:google_api_headers/google_api_headers.dart';
 import 'package:luxepass/pages/search_filter.dart';
 import '../models/google_api_repo.dart';
+import '../providers/serach_screen_controller.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -20,7 +21,7 @@ class _SearchPageState extends State<SearchPage> {
 
   String kGoogleApiKey = 'AIzaSyBLjgELUHE9X1z5OI0if3tMRDG5nWK2Rt8';
   PlaceApi _placeApi = PlaceApi.instance;
-
+  SerachController _serachController = Get.put(SerachController());
   bool buscando = false;
 
   List<Place> _predictions = [];
@@ -118,19 +119,38 @@ class _SearchPageState extends State<SearchPage> {
                               try {
                                 print(
                                     'all get address for  ${item.structuredFormatting['main_text']}');
-
                                 List structuredFormatting = item
                                     .structuredFormatting['secondary_text']
                                     .toString()
                                     .split(',');
-
+                                print(
+                                    'all strat of uiuiuiuib    ${structuredFormatting.length}  country ');
                                 List itm = item.description!.split(',');
                                 print('last but not list  ${itm.last}');
                                 int count = itm.length - 2;
 
                                 print('last but not list $count  $itm');
+                                if (structuredFormatting.length == 2) {
+                                  _serachController.address1 =
+                                      item.structuredFormatting['main_text'];
+                                  _serachController.state = '';
+                                  _serachController.city =
+                                      structuredFormatting.first;
+                                } else if (structuredFormatting.length == 1) {
+                                  _serachController.address1 =
+                                      item.structuredFormatting['main_text'];
+                                  _serachController.state = '';
+                                  _serachController.city = '';
+                                } else {
+                                  _serachController.address1 =
+                                      item.structuredFormatting['main_text'];
+                                  _serachController.state =
+                                      structuredFormatting[
+                                          structuredFormatting.length - 2];
+                                  _serachController.city = structuredFormatting[
+                                      structuredFormatting.length - 3];
+                                }
                               } catch (e) {}
-                              Get.back();
                             },
                             child: ListTile(
                               onTap: () {
