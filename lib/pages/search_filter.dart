@@ -203,9 +203,11 @@ class _SearchFilterState extends State<SearchFilter> {
                 ),
                 InkWell(
                   onTap: () {
-                    Get.to(() => DiscoverPage(
-                          searchData: searchController!.text,
-                        ));
+                    Get.to(
+                      () => DiscoverPage(
+                        searchData: searchController!.text.trim(),
+                      ),
+                    );
                   },
                   child: Container(
                     height: 45,

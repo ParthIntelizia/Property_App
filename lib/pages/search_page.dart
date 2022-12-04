@@ -162,7 +162,7 @@ class _SearchPageState extends State<SearchPage> {
                               Get.to(
                                 () => SearchFilter(
                                   ///searchText: item.description,
-                                  searchText: searchController.text,
+                                  searchText: searchController.text.trim(),
                                 ),
                               );
                             },
